@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:util="http://java.sun.com/jsf/composite/util" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+	<script type="text/javascript">
+		function releaseMask() {
+			unMaskScreen();
+		}
+	</script>
+</h:head>
+<h:body styleClass="screenBg">
+	<h:form id="labCheckTasksApprovalFormId" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/Template.xhtml">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tr>
+					<td class="screenTitle">
+						<h:outputText value="#{msgs.title_labCheckWFTasksApproval}" />
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.label_labCheckRequestsDetails}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td align="center" width="100%">
+						<h:panelGroup id="labCheckRequestsDetailsPanelId">
+							<p:dataTable reflow="true" tableStyle="table-layout: auto" paginator="true" selection="#{labCheckWFTasksApproval.selectedLabCheckList}" id="labCheckListDataTableId" rowKey="#{row.id}" rows="10" rowSelectMode="checkbox" rowIndexVar="index" var="row" value="#{labCheckWFTasksApproval.labCheckList}" rowHover="true">
+								<p:ajax event="rowSelectCheckbox" process="labCheckTasksApprovalFormId:labCheckListDataTableId" />
+								<p:ajax event="rowUnselectCheckbox" process="labCheckTasksApprovalFormId:labCheckListDataTableId" />
+								<p:ajax event="toggleSelect" process="labCheckTasksApprovalFormId:labCheckListDataTableId" />‎ 
+								<p:ajax event="filter" ignoreAutoUpdate="true" />
+								<p:column styleClass='centerText'>
+									<f:facet name="header">#</f:facet>
+	                                #{index + 1}
+	                            </p:column>
+								<p:column styleClass='centerText'>
+									<f:facet name="header"> #{msgs.label_orderNo} </f:facet>
+									<h:outputText value="#{row.orderNumber}" />
+								</p:column>
+								<p:column styleClass='centerText'>
+									<f:facet name="header"> #{msgs.label_orderDate} </f:facet>
+									<h:outputText value="#{row.orderDateString}" />
+								</p:column>
+								<p:column styleClass='centerText'>
+									<f:facet name="header">#{msgs.label_orderIssueSite}</f:facet>
+									<h:outputText id="orderIssueSiteId" value="#{row.orderSourceDomainDescription}" />
+								</p:column>
+								<p:column styleClass='centerText'>
+									<f:facet name="header"> #{msgs.label_checkReason} </f:facet>
+									<h:selectOneMenu disabled="true" value="#{row.checkReason}" styleClass="form-control">
+										<f:selectItems value="#{labCheckWFTasksApproval.labCheckReasonsEnumList}" var="checkReason" itemLabel="#{checkReason.arabicDescription}" itemValue="#{checkReason.code}" />
+									</h:selectOneMenu>
+								</p:column>
+								<p:column styleClass='centerText'>
+									<f:facet name="header"> #{msgs.label_description} </f:facet>
+									<h:commandButton value="&#xf05a;" styleClass="btn btn-trans-icon" onclick="this.form.target='_blank'" action="#{labCheckWFTasksApproval.viewLabCheckDetails(row)}" />
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="#{msgs.label_print}" />
+									</f:facet>
+									<h:commandButton value="&#xf02f;" styleClass="btn btn-trans-icon" onclick="this.form.target='_self'" action="#{labCheckWFTasksApproval.print(row)}" />
+								</p:column>
+								<p:column selectionMode="multiple" style="width:16px;text-align:center">
+									<f:facet name="header">#{msgs.label_choose}</f:facet>
+								</p:column>
+							</p:dataTable>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+
+				<tr>
+					<td>
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:commandButton id="printAllBtnId" styleClass="btn btn-success" onclick="this.form.target='_self'" action="#{labCheckWFTasksApproval.printAll()}" value="&#xf02f; #{msgs.label_print}" />
+									<h:commandButton id="approveBtnId" class="btn btn-success" value="&#xf00c; #{msgs.label_approve}" action="#{labCheckWFTasksApproval.doApprove()}" onclick="this.form.target='_self';return confirm('#{msgs.q_approve}');" >
+									</h:commandButton>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>

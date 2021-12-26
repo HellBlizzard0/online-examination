@@ -1,0 +1,530 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:util="http://java.sun.com/jsf/composite/util">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+	<script type="text/javascript">
+		var m;
+		function getEmployee(contextPath,mode){
+			m = mode;
+			openEmpsMiniSearch(contextPath,mode);
+    		return false;
+    	}
+
+    	function handleDownloadFiles(e){
+    		openDownloadPopupFlagId = document.getElementById('carRentalRegistrationId:openDownloadPopupFlagId').value;
+    		openDownloadDialogueFlagId = document.getElementById('carRentalRegistrationId:openDownloadDialogueFlagId').value;
+    		
+    		if(e.status == 'success'){
+    			if(openDownloadPopupFlagId == 'true'){
+    				downloadFile();
+        		}else if (openDownloadDialogueFlagId == 'true'){
+        			PF('dlg').show();
+            	}
+    		}
+        }
+
+    	function uploadFile(){
+    		fileArchivingParam = document.getElementById('carRentalRegistrationId:fileArchivingParamId').value;
+    		openUploadFile('#{carRentalRegisteration.boolServerUploadPath}', fileArchivingParam);
+    		return false;
+        }
+
+    	function downloadFile(){
+    		downloadedFileParamId = document.getElementById('carRentalRegistrationId:downloadedFileParamId').value;
+    		openDownloadFile('#{carRentalRegisteration.boolServerDownloadPath}',downloadedFileParamId);
+    		return false;
+        }
+
+		
+		function HandlePopupResult(ret) { 
+    		unMaskScreen();
+    		if(ret!=null){
+        		if(m == 1){
+        			document.getElementById('carRentalRegistrationId:selectedEmpId').value = ret[0];
+       	         	document.getElementById('carRentalRegistrationId:selectedEmpNameId').value = ret[1];
+       	         	document.getElementById('carRentalRegistrationId:empNameId').innerHTML= ret[1];
+       	         	document.getElementById('carRentalRegistrationId:insertNewEmployee').click();
+       	         	return true;
+            	} 
+	   			return false;
+    		}
+		}
+
+		function releaseMask(){
+    		unMaskScreen();
+       	}
+       	
+
+    	function calculateTotalPayment(){
+			var dailyAmount = parseFloat(document.getElementById("carRentalRegistrationId:dailyAmountId").value+".0");
+			var extraAmount = parseFloat(document.getElementById("carRentalRegistrationId:extraAmountId").value+".0");
+			var rentPeriod = parseFloat(document.getElementById("carRentalRegistrationId:rentPeriodId").innerHTML+".0");
+
+			var totalPaymentAmount= dailyAmount*rentPeriod+extraAmount;
+	       	document.getElementById('carRentalRegistrationId:totalPaymentAmountId').innerHTML= totalPaymentAmount;
+	       	return true;
+        }
+        
+		function validateMandatoryData(){
+			var renterId = document.getElementById("carRentalRegistrationId:selectedEmpId").value;
+			var missionDesc = document.getElementById("carRentalRegistrationId:missionDescId").value;
+			var missionconclusion = document.getElementById("carRentalRegistrationId:missionConclusionId").value;
+			var contractNum = document.getElementById("carRentalRegistrationId:contractNumId").value;
+			var dailyAmount = document.getElementById("carRentalRegistrationId:dailyAmountId").value;
+			var carModelId = document.getElementById("carRentalRegistrationId:carModelId").value;
+			var plateNum = document.getElementById("carRentalRegistrationId:plateNumId").value;
+
+			var errorMsg;
+			var successValidation = true;
+	        if(renterId == null || renterId==""){
+	            successValidation = false;
+				errorMsg='#{msgs.error_rentEmployeeMandatory}';
+	        }
+	        else if(missionDesc == null || missionDesc==""){
+	            successValidation = false;
+				errorMsg='#{msgs.error_missionDescriptionMandatory}';
+	        }
+	        else if(missionconclusion == null || missionconclusion==""){
+	            successValidation = false;
+				errorMsg='#{msgs.error_missionConclusionMandatory}';
+	        }
+	        else if(contractNum == null || contractNum==""){
+	            successValidation = false;
+				errorMsg='#{msgs.error_contractNumberMandatory}';
+	        }
+	        else if(dailyAmount == null || dailyAmount == "" || dailyAmount &lt; 0 || dailyAmount == 0){
+	            successValidation = false;
+				errorMsg='#{msgs.error_dailyAmountMandatory}';
+	        }
+	        else if(carModelId == null || carModelId==""){
+	            successValidation = false;
+				errorMsg='#{msgs.error_carModelMandatory}';
+	        }
+	        else if(plateNum == null || plateNum==""){
+	            successValidation = false;
+				errorMsg='#{msgs.error_plateNumberMandatory}';
+	        }
+
+			if(!successValidation){
+				showErrorMessage(errorMsg);
+	        }
+	        
+	        return successValidation;
+		}
+    </script>
+</h:head>
+<h:body styleClass="screenBg">
+	<h:form id="carRentalRegistrationId" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/Template.xhtml">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+
+
+				<tr>
+					<td class="screenTitle">#{msgs.title_carRntlRgstr}</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.label_internalData}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="internalInfoPnlId">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<th width="15%">#{msgs.label_department}</th>
+									<td width="20%" colspan="6">
+										<h:outputText value="#{carRentalRegisteration.carRentalData.registerDepartmentName}" />
+									</td>
+								</tr>
+
+								<tr>
+									<th width="15%">
+										#{msgs.label_renterName}
+										<h:outputText value="*" style="color:red;" />
+										<h:commandButton rendered="#{carRentalRegisteration.carRentalData.paid == 0}" value="&#xf002;" styleClass="btn btn-trans-icon" onclick="return getEmployee('#{request.contextPath}', 1);" title="#{msgs.label_renterName}" />
+									</th>
+									<td width="20%" colspan="6">
+										<h:inputHidden id="selectedEmpId" value="#{carRentalRegisteration.carRentalData.employeeId}" />
+										<h:inputHidden id="selectedEmpNameId" value="#{carRentalRegisteration.carRentalData.employeeName}" />
+										<h:commandButton id="insertNewEmployee" style="display:none;" action="#{carRentalRegisteration.getEmployeeDetails()}">
+											<f:ajax execute="selectedEmpId" render="carRentalRegistrationId:selectedEmpUnit carRentalRegistrationId:selectedEmpRank">
+											</f:ajax>
+										</h:commandButton>
+										<h:outputText id="empNameId" value="#{carRentalRegisteration.renterEmployeeName}" />
+									</td>
+								</tr>
+
+								<tr>
+									<th width="15%">#{msgs.label_rank}</th>
+									<td width="20%" colspan="2">
+										<h:outputText id="selectedEmpRank" value="#{carRentalRegisteration.carRentalData.employeeRank}" />
+									</td>
+									
+									<th width="15%">#{msgs.label_unit}</th>
+									<td width="20%" colspan="2">
+										<h:outputText id="selectedEmpUnit" value="#{carRentalRegisteration.carRentalData.employeeUnitName}" />
+									</td>
+
+								</tr>
+
+								<tr>
+									<th width="15%">#{msgs.label_isMissionRltdToInfo}</th>
+									<td width="20%" colspan="2">
+										<h:selectBooleanCheckbox rendered="#{carRentalRegisteration.carRentalData.paid==0}" value="#{carRentalRegisteration.isMissionRltdToInfo}">
+											<f:ajax render="sectorLabelId infoNumberId" />
+										</h:selectBooleanCheckbox>
+										<h:selectBooleanCheckbox rendered="#{carRentalRegisteration.carRentalData.paid==1}" readonly="true" styleClass="form-control" value="#{carRentalRegisteration.isMissionRltdToInfo}" />
+									</td>
+									
+
+									<th width="15%">
+										<h:panelGroup id="sectorLabelId">
+											<h:outputText rendered="#{carRentalRegisteration.isMissionRltdToInfo}" value="#{msgs.label_infoNumber}" />
+											<h:outputText rendered="#{carRentalRegisteration.isMissionRltdToInfo}" value="*" style="color:red;" />
+										</h:panelGroup>
+									</th>
+									<td width="20%" colspan="2">
+										<h:panelGroup id="infoNumberId">
+											<h:inputText onkeypress="return checkDigit(event);" styleClass="form-control" rendered="#{carRentalRegisteration.isMissionRltdToInfo and carRentalRegisteration.carRentalData.paid==0}" value="#{carRentalRegisteration.carRentalData.infoNumber}" />
+											<h:outputText rendered="#{carRentalRegisteration.isMissionRltdToInfo and carRentalRegisteration.carRentalData.paid==1}" value="#{carRentalRegisteration.carRentalData.infoNumber}" />
+										</h:panelGroup>
+									</td>
+
+								</tr>
+
+								<tr>
+									<th width="15%">
+										#{msgs.label_missionDesc}
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<h:inputTextarea rendered="#{carRentalRegisteration.carRentalData.paid==0}" id="missionDescId" styleClass="form-control" value="#{carRentalRegisteration.carRentalData.missionDescription}" />
+										<h:inputTextarea rendered="#{carRentalRegisteration.carRentalData.paid==1}" readonly="true" styleClass="form-control" value="#{carRentalRegisteration.carRentalData.missionDescription}" />
+									</td>
+									
+									
+									<th width="15%">
+										#{msgs.label_missionConclusion}
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<h:inputTextarea rendered="#{carRentalRegisteration.carRentalData.paid==0}" id="missionConclusionId" styleClass="form-control" value="#{carRentalRegisteration.carRentalData.missionConclusion}" />
+										<h:inputTextarea rendered="#{carRentalRegisteration.carRentalData.paid==1}" readonly="true" styleClass="form-control" value="#{carRentalRegisteration.carRentalData.missionConclusion}" />
+									</td>
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td width="100%">
+									<h:commandButton rendered="#{not empty carRentalRegisteration.carRentalData.id}" styleClass="btn btn-success" id="archiveBtnUploadId" value="&#xf187; #{msgs.label_archiveDocuments}">
+										<f:ajax listener="#{carRentalRegisteration.getUploadParam(carRentalRegisteration.carRentalData.id)}" render="carRentalRegistrationId:fileArchivingParamId" onevent="function(e){if(e.status == 'success') return uploadFile();}" />
+									</h:commandButton>
+
+									<h:commandButton rendered="#{not empty carRentalRegisteration.carRentalData.id}" styleClass="btn btn-success" id="archiveBtnDownloadId" value="&#xf0c5; #{msgs.label_archiveDocumentsShow}">
+										<f:ajax render="carRentalRegistrationId:downloadDlgPanelId carRentalRegistrationId:openDownloadDialogueFlagId carRentalRegistrationId:openDownloadPopupFlagId carRentalRegistrationId:downloadedFileParamId" listener="#{carRentalRegisteration.getDownloadedAttachmentsIdList(carRentalRegisteration.carRentalData.id)}" onevent="handleDownloadFiles" />
+									</h:commandButton>
+									<h:inputHidden id="fileArchivingParamId" value="#{carRentalRegisteration.fileArchivingParam}" />
+									<h:inputHidden id="downloadedFileParamId" value="#{carRentalRegisteration.downloadFileParamId}" />
+									<h:inputHidden id="openDownloadPopupFlagId" value="#{carRentalRegisteration.openDownloadPopupFlag}" />
+									<h:inputHidden id="openDownloadDialogueFlagId" value="#{carRentalRegisteration.openDownloadDialogueFlag}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.label_rentalData}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="carRntlRgstrPnlId">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<th width="15%">#{msgs.label_rentalCompanyName}</th>
+									<td width="20%">
+										<h:outputText value="#{msgs.label_wefaqCompany}" />
+									</td>
+									
+									<th width="15%">#{msgs.label_subRentalCompanyName}</th>
+									<td width="20%">
+										<h:selectOneMenu rendered="#{carRentalRegisteration.carRentalData.paid==0}" styleClass="form-control" value="#{carRentalRegisteration.carRentalData.domainSubRentalCompanyId}">
+											<f:selectItem itemLabel="" itemValue="" />
+											<f:selectItems value="#{carRentalRegisteration.subRentalCompanies}" var="subCompany" itemLabel="#{subCompany.description}" itemValue="#{subCompany.id}" />
+										</h:selectOneMenu>
+										<h:outputText rendered="#{carRentalRegisteration.carRentalData.paid==1}" value="#{carRentalRegisteration.carRentalData.domainSubRentalComapnyName}" />
+									</td>
+
+								</tr>
+
+								<tr>
+									<th width="15%">
+										#{msgs.label_contractNum}
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%" colspan="1">
+										<h:inputText maxlength="20" styleClass="form-control inputnumber" rendered="#{carRentalRegisteration.carRentalData.paid==0}" id="contractNumId" value="#{carRentalRegisteration.carRentalData.contractNumber}" />
+										<h:outputText rendered="#{carRentalRegisteration.carRentalData.paid==1}" value="#{carRentalRegisteration.carRentalData.contractNumber}" />
+									</td>
+
+								</tr>
+
+								<tr>
+									<th width="15%">
+										#{msgs.label_rentalStartDate}
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<util:advancedHijriDate rendered="#{carRentalRegisteration.carRentalData.paid==0}" id="rentStartDateId" value="#{carRentalRegisteration.carRentalData.rentStartDate}" listener="#{carRentalRegisteration.dateChangedListener}" renderIds="carRentalRegistrationId:rentPeriodId carRentalRegistrationId:totalPaymentAmountId carRentalRegistrationId:notifyMessagesId" />
+										<h:outputText rendered="#{carRentalRegisteration.carRentalData.paid==1}" value="#{carRentalRegisteration.carRentalData.rentStartDateString}" />
+									</td>
+									
+									<th width="15%">
+										#{msgs.label_rentalEndDate}
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<util:advancedHijriDate rendered="#{carRentalRegisteration.carRentalData.paid==0}" id="rentEndDateId" value="#{carRentalRegisteration.carRentalData.rentEndDate}" listener="#{carRentalRegisteration.dateChangedListener}" renderIds="carRentalRegistrationId:rentPeriodId carRentalRegistrationId:totalPaymentAmountId carRentalRegistrationId:notifyMessagesId" />
+										<h:outputText rendered="#{carRentalRegisteration.carRentalData.paid==1}" value="#{carRentalRegisteration.carRentalData.rentEndDateString}" />
+									</td>
+
+								</tr>
+
+								<tr>
+									<th width="15%">#{msgs.label_rentPeriod}</th>
+									<td width="20%">
+										<h:outputText id="rentPeriodId" value="#{carRentalRegisteration.carRentalData.rentPeriod}" />
+									</td>
+									
+									<th width="15%">
+										#{msgs.label_dailyPaymentAmount} #{msgs.label_sarCurrency}
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<h:inputText maxlength="20" rendered="#{carRentalRegisteration.carRentalData.paid==0}" id="dailyAmountId" styleClass="form-control inputnumber" value="#{carRentalRegisteration.carRentalData.dailyAmount}" onkeypress="return checkFloat(event);" onblur="return isDigitFloat(this, 1);" onkeyup="calculateTotalPayment();" />
+										<h:outputText rendered="#{carRentalRegisteration.carRentalData.paid==1}" value="#{carRentalRegisteration.carRentalData.dailyAmount}" />
+									</td>
+
+								</tr>
+
+								<tr>
+									<th width="15%">#{msgs.label_extraPaymentAmount} #{msgs.label_sarCurrency}</th>
+									<td width="20%">
+										<h:inputText maxlength="20" rendered="#{carRentalRegisteration.carRentalData.paid==0}" id="extraAmountId" styleClass="form-control inputnumber" value="#{carRentalRegisteration.carRentalData.extraAmount}" onkeypress="return checkFloat(event);" onblur="return isDigitFloat(this, 1);" onkeyup="calculateTotalPayment();" />
+										<h:outputText rendered="#{carRentalRegisteration.carRentalData.paid==1}" value="#{carRentalRegisteration.carRentalData.extraAmount}" />
+									</td>
+									
+									<th width="15%">#{msgs.label_totalPaymentAmount} #{msgs.label_sarCurrency}</th>
+									<td width="20%">
+										<h:outputText id="totalPaymentAmountId" value="#{carRentalRegisteration.carRentalData.totalAmount}" />
+									</td>
+
+								</tr>
+
+								<tr>
+									<th width="15%">
+										#{msgs.label_carModel}
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<h:selectOneMenu rendered="#{carRentalRegisteration.carRentalData.paid==0}" id="carModelId" styleClass="form-control" value="#{carRentalRegisteration.carRentalData.domainCarModelId}">
+											<f:selectItems value="#{carRentalRegisteration.carModels}" var="car" itemLabel="#{car.description}" itemValue="#{car.id}" />
+										</h:selectOneMenu>
+										<h:outputText rendered="#{carRentalRegisteration.carRentalData.paid==1}" value="#{carRentalRegisteration.carRentalData.domainCarModelName}" />
+									</td>
+									
+									<th width="15%">
+										#{msgs.label_plateNumber}
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<h:selectOneMenu rendered="#{carRentalRegisteration.carRentalData.paid==0}" value="#{carRentalRegisteration.plateText1}" styleClass="form-control">
+											<f:selectItems value="#{carRentalRegisteration.plateNumberList}" var="number" itemLabel="#{number}" itemValue="#{number}" />
+										</h:selectOneMenu>
+										<h:selectOneMenu rendered="#{carRentalRegisteration.carRentalData.paid==0}" value="#{carRentalRegisteration.plateText2}" styleClass="form-control">
+											<f:selectItems value="#{carRentalRegisteration.plateNumberList}" var="number" itemLabel="#{number}" itemValue="#{number}" />
+										</h:selectOneMenu>
+										<h:selectOneMenu rendered="#{carRentalRegisteration.carRentalData.paid==0}" value="#{carRentalRegisteration.plateText3}" styleClass="form-control">
+											<f:selectItems value="#{carRentalRegisteration.plateNumberList}" var="number" itemLabel="#{number}" itemValue="#{number}" />
+										</h:selectOneMenu>
+										<h:inputText id="plateNumId" rendered="#{carRentalRegisteration.carRentalData.paid==0}" styleClass="form-control inputnumber" value="#{carRentalRegisteration.plateNumber}" maxlength="4" onkeypress="return checkDigit(event)" />
+
+										<h:inputText rendered="#{carRentalRegisteration.carRentalData.paid==1}" disabled="true" value="#{carRentalRegisteration.carRentalData.plateText1}" />
+										<h:inputText rendered="#{carRentalRegisteration.carRentalData.paid==1}" disabled="true" value="#{carRentalRegisteration.carRentalData.plateText2}" />
+										<h:inputText rendered="#{carRentalRegisteration.carRentalData.paid==1}" disabled="true" value="#{carRentalRegisteration.carRentalData.plateText3}" />
+										<h:inputText rendered="#{carRentalRegisteration.carRentalData.paid==1}" disabled="true" value="#{carRentalRegisteration.carRentalData.plateNumber}" />
+									</td>
+
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="chequeDetailsPanelId" rendered="#{carRentalRegisteration.carRentalData.paid==1}">
+							<table border="0" cellpadding="0" cellspacing="0" width="100%">
+								<tr>
+									<td>
+										<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+											<tr>
+												<td>
+													<h:outputText value="#{msgs.label_chequeData}" />
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+
+								<tr>
+									<td colspan="4" width="100%" height="5" />
+								</tr>
+
+								<tr>
+									<td>
+										<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+											<tr>
+												<th width="15%">#{msgs.label_chequeNumber}</th>
+												<td width="35%">
+													<h:outputText value="#{carRentalRegisteration.carRentalData.chequeNumber}" />
+												</td>
+												<th width="15%">#{msgs.label_chequeAmount}</th>
+												<td width="35%">
+													<h:outputText value="#{carRentalRegisteration.carRentalData.chequeAmount}" />
+													#{msgs.label_riyal}
+												</td>
+											</tr>
+
+											<tr>
+												<th width="15%">#{msgs.label_chequeDate}</th>
+												<td width="85%" colspan="3">
+													<h:outputText value="#{carRentalRegisteration.carRentalData.chequeDateString}" />
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td width="100%">
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td width="100%">
+									<h:commandButton rendered="#{carRentalRegisteration.carRentalData.paid==0}" styleClass="btn btn-success" id="saveBtnId" value="&#xf0c7; #{msgs.label_save}" action="#{carRentalRegisteration.saveCarRental()}" onclick="return validateMandatoryData();" />
+									<h:commandButton rendered="#{carRentalRegisteration.carRentalData.id != null}" styleClass="btn btn-success" value="&#xf02f; #{msgs.label_print}" action="#{carRentalRegisteration.print()}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+
+			<h:panelGroup id="downloadDlgPanelId">
+				<p:dialog dir="#{msgs.dir}" header="#{msgs.label_archiveDocumentsShow}" id="dlgId" widgetVar="dlg" modal="true" height="180px;" width="720px">
+					<h:panelGroup id="internalDlgPanelId" rendered="#{carRentalRegisteration.attachmentList.size() > 1}">
+						<table width="100%">
+							<tr>
+								<td>
+									<p:dataTable tableStyle="table-layout:auto" reflow="true" liveResize="true" paginatorPosition="bottom" id="fileListIds" paginator="true" style="width:100%" rowIndexVar="index" rows="10" var="row" value="#{carRentalRegisteration.attachmentList}" widgetVar="table" rowHover="true">
+										<p:column styleClass='centerText'>
+											<f:facet name="header">#</f:facet>
+		                                    #{index + 1}
+	                                   	</p:column>
+										<p:column styleClass='centerText'>
+											<f:facet name="header">
+													#{msgs.label_fileName}
+												</f:facet>
+											<h:outputText value="#{row.fileName}" />
+										</p:column>
+										<p:column styleClass='centerText'>
+											<f:facet name="header">
+												#{msgs.label_download}
+											</f:facet>
+											<h:commandButton styleClass="btn btn-success" value="&#xf019; #{msgs.label_download}">
+												<f:ajax render="carRentalRegistrationId:internalDlgPanelId carRentalRegistrationId:downloadedFileParamId" listener="#{carRentalRegisteration.getDownloadParam(row.attachmentId)}" onevent="function(e){if(e.status == 'success') return downloadFile();}" />
+											</h:commandButton>
+										</p:column>
+										<p:column styleClass='centerText'  rendered="#{carRentalRegisteration.deletePrivilage}">
+											<f:facet name="header">
+												#{msgs.label_delete}
+											</f:facet>
+											<h:commandButton styleClass="btn btn-trans-icon" value="&#xf00d;">
+												<f:ajax render="carRentalRegistrationId:internalDlgPanelId carRentalRegistrationId:downloadedFileParamId" listener="#{carRentalRegisteration.deleteAttachment(row)}" />
+											</h:commandButton>
+										</p:column>
+									</p:dataTable>
+								</td>
+							</tr>
+						</table>
+					</h:panelGroup>
+				</p:dialog>
+			</h:panelGroup>
+		</ui:decorate>
+	</h:form>
+	<h:inputHidden value="#{msgs.error_mandatory}" id="mandatoryErrorId" />
+</h:body>
+</html>

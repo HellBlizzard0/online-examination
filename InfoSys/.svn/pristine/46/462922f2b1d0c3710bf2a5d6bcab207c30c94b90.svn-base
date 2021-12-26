@@ -1,0 +1,397 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+	<script type="text/javascript">
+		window.onunload = unloadPage;
+		function unloadPage() {
+			window.opener.releaseMask();
+		}
+
+		function toggleText(callerId) {
+			var idTokens = callerId.split(':');
+			var caseSubject = document.getElementById('employeeInfoSysDetailFormId:casesDetailsId:' + idTokens[2] + ':caseSubjectId');
+			var shortCaseSubject = document.getElementById('employeeInfoSysDetailFormId:casesDetailsId:' + idTokens[2] + ':shortCaseSubjectId');
+			var toggleExpandBtn = document.getElementById('employeeInfoSysDetailFormId:casesDetailsId:' + idTokens[2] + ':toggleExpandBtnId');
+			var toggleCollapseBtn = document.getElementById('employeeInfoSysDetailFormId:casesDetailsId:' + idTokens[2] + ':toggleCollapseBtnId');
+
+			if (toggleExpandBtn.style.display === "none") {
+				toggleExpandBtn.style.display = "inline";
+				shortCaseSubject.style.display = "inline";
+				caseSubject.style.display = "none";
+				toggleCollapseBtn.style.display = "none";
+			} else {
+				toggleExpandBtn.style.display = "none";
+				shortCaseSubject.style.display = "none";
+				caseSubject.style.display = "inline";
+				toggleCollapseBtn.style.display = "inline";
+			}
+		}
+	</script>
+</h:head>
+<h:body styleClass="screenBg" onunload="unloadPage();">
+	<h:form id="employeeInfoSysDetailFormId" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/TemplateMiniSearch.xhtml">
+
+			<table border="0" cellpadding="0" cellspacing="3" width="100%">
+				<tr valign="top" class="centerBody">
+					<td width="100%">
+						<table border="0" cellpadding="0" cellspacing="0" width="100%">
+							<tr>
+								<td width="100%" height="5" />
+							</tr>
+
+							<tr>
+								<td class="screenTitle">
+									<h:outputText value="#{msgs.title_extraInformation}" />
+									<h:outputText value=" #{ employeeInfoSysDetails.empName}" />
+								</td>
+							</tr>
+
+							<tr>
+								<td width="100%" height="5" />
+							</tr>
+
+							<tr>
+								<td colspan="2">
+									<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+										<tr>
+											<td>
+												<h:outputText value="#{msgs.title_information}" />
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+
+							<tr>
+								<td width="100%" height="5" />
+							</tr>
+
+							<tr>
+								<td>
+									<p:dataTable tableStyle="table-layout:auto" reflow="true" liveResize="true" paginatorPosition="bottom" paginator="true" style="width:100%" rowIndexVar="index" rows="10" var="employeeInfoRow" value="#{employeeInfoSysDetails.employeeRelatedInfoList}" rowHover="true">
+										<p:column styleClass='centerText'>
+											<f:facet name="header">
+											#
+										</f:facet>
+                                    	#{index + 1}
+                                  		</p:column>
+
+										<p:column styleClass='centerText'>
+											<f:facet name="header">
+											#{msgs.label_infoNumber}
+										</f:facet>
+											<h:outputText value="#{employeeInfoRow.infoNumber}" />
+										</p:column>
+
+										<p:column styleClass='centerText'>
+											<f:facet name="header">
+											#{msgs.label_infoReceiveDate}
+										</f:facet>
+											<h:outputText value="#{employeeInfoRow.registerationDateString}" />
+										</p:column>
+
+										<p:column styleClass='centerText'>
+											<f:facet name="header"> 
+											#{msgs.label_infoType}
+										</f:facet>
+											<h:outputText value="#{employeeInfoRow.typeDescription}" />
+										</p:column>
+
+										<p:column styleClass='centerText'>
+											<f:facet name="header"> 
+											#{msgs.label_subject}
+										</f:facet>
+											<h:outputText value="#{employeeInfoRow.subjectDescription}" />
+										</p:column>
+									</p:dataTable>
+								</td>
+							</tr>
+
+							<tr>
+								<td>
+									<h:panelGroup>
+										<table width="100%">
+											<tr>
+												<td>
+													<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+														<tr>
+															<td>
+																<h:outputText value="#{msgs.label_surveillanceOrders}" />
+															</td>
+														</tr>
+													</table>
+												</td>
+											</tr>
+
+											<tr>
+												<td width="100%" height="5" />
+											</tr>
+
+											<tr>
+												<td>
+													<p:dataTable tableStyle="table-layout:auto" reflow="true" liveResize="true" paginatorPosition="bottom" paginator="true" style="width:100%" rowIndexVar="index" rows="10" var="employeeSurviellanceRow" value="#{employeeInfoSysDetails.employeeSurveillanceOrderList}" rowHover="true">
+														<p:column styleClass='centerText'>
+															<f:facet name="header">#</f:facet>
+				                                    	#{index + 1}
+				                                  		</p:column>
+
+														<p:column styleClass='centerText'>
+															<f:facet name="header">
+															#{msgs.label_orderNo}
+														</f:facet>
+															<h:outputText value="#{employeeSurviellanceRow.orderNumber}" />
+														</p:column>
+
+														<p:column styleClass='centerText'>
+															<f:facet name="header">
+															#{msgs.label_orderDate}
+														</f:facet>
+															<h:outputText value="#{employeeSurviellanceRow.orderDateString}" />
+														</p:column>
+
+														<p:column styleClass='centerText'>
+															<f:facet name="header"> 
+															#{msgs.label_survReasons}
+														</f:facet>
+															<h:outputText value="#{employeeSurviellanceRow.surveillanceReasons}" />
+														</p:column>
+													</p:dataTable>
+												</td>
+											</tr>
+										</table>
+									</h:panelGroup>
+								</td>
+							</tr>
+
+							<tr>
+								<td width="100%" height="5" />
+							</tr>
+
+							<tr>
+								<td colspan="2">
+									<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+										<tr>
+											<td>
+												<h:outputText value="#{msgs.label_securityChecks}" />
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+
+							<tr>
+								<td width="100%" height="5" />
+							</tr>
+
+							<tr>
+								<td>
+									<p:dataTable reflow="true" tableStyle="table-layout: auto" paginator="true" id="securityCheckDataTableId" rows="10" rowIndexVar="index" var="row" value="#{employeeInfoSysDetails.employeeSecurityCheckList}" rowHover="true">
+										<p:column styleClass='centerText'>
+											<f:facet name="header">#</f:facet>
+		                                #{index + 1}
+		                            </p:column>
+										<p:column styleClass='centerText'>
+											<f:facet name="header">#{msgs.label_requestNumber} </f:facet>
+											<h:outputText value="#{row.requestNumber}" />
+										</p:column>
+										<p:column styleClass='centerText'>
+											<f:facet name="header">#{msgs.label_requestDate} </f:facet>
+											<h:outputText value="#{row.requestDateString}" />
+										</p:column>
+										<p:column styleClass='centerText'>
+											<f:facet name="header">#{msgs.label_requestSource} </f:facet>
+											<h:outputText value="#{row.departmentOrderSrcName}" />
+										</p:column>
+										<p:column styleClass='centerText'>
+											<f:facet name="header">#{msgs.label_reasons} </f:facet>
+											<h:outputText value="#{row.reason}" />
+										</p:column>
+									</p:dataTable>
+								</td>
+							</tr>
+
+							<tr>
+								<td width="100%" height="5" />
+							</tr>
+
+							<tr>
+								<td>
+									<h:panelGroup rendered="#{employeeInfoSysDetails.pageMode == 1}">
+										<table width="100%">
+											<tr>
+												<td colspan="2">
+													<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+														<tr>
+															<td>
+																<h:outputText value="#{msgs.title_perviousChecks}" />
+															</td>
+														</tr>
+													</table>
+												</td>
+											</tr>
+
+											<tr>
+												<td width="100%" height="5" />
+											</tr>
+
+											<tr>
+												<td>
+													<table width="100%">
+														<tr>
+															<td>
+																<p:dataTable tableStyle="table-layout:auto" reflow="true" liveResize="true" paginatorPosition="bottom" id="labCheckEmployeeDetailsId" paginator="true" style="width:100%" rowIndexVar="index" rows="10" var="empRow" value="#{employeeInfoSysDetails.employeeLabCheckList}" rowHover="true">
+																	<p:column styleClass='centerText'>
+																		<f:facet name="header">
+																	#
+																</f:facet>
+						                                    	#{index + 1}
+					                                   		</p:column>
+
+																	<p:column styleClass='centerText'>
+																		<f:facet name="header">
+																	#{msgs.label_checkDate}
+																</f:facet>
+																		<h:outputText value="#{empRow.sampleDateString}" />
+																	</p:column>
+
+																	<p:column styleClass='centerText'>
+																		<f:facet name="header">
+																	#{msgs.label_checkReason}
+																</f:facet>
+																		<h:selectOneMenu disabled="true" value="#{empRow.checkReason}" styleClass="form-control">
+																			<f:selectItems value="#{employeeInfoSysDetails.labCheckReasonsEnumList}" var="checkReason" itemLabel="#{checkReason.arabicDescription}" itemValue="#{checkReason.code}" />
+																		</h:selectOneMenu>
+																	</p:column>
+
+																	<p:column styleClass='centerText'>
+																		<f:facet name="header"> 
+																	#{msgs.label_checkResult}
+																</f:facet>
+																		<h:outputText value="#{msgs.label_noSample}" rendered="#{empRow.checkStatus==employeeInfoSysDetails.noSampleCheckResult}" />
+																		<h:outputText value="#{msgs.label_checkPrivation}" rendered="#{empRow.checkStatus==employeeInfoSysDetails.checkPrivationCheckResult}" />
+																		<h:outputText value="#{msgs.label_negative}" rendered="#{empRow.checkStatus==employeeInfoSysDetails.negativeCheckResult}" />
+																		<h:outputText value="#{msgs.label_positiveUnderApprove}" rendered="#{empRow.checkStatus==employeeInfoSysDetails.positiveUnderApproveCheckResult}" />
+																		<h:outputText value="#{msgs.label_positive}" rendered="#{empRow.checkStatus==employeeInfoSysDetails.positiveCheckResult}" />
+																		<h:outputText value="#{msgs.label_sendingToForce}" rendered="#{empRow.checkStatus==employeeInfoSysDetails.sendingToForceCheckResult}" />
+																		<h:outputText value="#{msgs.label_retest}" rendered="#{empRow.checkStatus==employeeInfoSysDetails.retestCheckResult}" />
+																		<h:outputText value="#{msgs.label_cheatingInSample}" rendered="#{empRow.checkStatus==employeeInfoSysDetails.cheatingInCheckResult}" />
+																	</p:column>
+
+																	<p:column styleClass='centerText'>
+																		<f:facet name="header"> 
+																	#{msgs.label_metrial}
+																</f:facet>
+																		<h:outputText value="#{empRow.domainMaterialTypeDescripttion}" rendered="#{empRow.checkStatus==employeeInfoSysDetails.positiveUnderApproveCheckResult}" />
+																		<h:outputText value="#{empRow.domainNationalForceMaterialTypeDesc}" rendered="#{empRow.checkStatus==employeeInfoSysDetails.positiveCheckResult}" />
+																	</p:column>
+																</p:dataTable>
+															</td>
+														</tr>
+													</table>
+												</td>
+											</tr>
+										</table>
+									</h:panelGroup>
+								</td>
+							</tr>
+							<tr>
+								<td width="100%" height="5" />
+							</tr>
+
+							<tr>
+								<td>
+									<table width="100%">
+										<tr>
+											<td colspan="2">
+												<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+													<tr>
+														<td>
+															<h:outputText value="#{msgs.title_casesDetails}" />
+														</td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+
+										<tr>
+											<td width="100%" height="5" />
+										</tr>
+
+										<tr>
+											<td>
+												<table width="100%">
+													<tr>
+														<td>
+															<p:dataTable tableStyle="table-layout:fixed !important" reflow="true" liveResize="true" paginatorPosition="bottom" id="casesDetailsId" paginator="true" style="width:100%" rowIndexVar="index" rows="10" var="empCase" value="#{employeeInfoSysDetails.employeeRelatedCasesList}" rowHover="true">
+																<p:column styleClass='centerText' style="width: 7%;">
+																	<f:facet name="header">
+																		#
+																	</f:facet>
+							                                    	#{index + 1}
+						                                   		</p:column>
+
+																<p:column styleClass='centerText' style="width: 15%;">
+																	<f:facet name="header">
+																		#{msgs.label_caseNumber}
+																	</f:facet>
+																	<h:outputText value="#{empCase.caseNumber}" />
+																</p:column>
+
+																<p:column styleClass='centerText' style="width: 8%;">
+																	<f:facet name="header">
+																		#{msgs.label_caseDate}
+																	</f:facet>
+																	<h:outputText value="#{empCase.caseDate}" />
+																</p:column>
+
+																<p:column styleClass='centerText' style="width: 20%;">
+																	<f:facet name="header"> 
+																		#{msgs.label_responsableDepName}
+																	</f:facet>
+																	<h:outputText value="#{empCase.responsableDepName}" />
+																</p:column>
+
+																<p:column styleClass='centerText' style="width: 20%;">
+																	<f:facet name="header"> 
+																		#{msgs.label_caseType}
+																	</f:facet>
+																	<h:outputText value="#{empCase.caseType}" />
+																</p:column>
+
+																<p:column styleClass='centerText' style="width: 30%;word-wrap: break-word;">
+																	<f:facet name="header"> 
+																		#{msgs.label_caseDescription}
+																	</f:facet>
+																	<h:outputText id="caseSubjectId" value="#{empCase.subject}" style="display:none;" />
+																	<h:outputText id="shortCaseSubjectId" value="#{empCase.shortSubject}" />
+																	<h:commandButton id="toggleExpandBtnId" onclick="toggleText(this.id); return false;" value="&#xf078;" style="#{empCase.subject.length() > employeeInfoSysDetails.maxDescLn ? 'display:inline;':'display:none;'}">
+																	</h:commandButton>
+																	<h:commandButton id="toggleCollapseBtnId" onclick="toggleText(this.id); return false;" value="&#xf077;" style="display:none;">
+																	</h:commandButton>
+																</p:column>
+															</p:dataTable>
+														</td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>

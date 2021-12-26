@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+      http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+	version="2.0">
+
+	<application>
+		<locale-config>
+			<default-locale>ar</default-locale>
+			<!-- <supported-locale>en</supported-locale> -->
+			<supported-locale>ar</supported-locale>
+		</locale-config>
+		<resource-bundle>
+			<base-name>com.code.resources.messages</base-name>
+			<var>msgs</var>
+		</resource-bundle>
+	</application>
+
+	<lifecycle>
+		<phase-listener>com.code.ui.config.AppPhaseListener</phase-listener>
+	</lifecycle>
+
+	<navigation-rule>
+		<from-view-id>/Main/Login.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/Main/Welcome.xhtml</to-view-id>
+			<redirect>
+				<view-param>
+					<name>menuType</name>
+					<value>1</value>
+				</view-param>
+			</redirect>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/Info/InformationSearch.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>INFO_DATA_VIEW</from-outcome>
+			<to-view-id>/Info/InfoRegisteration.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/Info/InformationSearch.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>INFO_VIEW_MODE</from-outcome>
+			<to-view-id>/Info/InfoView.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/Info/InfoRegisteration.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>INFO_SEARCH</from-outcome>
+			<to-view-id>/Info/InformationSearch.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/LabCheck/LabChecksSearch.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>LAB_CHECK_SEARCH</from-outcome>
+			<to-view-id>/LabCheck/LabCheckRegisteration.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/LabCheck/LabChecksSearch.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>LAB_CHECK_EDIT</from-outcome>
+			<to-view-id>/LabCheck/LabCheckEdit.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/LabCheck/LabChecksSearch.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>NATIONAL_FORCE_CHECK</from-outcome>
+			<to-view-id>/LabCheck/NationalForcesSample.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/LabCheck/NationalForcesSample.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>NATIONAL_LAB_SEARCH</from-outcome>
+			<to-view-id>/LabCheck/LabChecksSearch.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/LabCheck/LabChecksSearch.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>EDIT_LAB_CHECK</from-outcome>
+			<to-view-id>/LabCheck/LabCheckRegisteration.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/WorkList/WFCollectiveInbox.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>LAB_CHECK_COLLECTIVE_APPROVAL</from-outcome>
+			<to-view-id>/LabCheck/LabCheckWFTasksApproval.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/LabCheck/LabCheckWFTasksApproval.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>LAB_CHECK_DETAILS</from-outcome>
+			<to-view-id>/LabCheck/LabCheckRegisteration.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+
+	<navigation-rule>
+		<from-view-id>/Surveillance/SurveillanceOrdersSearch.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>SURVEILLANCE_REPORT</from-outcome>
+			<to-view-id>/Surveillance/EmployeeSurveillanceReport.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/Surveillance/SurveillanceOrdersSearch.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>SURVEILLANCE_ORDER</from-outcome>
+			<to-view-id>/Surveillance/SurveillanceOrderView.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/Surveillance/SurveillanceOrdersSearch.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>SURVEILLANCE_ORDER_REGISTERATION</from-outcome>
+			<to-view-id>/Surveillance/SurveillanceOrderRegisteration.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/Surveillance/SurveillanceOrderRegisteration.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>SURVEILLANCE_ORDER_SEARCH</from-outcome>
+			<to-view-id>/Surveillance/SurveillanceOrdersSearch.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/Surveillance/EmployeeSurveillanceReport.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>SURVEILLANCE_ORDER_SEARCH</from-outcome>
+			<to-view-id>/Surveillance/SurveillanceOrdersSearch.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/SecurityCheck/SecurityChecksSearch.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>SECURITY_CHECK</from-outcome>
+			<to-view-id>/SecurityCheck/SecurityCheckRegisteration.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/SecurityAction/PenaltyArrestsSearch.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>PENALTY_ARREST</from-outcome>
+			<to-view-id>/SecurityAction/PenaltyArrestRegisteration.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/SecurityAnalysis/DirectFollowUps.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>FOLLOW_UP_DETAILS</from-outcome>
+			<to-view-id>/SecurityAnalysis/FollowUpDetails.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/SecurityAnalysis/DirectFollowUps.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>EDIT_FOLLOW_UP</from-outcome>
+			<to-view-id>/SecurityAnalysis/FollowUpRegistration.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/SecurityAnalysis/FollowUpActionRequest.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>FOLLOW_UP_DETAILS</from-outcome>
+			<to-view-id>/SecurityAnalysis/FollowUpDetails.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/SecurityAnalysis/FollowUpActionRequest.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>FOLLOW_UP_TAKE_ACTION</from-outcome>
+			<to-view-id>/SecurityAnalysis/FollowUpTakeAction.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/Main/Message.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>LOGIN</from-outcome>
+			<to-view-id>/Main/Login.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>INBOX</from-outcome>
+			<to-view-id>/WorkList/WFInbox.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/CarRental/CarRentalsSearch.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>EDIT_CAR_RENTAL</from-outcome>
+			<to-view-id>/CarRental/CarRentalRegisteration.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/CarRental/CarRentalRegisteration.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>SUCCESS</from-outcome>
+			<to-view-id>/CarRental/CarRentalsSearch.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/SecurityAction/SecurityGuardMissionsSearch.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>VIEW_GUARD_MISSION</from-outcome>
+			<to-view-id>/SecurityAction/SecurityGuardMissionRegisteration.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/LabCheck/MissionReportsSearch.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>VIEW_LAB_CHECK_REPORT</from-outcome>
+			<to-view-id>/LabCheck/MissionReportRegisteration.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/Assignment/EmployeeAssignmentsSearch.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>EMPLOYEE_ASSIGNEMNT</from-outcome>
+			<to-view-id>/Assignment/EmployeesAssignment.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/Assignment/EmployeeAssignmentsSearch.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>EMPLOYEE_ASSIGNEMNT_EVALUATION</from-outcome>
+			<to-view-id>/Assignment/EmployeeAssignmentEvaluation.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/Assignment/NonEmployeeAssignmentsSearch.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>NON_EMPLOYEE_ASSIGNEMNT</from-outcome>
+			<to-view-id>/Assignment/NonEmployeesAssignment.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/Assignment/NonEmployeeAssignmentsSearch.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>NON_EMPLOYEE_ASSIGNEMNT_EVALUATION</from-outcome>
+			<to-view-id>/Assignment/NonEmployeeAssignmentEvaluation.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/Assignment/EmployeesAssignment.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>EMPLOYEE_ASSIGNEMNT_SEARCH</from-outcome>
+			<to-view-id>/Assignment/EmployeeAssignmentsSearch.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/Assignment/NonEmployeesAssignment.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>NON_EMPLOYEE_ASSIGNEMNT_SEARCH</from-outcome>
+			<to-view-id>/Assignment/NonEmployeeAssignmentsSearch.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/Main/Welcome.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>SECURITY_STATUS_SEARCH</from-outcome>
+			<to-view-id>/SecurityAction/SecurityStatusSearch.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/Main/Welcome.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>SECURITY_STATUS_MANAGEMENT</from-outcome>
+			<to-view-id>/Setup/SecurityStatusManagement.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/Main/Welcome.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>SECURITY_ADMIN_MANAGEMENT</from-outcome>
+			<to-view-id>/Setup/AdminManagement.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/SecurityAnalysis/ConversationGuidanceRequest.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>VIEW_FOLLOW_UP_CONVERSATIONS</from-outcome>
+			<to-view-id>/SecurityAnalysis/FollowUpConversations.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/SecurityAnalysis/FollowUpManagement.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>FOLLOW_UP_RESULT</from-outcome>
+			<to-view-id>/SecurityAnalysis/FollowUpResults.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>FOLLOW_UP_RESULT_DETAILS</from-outcome>
+			<to-view-id>/SecurityAnalysis/FollowUpResultRequest.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/SecurityAnalysis/FollowUpManagement.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>FOLLOW_UP_LETTERS</from-outcome>
+			<to-view-id>/SecurityAnalysis/FollowUpLetters.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>FOLLOW_UP_LETTER_DETAILS</from-outcome>
+			<to-view-id>/SecurityAnalysis/LetterRegisteration.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/SecurityAnalysis/FollowUpManagement.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>FOLLOW_UP_CONVERSATIONS</from-outcome>
+			<to-view-id>/SecurityAnalysis/FollowUpConversations.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/SecurityAnalysis/FollowUpManagement.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>FOLLOW_UP_EDIT</from-outcome>
+			<to-view-id>/SecurityAnalysis/FollowUpRegistration.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/SecurityAnalysis/FollowUpDetails.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>VIEW_CONVERSATION</from-outcome>
+			<to-view-id>/SecurityAnalysis/ConversationRegisteration.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/SecurityAnalysis/FollowUpDetails.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>EDIT_CONVERSATION</from-outcome>
+			<to-view-id>/SecurityAnalysis/ConversationRegisteration.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/SecurityAnalysis/FollowUpConversations.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>VIEW_CONVERSATION</from-outcome>
+			<to-view-id>/SecurityAnalysis/ConversationRegisteration.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/SecurityAnalysis/FollowUpConversations.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>EDIT_CONVERSATION</from-outcome>
+			<to-view-id>/SecurityAnalysis/ConversationRegisteration.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+</faces-config>

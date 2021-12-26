@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ConversationsReferralsReport" pageWidth="800" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="760" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="51ece5f3-7964-44db-97ea-80489660d156">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<style name="table">
+		<box>
+			<topPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#A9A9A9">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#FFBFBF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="P_REPORTS_ROOT" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\Heba\\workspaceSVN\\OPRPass\\OPRPASSReports\\Occurrences\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_FOLLOW_UP_ID" class="java.lang.Long"/>
+	<parameter name="P_TO_DATE" class="java.lang.String"/>
+	<parameter name="P_FROM_DATE" class="java.lang.String"/>
+	<parameter name="P_EMPLOYEE_ID" class="java.lang.Long"/>
+	<parameter name="P_REFERRAL_TYPE" class="java.lang.Long"/>
+	<parameter name="P_REGION_LIST" class="java.util.List"/>
+	<parameter name="P_LOGIN_EMPLOYEE_NAME" class="java.lang.String"/>
+	<parameter name="P_HIJRI_SYS_DATE" class="java.lang.String"/>
+	<parameter name="P_SCHEMA_NAME" class="java.lang.String">
+		<defaultValueExpression><![CDATA["INFOSYS"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT FU.CODE,
+FU.ALIAS_NAME,
+$P!{P_SCHEMA_NAME}.PKG_DATE_TO_CHAR (CONV.CONVERSATION_DATE,'YYYY/mm/MI') CONVERSATION_DATE,
+CONV.CONVERSATION_TIME,
+CONV.CONVERSATION_LOCATION,
+REF.DOMAIN_REFERRAL_DESCRIPTION,
+REF.REFERRAL_EMPLOYEE_NAME,
+REF.DETAILS,
+GR.DOMAIN_GUIDANCE_DESCRIPTION,
+GR.GUIDANCE_DETAILS
+FROM $P!{P_SCHEMA_NAME}.FIS_SC_VW_CONVERSATIONS CONV
+LEFT OUTER JOIN $P!{P_SCHEMA_NAME}.FIS_SC_VW_GUIDANCE_REQUESTS GR ON GR.CONVERSATION_ID = CONV.ID
+INNER JOIN $P!{P_SCHEMA_NAME}.FIS_SC_VW_FOLLOW_UPS FU ON CONV.FOLLOW_UP_ID = FU.ID
+INNER JOIN  $P!{P_SCHEMA_NAME}.FIS_SC_VW_REFERRALS REF ON REF.CONVERSATION_ID = CONV.ID
+WHERE ($P{P_FOLLOW_UP_ID} = -1 OR FU.ID = $P{P_FOLLOW_UP_ID})
+AND ($X{IN, FU.REGION_ID, P_REGION_LIST})
+AND ($P{P_EMPLOYEE_ID} = -1 OR REF.EMPLOYEE_NUMBER = $P{P_EMPLOYEE_ID})
+AND ($P{P_REFERRAL_TYPE} = -1 OR REF.DOMAIN_REFERRAL_TYPES_ID = $P{P_REFERRAL_TYPE})
+AND (CONV.CONVERSATION_DATE >= $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_DATE ($P{P_FROM_DATE},'MI/mm/YYYY'))
+AND (CONV.CONVERSATION_DATE <= $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_DATE ($P{P_TO_DATE},'MI/mm/YYYY'))]]>
+	</queryString>
+	<field name="CODE" class="java.lang.String"/>
+	<field name="ALIAS_NAME" class="java.lang.String"/>
+	<field name="CONVERSATION_DATE" class="java.lang.String"/>
+	<field name="CONVERSATION_TIME" class="java.lang.String"/>
+	<field name="CONVERSATION_LOCATION" class="java.lang.String"/>
+	<field name="DOMAIN_REFERRAL_DESCRIPTION" class="java.lang.String"/>
+	<field name="REFERRAL_EMPLOYEE_NAME" class="java.lang.String"/>
+	<field name="DETAILS" class="java.lang.String"/>
+	<field name="DOMAIN_GUIDANCE_DESCRIPTION" class="java.lang.String"/>
+	<field name="GUIDANCE_DETAILS" class="java.lang.String"/>
+	<pageHeader>
+		<band height="139">
+			<staticText>
+				<reportElement mode="Opaque" x="274" y="111" width="204" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="288c065f-640d-4656-b9a2-d7dd8220b546"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="ARIALARABICNUMBERS.TTF" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[تقرير بإحالات المحادثات]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="594" y="0" width="166" height="80" forecolor="#000000" backcolor="#FFFFFF" uuid="ad006f74-ebfd-4c9e-bfc0-cb9ac457125f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[المملكة العربية السعودية
+وزارة الداخلية
+المديرية العامة لحرس الحدود
+الإدارة العامة للامن والاستخبارات
+إدارة الاستخبارات
+
+]]></text>
+			</staticText>
+			<textField evaluationTime="Report" pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="0" y="-1" width="98" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="fa76e8db-d24f-4564-8ab2-229809a764fe"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_LOGIN_EMPLOYEE_NAME}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="31" y="19" width="67" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="95c96b57-60f4-4f98-a12e-1a147a946d66"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="297" y="48" width="166" height="30" forecolor="#000000" backcolor="#FFFFFF" uuid="97e6c43d-e86c-4719-94fb-cdf16ea85cd4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[سري غير قابل للتداول
+فقط للمختصين]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="98" y="39" width="54" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="66f4191a-b4bd-4d25-89ec-ac2ca25079f7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="com/code/resources/reports/arial.ttf" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[الـتـاريـــخ :]]></text>
+			</staticText>
+			<image>
+				<reportElement x="360" y="2" width="71" height="46" uuid="5c428bc3-4865-4990-bf74-c799888348aa"/>
+				<imageExpression><![CDATA[$P{P_REPORTS_ROOT} + "//Images//u5.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement mode="Transparent" x="98" y="-1" width="54" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="0721f174-04a5-4781-b73f-9fa97bdda11d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[المستخدم :]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="31" y="39" width="67" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="a1730749-0d4b-4fc9-a512-cd9bed83d245"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_HIJRI_SYS_DATE}.substring(6,10)
++"/"+
+$P{P_HIJRI_SYS_DATE}.substring(3,5)
++"/"+
+$P{P_HIJRI_SYS_DATE}.substring(0,2)
++"هـ"]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="98" y="19" width="54" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="a4694a23-4c4b-4f9e-ae8c-1ea5b1649e2d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["صفحة "+$V{PAGE_NUMBER}+" من"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="20">
+			<staticText>
+				<reportElement key="staticText-16" positionType="Float" mode="Opaque" x="478" y="0" width="105" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="f4f66239-e221-421f-8433-8ea5701b1008"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="ARIALARABICNUMBERS.TTF" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[تاريخ و وقت المحادثة]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-27" positionType="Float" mode="Opaque" x="727" y="0" width="19" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="5030ec0e-6500-4345-83c7-1984ce8a81aa"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="ARIALARABICNUMBERS.TTF" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[#]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-34" positionType="Float" mode="Opaque" x="666" y="0" width="61" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="b4f61f27-6d8a-41f7-bfd3-84baa2d3d21f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="ARIALARABICNUMBERS.TTF" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[رمز المتابعة]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-15" positionType="Float" mode="Opaque" x="583" y="0" width="83" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="cee167ed-3c3f-4066-b2f5-57aaed276032"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="ARIALARABICNUMBERS.TTF" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[الاسم الحركي للشبح]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-17" positionType="Float" mode="Opaque" x="408" y="0" width="70" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="629b4b75-604b-4c43-a5cc-ae9bc495e51a"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="ARIALARABICNUMBERS.TTF" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[موقع المحادثة]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-17" positionType="Float" mode="Opaque" x="351" y="0" width="57" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="fb2acc60-3a04-4809-9d50-54da8a4aeb6d"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="ARIALARABICNUMBERS.TTF" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[نوع الإحالة]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-17" positionType="Float" mode="Opaque" x="250" y="0" width="101" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="25a9be87-ef2d-40ec-b560-d9e59194eb40"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="ARIALARABICNUMBERS.TTF" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[اسم المنسوب المحال له]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-17" positionType="Float" mode="Opaque" x="173" y="0" width="77" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="9fadd7b5-44ca-472f-8f4d-0aeb7f13c5e1"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="ARIALARABICNUMBERS.TTF" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[تفاصيل الإحالة]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-17" positionType="Float" mode="Opaque" x="120" y="0" width="53" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="1d135bf7-2b7e-4b9b-a959-784b16840df1"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="ARIALARABICNUMBERS.TTF" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[نوع التوجية]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-17" positionType="Float" mode="Opaque" x="15" y="0" width="105" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="710a7474-1480-4774-b255-2b9e84e569ce"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="ARIALARABICNUMBERS.TTF" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[تفاصيل التوجية]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="666" y="0" width="61" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="0a517cd6-114c-4b06-a231-19f50201ebb2"/>
+				<box leftPadding="0">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CODE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="478" y="0" width="105" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="6c66b926-34d8-4417-bc1c-93fd1f758167"/>
+				<box leftPadding="0">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CONVERSATION_TIME} + ' ' + $F{CONVERSATION_DATE}.toString()]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="727" y="0" width="19" height="20" uuid="1388610d-77bf-49ab-b8b4-6da81e179c62"/>
+				<box leftPadding="0">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" pdfFontName="Helvetica" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{COLUMN_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="583" y="0" width="83" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="588336b5-9793-4d61-a02e-db04d852f864"/>
+				<box leftPadding="0">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ALIAS_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="408" y="0" width="70" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="56dca477-da4f-4dec-97e6-0c871854f93a"/>
+				<box leftPadding="0">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CONVERSATION_LOCATION}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="351" y="0" width="57" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="38fe2ec4-df3f-4b04-a6b7-94e7bd787df8"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DOMAIN_REFERRAL_DESCRIPTION}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="250" y="0" width="101" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="1580de6c-f78d-4329-aca0-e87bfda0307c"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REFERRAL_EMPLOYEE_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="173" y="0" width="77" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="30e230fa-4a17-4f66-8799-b45c7b0ad9c9"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DETAILS}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="120" y="0" width="53" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="cc3d9f29-5026-4963-94dd-ed6e0cfbf0d8"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DOMAIN_GUIDANCE_DESCRIPTION}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="15" y="0" width="105" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="4b5bb91b-55cc-425a-948f-72b4b0f7329c"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{GUIDANCE_DETAILS}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<noData>
+		<band height="19">
+			<staticText>
+				<reportElement key="staticText-35" x="0" y="0" width="789" height="19" uuid="51268947-1e26-4752-8fc7-252098d8bc8f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true" pdfFontName="ARIALBD.TTF" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[لا يوجد بيانات متاحة حالياً]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

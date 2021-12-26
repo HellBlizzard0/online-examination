@@ -1,0 +1,473 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:util="http://java.sun.com/jsf/composite/util">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+	<script type="text/javascript">
+		var m;
+		function getEmployee(contextPath, mode) {
+			m = 1;
+			openEmpsMiniSearch(contextPath, mode);
+			return false;
+		}
+
+		function releaseMask() {
+			unMaskScreen();
+		}
+
+		function HandlePopupResult(ret) {
+			unMaskScreen();
+			if (ret != null) {
+				if (m == 1) {
+					document.getElementById('securityGuardMissionSearchFormId:selectedEmpId').value = ret[0];
+					document.getElementById('securityGuardMissionSearchFormId:selectedEmpNameId').value = ret[1];
+					document.getElementById('securityGuardMissionSearchFormId:empNameId').innerHTML = ret[1];
+					return true;
+				}
+			}
+			return false;
+		}
+
+		window.onkeypress = function(e) {
+			var keyCode = window.event.keyCode || e.keyCode || e.which;
+			if (keyCode == '13') {
+				document.getElementById('securityGuardMissionSearchFormId:searchBtn').click();
+				return false;
+			}
+		};
+
+		function validateData() {
+			var orderNumber = document.getElementById("securityGuardMissionSearchFormId:orderNumberId").value;
+			var empId = document.getElementById("securityGuardMissionSearchFormId:selectedEmpId").value;
+			var missionNumber = document.getElementById("securityGuardMissionSearchFormId:missionNumberId").value;
+			/* <![CDATA[ */
+			if ((orderNumber == null || orderNumber == "") && (empId == null || empId == "" || empId == "-1") && (missionNumber == null || missionNumber == "")) {
+				showErrorMessage('#{msgs.error_securityGuardSearchMandatory}');
+				return false;
+			}
+			/* ]]> */
+			return true;
+		}
+	</script>
+</h:head>
+<h:body styleClass="screenBg">
+	<h:form id="securityGuardMissionSearchFormId" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/Template.xhtml">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+
+
+				<tr>
+					<td class="screenTitle">#{msgs.title_securityGuardMissionSearch}</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.label_searchData}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="searchDataPnlId">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<th width="15%">#{msgs.label_missionOrderNumber}</th>
+									<td width="20%">
+										<h:inputText styleClass="form-control inputnumber" id="orderNumberId" value="#{securityGuardMissionSearch.missionOrderNumber}" maxlength="20" />
+									</td>
+									
+									<th width="15%">#{msgs.label_orderDate}</th>
+									<td width="20%">
+										<util:advancedHijriDate id="orderDateId" value="#{securityGuardMissionSearch.missionOrderDate}" />
+									</td>
+
+								</tr>
+								<tr>
+									<th width="15%">#{msgs.label_missionNumber}</th>
+									<td width="20%">
+										<h:inputText maxlength="15" styleClass="form-control inputnumber" id="missionNumberId" value="#{securityGuardMissionSearch.missionNumber}" onkeypress="return checkDigit(event);" onblur="return isDigitFloat(this);" />
+									</td>
+									
+
+									<th width="15%">#{msgs.label_missionType}</th>
+									<td width="20%">
+										<h:selectOneMenu  id="missionTypeId" styleClass="form-control" value="#{securityGuardMissionSearch.missionType}" rendered="#{securityGuardMissionRegisteration.pageMode==1}">
+											<f:selectItem itemLabel="" itemValue="" />
+											<f:selectItems value="#{securityGuardMissionSearch.missionTypes}" var="type" itemLabel="#{type.description}" itemValue="#{type.id}" />
+										</h:selectOneMenu>
+									</td>
+
+								</tr>
+								<tr>
+									<th width="15%">#{msgs.label_missionStartDate} #{msgs.label_from}</th>
+									<td width="20%">
+										<util:advancedHijriDate id="missionStartDateId" value="#{securityGuardMissionSearch.missionStartDate}" />
+									</td>
+									
+
+									<th width="15%">#{msgs.label_missionEndDate} #{msgs.label_to}</th>
+									<td width="20%">
+										<util:advancedHijriDate id="missionEndDateId" value="#{securityGuardMissionSearch.missionEndDate}" />
+									</td>
+
+								</tr>
+								<tr>
+									<th width="15%">
+										#{msgs.label_employee}
+										<h:commandButton value="&#xf002;" styleClass="btn btn-trans-icon" onclick="return getEmployee('#{request.contextPath}',1);" title="#{msgs.label_renterName}" />
+									</th>
+									<td width="20%" colspan="1">
+										<h:inputHidden id="selectedEmpId" value="#{securityGuardMissionSearch.employeeId}" />
+										<h:inputHidden id="selectedEmpNameId" value="#{securityGuardMissionSearch.employeeName}" />
+										<h:outputText id="empNameId" value="#{securityGuardMissionSearch.employeeName}" />
+									</td>
+
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+				<tr>
+					<td width="100%">
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:commandButton styleClass="btn btn-default" id="resetBtn" value="&#xf021; #{msgs.label_reset}" action="#{securityGuardMissionSearch.reset}">
+										<f:ajax render="securityGuardMissionSearchFormId:notifyMessagesId securityGuardMissionSearchFormId:searchDataPnlId" />
+									</h:commandButton>
+									<h:commandButton styleClass="btn btn-default" id="searchBtn" value="&#xf002; #{msgs.label_search}" action="#{securityGuardMissionSearch.search}" onclick="return validateData();">
+										<f:ajax render="securityGuardMissionSearchFormId:notifyMessagesId securityGuardMissionSearchFormId:searchResults" execute="securityGuardMissionSearchFormId:searchDataPnlId" />
+									</h:commandButton>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+				<tr>
+					<td colspan="4">
+						<p:accordionPanel id="searchResults" activeIndex="#{securityGuardMissionSearch.activeIndexString}">
+							<p:tab title="#{msgs.label_employeesAndGunsData}" rendered="#{securityGuardMissionSearch.privilege == 2 or securityGuardMissionSearch.privilege == 3}">
+								<table width="100%" border="0" cellpadding="0" cellspacing="0">
+									<tr>
+										<td width="100%">
+											<h:panelGroup rendered="#{not empty securityGuardMissionSearch.missionWeaponDataList}">
+												<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+													<tr>
+														<td>
+															<h:commandButton styleClass="btn btn-default" id="receiveAllGunsBtn" value="#{msgs.label_received}" action="#{securityGuardMissionSearch.recieveAll(0)}" onclick="return confirm('#{msgs.q_receive}');">
+																<f:ajax render="securityGuardMissionSearchFormId:notifyMessagesId securityGuardMissionSearchFormId:searchResults:weaponsListId" />
+															</h:commandButton>
+
+															<h:commandButton styleClass="btn btn-default" id="returnAllGunsBtn" value="#{msgs.label_returned}" action="#{securityGuardMissionSearch.returnAll(0)}" onclick="return confirm('#{msgs.q_return}');">
+																<f:ajax render="securityGuardMissionSearchFormId:notifyMessagesId securityGuardMissionSearchFormId:searchResults:weaponsListId" />
+															</h:commandButton>
+														</td>
+													</tr>
+												</table>
+											</h:panelGroup>
+										</td>
+									</tr>
+
+									<tr>
+										<td width="100%" height="5" />
+									</tr>
+
+									<tr>
+										<td>
+											<p:dataTable tableStyle="table-layout:auto" reflow="true" liveResize="true" paginatorPosition="bottom" id="weaponsListId" paginator="true" style="width:100%" rowIndexVar="index" rows="10" var="weapon" value="#{securityGuardMissionSearch.missionWeaponDataList}" widgetVar="weaponTable" rowHover="true">
+												<p:column styleClass='centerText'>
+													<f:facet name="header">
+														#
+													</f:facet>
+										            #{index + 1}
+									     		</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header">
+														#{msgs.label_missionNumber}
+												</f:facet>
+													<h:outputText value="#{weapon.missionNumber}" />
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header">
+														#{msgs.label_missionStartDate}
+												</f:facet>
+													<h:outputText value="#{weapon.missionStartDateString}" />
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header">
+														#{msgs.label_employeeName}
+												</f:facet>
+													<h:outputText value="#{weapon.employeeName}" />
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header"> 
+													#{msgs.label_rank}
+													</f:facet>
+													<h:outputText value="#{weapon.employeeRank}" />
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header"> 
+													#{msgs.label_receiveDate}
+													</f:facet>
+													<h:outputText value="#{weapon.receiveDateString}" />
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header"> 
+													#{msgs.label_returnDate}
+													</f:facet>
+													<h:outputText value="#{weapon.returnDateString}" />
+												</p:column>
+												<p:column styleClass='centerText' headerText="#{msgs.label_received}">
+													<h:commandButton styleClass="btn btn-default" id="receivedBtnId" value="#{msgs.label_received}" action="#{securityGuardMissionSearch.receiveMissionAttachments(weapon,null,null)}" rendered="#{weapon.receiveDate == null}">
+														<f:ajax render="securityGuardMissionSearchFormId:notifyMessagesId securityGuardMissionSearchFormId:searchResults" />
+													</h:commandButton>
+													<h:outputText value="#{weapon.receiveTime}" rendered="#{weapon.receiveTime != null}" />
+												</p:column>
+												<p:column styleClass='centerText' headerText="#{msgs.label_returned}">
+													<h:commandButton styleClass="btn btn-default" id="returnedBtnId" value="#{msgs.label_returned}" action="#{securityGuardMissionSearch.returnMissionAttachments(weapon,null,null)}" rendered="#{weapon.returnDate == null and weapon.receiveDate !=null}">
+														<f:ajax render="securityGuardMissionSearchFormId:notifyMessagesId securityGuardMissionSearchFormId:searchResults" />
+													</h:commandButton>
+													<h:outputText value="#{weapon.returnTime}" rendered="#{weapon.returnTime != null}" />
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header">
+														<h:outputText value="#{msgs.label_view}" />
+													</f:facet>
+													<h:commandButton value="&#xf05a;" styleClass="btn btn-trans-icon" target="_blank" onclick="this.form.target='_blank'"  action="#{securityGuardMissionSearch.view(weapon.securityGuardMissionId)}">
+													</h:commandButton>
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header">
+														<h:outputText value="#{msgs.label_print}" />
+													</f:facet>
+													<h:commandButton id="printBtnId" styleClass="btn btn-success" action="#{securityGuardMissionSearch.print(weapon.orderNumber)}" value="&#xf02f; #{msgs.label_print}"/>
+												</p:column>
+											</p:dataTable>
+										</td>
+									</tr>
+								</table>
+							</p:tab>
+							<p:tab title="#{msgs.label_missionCarsData}" rendered="#{securityGuardMissionSearch.privilege == 1 or securityGuardMissionSearch.privilege == 3}">
+								<table width="100%" border="0" cellpadding="0" cellspacing="0">
+									<tr>
+										<td width="100%">
+											<h:panelGroup rendered="#{not empty securityGuardMissionSearch.missionCarDataList}">
+												<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+													<tr>
+														<td>
+															<h:commandButton styleClass="btn btn-default" id="receiveAllCarsBtn" value="#{msgs.label_received}" action="#{securityGuardMissionSearch.recieveAll(1)}" onclick="return confirm('#{msgs.q_receive}');" execute="securityGuardMissionSearchFormId:searchResults">
+																<f:ajax render="securityGuardMissionSearchFormId:notifyMessagesId securityGuardMissionSearchFormId:searchResults:carsListId" />
+															</h:commandButton>
+
+															<h:commandButton styleClass="btn btn-default" id="returnAllCarsBtn" value="#{msgs.label_returned}" action="#{securityGuardMissionSearch.returnAll(1)}" onclick="return confirm('#{msgs.q_return}');" execute="securityGuardMissionSearchFormId:searchResults">
+																<f:ajax render="securityGuardMissionSearchFormId:notifyMessagesId securityGuardMissionSearchFormId:searchResults:carsListId" />
+															</h:commandButton>
+														</td>
+													</tr>
+												</table>
+											</h:panelGroup>
+										</td>
+									</tr>
+
+									<tr>
+										<td width="100%" height="5" />
+									</tr>
+
+									<tr>
+										<td>
+											<p:dataTable tableStyle="table-layout:auto" reflow="true" liveResize="true" paginatorPosition="bottom" id="carsListId" paginator="true" style="width:100%" rowIndexVar="index" rows="10" var="car" value="#{securityGuardMissionSearch.missionCarDataList}" widgetVar="carTable" rowHover="true">
+												<p:column styleClass='centerText'>
+													<f:facet name="header">
+														#
+													</f:facet>
+										            #{index + 1}
+									     		</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header">
+														#{msgs.label_missionNumber}
+												</f:facet>
+													<h:outputText value="#{car.missionNumber}" />
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header">
+														#{msgs.label_missionStartDate}
+												</f:facet>
+													<h:outputText value="#{car.missionStartDateString}" />
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header">
+														#{msgs.label_employeeName}
+												</f:facet>
+													<h:outputText value="#{car.employeeName}" />
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header"> 
+													#{msgs.label_rank}
+													</f:facet>
+													<h:outputText value="#{car.employeeRank}" />
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header"> 
+													#{msgs.label_receiveDate}
+													</f:facet>
+													<h:outputText value="#{car.receiveDateString}" />
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header"> 
+													#{msgs.label_returnDate}
+													</f:facet>
+													<h:outputText value="#{car.returnDateString}" />
+												</p:column>
+												<p:column styleClass='centerText' headerText="#{msgs.label_received}">
+													<h:commandButton styleClass="btn btn-default" id="receivedBtnId" value="#{msgs.label_received}" action="#{securityGuardMissionSearch.receiveMissionAttachments(null,car,null)}" rendered="#{car.receiveDate == null}">
+														<f:ajax render="securityGuardMissionSearchFormId:notifyMessagesId securityGuardMissionSearchFormId:searchResults" />
+													</h:commandButton>
+													<h:outputText value="#{car.receiveTime}" rendered="#{car.receiveTime != null}" />
+												</p:column>
+												<p:column styleClass='centerText' headerText="#{msgs.label_returned}">
+													<h:commandButton styleClass="btn btn-default" id="returnedBtnId" value="#{msgs.label_returned}" action="#{securityGuardMissionSearch.returnMissionAttachments(null,car,null)}" rendered="#{car.returnDate == null and car.receiveDate !=null}">
+														<f:ajax render="securityGuardMissionSearchFormId:notifyMessagesId securityGuardMissionSearchFormId:searchResults" />
+													</h:commandButton>
+													<h:outputText value="#{car.returnTime}" rendered="#{car.returnTime != null}" />
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header">
+														<h:outputText value="#{msgs.label_view}" />
+													</f:facet>
+													<h:commandButton value="&#xf05a;" styleClass="btn btn-trans-icon" target="_blank" onclick="this.form.target='_blank'" action="#{securityGuardMissionSearch.view(car.securityGuardMissionId)}">
+													</h:commandButton>
+												</p:column>
+											</p:dataTable>
+										</td>
+									</tr>
+								</table>
+							</p:tab>
+							<p:tab title="#{msgs.label_missionEquipmentData}" rendered="#{securityGuardMissionSearch.privilege == 2 or securityGuardMissionSearch.privilege == 3}">
+								<table width="100%" border="0" cellpadding="0" cellspacing="0">
+									<tr>
+										<td width="100%">
+											<h:panelGroup rendered="#{not empty securityGuardMissionSearch.missionEquipmentDataList}">
+												<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+													<tr>
+														<td>
+															<h:commandButton styleClass="btn btn-default" id="receiveAllEqBtn" value="#{msgs.label_received}" action="#{securityGuardMissionSearch.recieveAll(2)}" onclick="return confirm('#{msgs.q_receive}');">
+																<f:ajax render="securityGuardMissionSearchFormId:notifyMessagesId securityGuardMissionSearchFormId:searchResults:equipmentListId" />
+															</h:commandButton>
+
+															<h:commandButton styleClass="btn btn-default" id="returnAllEqBtn" value="#{msgs.label_returned}" action="#{securityGuardMissionSearch.returnAll(2)}" onclick="return confirm('#{msgs.q_return}');">
+																<f:ajax render="securityGuardMissionSearchFormId:notifyMessagesId securityGuardMissionSearchFormId:searchResults:equipmentListId" />
+															</h:commandButton>
+														</td>
+													</tr>
+												</table>
+											</h:panelGroup>
+										</td>
+									</tr>
+
+									<tr>
+										<td width="100%" height="5" />
+									</tr>
+
+									<tr>
+										<td>
+											<p:dataTable tableStyle="table-layout:auto" reflow="true" liveResize="true" paginatorPosition="bottom" id="equipmentListId" paginator="true" style="width:100%" rowIndexVar="index" rows="10" var="equipment" value="#{securityGuardMissionSearch.missionEquipmentDataList}" widgetVar="equipmentTable" rowHover="true">
+												<p:column styleClass='centerText'>
+													<f:facet name="header">
+														#
+													</f:facet>
+										            #{index + 1}
+									     		</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header">
+														#{msgs.label_missionNumber}
+												</f:facet>
+													<h:outputText value="#{equipment.missionNumber}" />
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header">
+														#{msgs.label_missionStartDate}
+												</f:facet>
+													<h:outputText value="#{equipment.missionStartDateString}" />
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header">
+														#{msgs.label_employeeName}
+												</f:facet>
+													<h:outputText value="#{equipment.employeeName}" />
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header"> 
+													#{msgs.label_rank}
+													</f:facet>
+													<h:outputText value="#{equipment.employeeRank}" />
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header"> 
+													#{msgs.label_receiveDate}
+													</f:facet>
+													<h:outputText value="#{equipment.receiveDateString}" />
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header"> 
+													#{msgs.label_returnDate}
+													</f:facet>
+													<h:outputText value="#{equipment.returnDateString}" />
+												</p:column>
+												<p:column styleClass='centerText' headerText="#{msgs.label_received}">
+													<h:commandButton styleClass="btn btn-default" id="receivedBtnId" value="#{msgs.label_received}" action="#{securityGuardMissionSearch.receiveMissionAttachments(null,null,equipment)}" rendered="#{equipment.receiveDate == null}">
+														<f:ajax render="securityGuardMissionSearchFormId:notifyMessagesId securityGuardMissionSearchFormId:searchResults" />
+													</h:commandButton>
+													<h:outputText value="#{equipment.receiveTime}" rendered="#{equipment.receiveTime != null}" />
+												</p:column>
+												<p:column styleClass='centerText' headerText="#{msgs.label_returned}">
+													<h:commandButton styleClass="btn btn-default" id="returnedBtnId" value="#{msgs.label_returned}" action="#{securityGuardMissionSearch.returnMissionAttachments(null,null,equipment)}" rendered="#{equipment.returnDate == null and equipment.receiveDate !=null}">
+														<f:ajax render="securityGuardMissionSearchFormId:notifyMessagesId securityGuardMissionSearchFormId:searchResults" />
+													</h:commandButton>
+													<h:outputText value="#{equipment.returnTime}" rendered="#{equipment.returnTime != null}" />
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header">
+														<h:outputText value="#{msgs.label_view}" />
+													</f:facet>
+													<h:commandButton value="&#xf05a;" styleClass="btn btn-trans-icon" target="_blank" onclick="this.form.target='_blank'" action="#{securityGuardMissionSearch.view(equipment.securityGuardMissionId)}">
+													</h:commandButton>
+												</p:column>
+											</p:dataTable>
+										</td>
+									</tr>
+								</table>
+							</p:tab>
+						</p:accordionPanel>
+					</td>
+				</tr>
+			</table>
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>

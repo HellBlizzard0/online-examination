@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+	<script type="text/javascript">
+	  window.onunload = unloadPage;
+	  function unloadPage(){
+		 window.opener.releaseMask();
+	  }
+	  var imgId = window.opener.returnImageId();
+	  window.onload = function(){
+		  document.getElementById('ImageUploadForm:imageId').value = imgId;
+		  document.getElementById('ImageUploadForm:adjustImageId').click();
+	  };     
+       function closeImageUpload(imageIdToReturn){
+     	  window.opener.reRenderImage(imageIdToReturn);
+           window.close();
+       }
+   </script>
+</h:head>
+<h:body styleClass="screenBg">
+	<h:form id="ImageUploadForm" dir="#{msgs.dir}">
+
+		<p:growl showDetail="true" autoUpdate="true" id="notifyMessagesId" />
+
+		<p:ajaxStatus onstart="PF('reload').show();" onsuccess="PF('reload').hide();" />
+		<p:dialog id="reload" widgetVar="reload" modal="true" showHeader="false" resizable="false" closable="false">
+			<h:graphicImage value="/resources/images/ai.gif" alt="ai" />
+		</p:dialog>
+
+		<h:commandButton id="adjustImageId" style="display : none;" action="#{imageUpload.refreshSubmit()}">
+			<f:ajax execute="ImageUploadForm:imageId">
+			</f:ajax>
+		</h:commandButton>
+		<h:inputHidden id="imageId" value="#{imageUpload.imageId}" />
+		<table border="0" cellpadding="0" cellspacing="3" width="100%">
+			<tr valign="top" class="centerBody">
+				<td width="100%">
+					<table border="0" cellpadding="0" cellspacing="0" width="100%">
+						<tr>
+							<td width="100%" height="5" />
+						</tr>
+
+						<tr>
+							<td class="screenTitle">
+								<h:outputText value="#{msgs.title_imageUpload}" />
+							</td>
+						</tr>
+
+						<tr>
+							<td width="100%" height="5" />
+						</tr>
+						<tr>
+							<td width="100%">
+								<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+									<tr>
+										<th width="25%">
+											<h:outputText value="#{msgs.label_attachments}" />
+										</th>
+										<td width="75%">
+											<p:fileUpload fileUploadListener="#{imageUpload.uploadListener}" mode="advanced" maxFilesQuantity="1" acceptedTypes="jpg, jpeg, gif, png, bmp" ontyperejected="alert(#{msgs.error_pleaseSelectAnImage});">
+											</p:fileUpload>
+										</td>
+									</tr>
+									<tr>
+										<td width="100%" colspan="2">
+											<h:commandButton id="finishId" action="#{imageUpload.realUpload()}" value="#{msgs.label_finish}">
+												<f:ajax onevent="function(e){if(e.status == 'complete') {closeImageUpload(#{imageUpload.returnId()}); return false;}}"></f:ajax>
+											</h:commandButton>
+
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</h:form>
+</h:body>
+</html>

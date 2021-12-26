@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:util="http://java.sun.com/jsf/composite/util">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+	<script type="text/javascript">
+		var m;
+		function getFollowUp(contextPath) {
+			m = 1;
+			openFollowUpMiniSearch(contextPath, "true");
+			return false;
+		}
+		function HandlePopupResult(ret) {
+			unMaskScreen();
+			if (ret != null) {
+				if (m == 1) {
+					document.getElementById('formId:followUpCodeId').value = ret[1];
+					document.getElementById('formId:followUpCodeViewId').innerHTML = ret[1];
+					document.getElementById('formId:followUpCodeViewId').value = ret[1];
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		function releaseMask() {
+			unMaskScreen();
+		}
+	</script>
+</h:head>
+<h:body styleClass="screenBg">
+	<h:form id="formId" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/Template.xhtml">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tr>
+					<td class="screenTitle">#{msgs.title_conversationsBasedOnCodeInDuration}</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.label_searchData}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="followUpsReportContainer">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<th width="15%">
+										<h:outputText value="#{msgs.label_followUp}" />
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<h:inputText disabled="true" id="followUpCodeViewId" value="#{conversationBasedOnCode.followUpCode}" style="width:88%;" />
+										<h:commandButton value="&#xf03a;" styleClass="btn btn-trans-icon" onclick="return getFollowUp('#{request.contextPath}');" />
+										<h:inputHidden id="followUpCodeId" value="#{conversationBasedOnCode.followUpCode}" />
+									</td>
+									<td width="35%"></td>
+
+								</tr>
+								<tr>
+									<th width="15%">
+										#{msgs.label_fromDate}
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<util:advancedHijriDate value="#{conversationBasedOnCode.fromDate}" />
+									</td>
+
+									<th width="15%">
+										#{msgs.label_toDate}
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<util:advancedHijriDate value="#{conversationBasedOnCode.toDate}" />
+									</td>
+
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+				<tr>
+					<td width="100%">
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:commandButton styleClass="btn btn-default" id="resetBtn" value="&#xf021; #{msgs.label_reset}" action="#{conversationBasedOnCode.reset()}">
+										<f:ajax render="formId:followUpsReportContainer" />
+									</h:commandButton>
+									<h:commandButton styleClass="btn btn-default" id="printBtn" value="&#xf02f; #{msgs.label_print}" action="#{conversationBasedOnCode.printReport()}">
+									</h:commandButton>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>

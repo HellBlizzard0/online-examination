@@ -1,0 +1,301 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:util="http://java.sun.com/jsf/composite/util">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+	<script type="text/javascript">
+		var mode;
+		function getDepartment(contextPath) {
+			mode = 1;
+			openDepartmentsMiniSearch(contextPath, 1, null, null);
+			return false;
+		}
+
+		function getEmployee(contextPath) {
+			mode = 2;
+			openEmpsMiniSearch(contextPath, 2);
+			return false;
+		}
+
+		function releaseMask() {
+			unMaskScreen();
+		}
+
+		function getNonEmployee(contextPath) {
+			mode = 3;
+			openNonEmpsMiniSearch(contextPath, 1);
+			return false;
+		}
+
+		function getRegionDepartment(contextPath, m) {
+			mode = 4;
+			openDepartmentsMiniSearch(contextPath, m, null, '#{employeeAssignmentSearch.departmentType}');
+			return false;
+		}
+
+		function getWorkflow(contextPath, instanceId) {
+			openWorkflowRepresentation(contextPath, 1, instanceId);
+		}
+
+		function HandlePopupResult(ret) {
+			unMaskScreen();
+			if (ret != null) {
+				if (mode == 1) {
+					document.getElementById('securityChecksSearchFormId:departmentSearchIdId').value = ret[0];
+					document.getElementById('securityChecksSearchFormId:departmentSearchNameId').innerHTML = ret[1];
+				} else if (mode == 2) {
+					document.getElementById('securityChecksSearchFormId:employeeSearchIdId').value = ret[0];
+					document.getElementById('securityChecksSearchFormId:employeeSearchNameId').innerHTML = ret[1];
+				} else if (mode == 3) {
+					document.getElementById('securityChecksSearchFormId:selectedNonemployeeIdId').value = ret[0];
+					document.getElementById('securityChecksSearchFormId:selectedNonemployeeNameId').innerHTML = ret[1];
+				} else if (mode == 4) {
+					document.getElementById('securityChecksSearchFormId:selectedDepartmentId').value = ret[0];
+					document.getElementById('securityChecksSearchFormId:selectedDepartmentNameId').value = ret[1];
+					document.getElementById('securityChecksSearchFormId:departmentNameId').innerHTML = ret[1];
+				}
+				return true;
+			}
+			return false;
+		}
+
+		window.onkeypress = function(e) {
+			var keyCode = window.event.keyCode || e.keyCode || e.which;
+			if (keyCode == '13') {
+				document.getElementById('securityChecksSearchFormId:searchBtnId').click();
+				return false;
+			}
+		};
+	</script>
+</h:head>
+<h:body styleClass="screenBg">
+	<h:form id="securityChecksSearchFormId" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/Template.xhtml">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+
+				<h:panelGroup rendered="#{securityChecksSearch.viewMode == 1}">
+					<tr>
+						<td class="screenTitle">#{msgs.title_securityCheckSearchEmp}</td>
+					</tr>
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{securityChecksSearch.viewMode == 2}">
+					<tr>
+						<td class="screenTitle">#{msgs.title_securityCheckSearchNonEmp}</td>
+					</tr>
+				</h:panelGroup>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.label_searchData}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="searchContainerId">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<th width="15%">#{msgs.label_requestDurationFrom}</th>
+									<td width="20%">
+										<util:advancedHijriDate id="fromDateId" value="#{securityChecksSearch.fromDate}" />
+									</td>
+
+
+									<th width="15%">#{msgs.label_to}</th>
+									<td width="20%">
+										<util:advancedHijriDate id="toDateId" value="#{securityChecksSearch.toDate}" />
+									</td>
+
+								</tr>
+
+								<tr>
+									<th width="15%">#{msgs.label_requestSource}</th>
+									<td width="20%">
+									<h:selectOneMenu class="form-control inputnumber"  value="#{securityChecksSearch.requestSource}">
+										<f:selectItem itemValue="" itemLabel=" " />
+										<f:selectItems value="#{securityChecksSearch.requestSourceEnumList}" var="f" itemLabel="#{f.description}" itemValue="#{f.description}" />
+										<f:ajax event="change" render="securityChecksSearchFormId:departmentPenelGroupId" execute="@this" />
+									</h:selectOneMenu>
+									</td>
+									<th width="15%">#{msgs.label_unit}</th>
+									<td width="20%">
+									<h:panelGroup id="departmentPenelGroupId">
+										<h:panelGroup rendered="#{securityChecksSearch.requestSource == securityChecksSearch.othersRequestSource}">
+										<h:commandButton value="&#xf002;" styleClass="btn btn-trans-icon" id="searchDepartmentBtnId" onclick="return getDepartment('#{request.contextPath}');" />
+										<h:inputHidden id="departmentSearchIdId" value="#{securityChecksSearch.departmentSourceId}" />
+										</h:panelGroup>
+										<h:outputText id="departmentSearchNameId" value="#{securityChecksSearch.departmentSourceName}" />
+										</h:panelGroup>
+									</td>
+
+								</tr>
+								<tr>
+									<th width="15%">#{msgs.label_incomingSide}</th>
+									<td width="20%">
+										<h:selectOneMenu value="#{securityChecksSearch.domainIncomingSourceId}" styleClass="form-control">
+											<f:selectItem itemValue="#{null}" itemLabel=" " />
+											<f:selectItems value="#{securityChecksSearch.incomingSideList}" var="side" itemLabel="#{side.description}" itemValue="#{side.id}" />
+										</h:selectOneMenu>
+									</td>
+								</tr>
+								<h:panelGroup rendered="#{securityChecksSearch.viewMode == 1}">
+									<tr>
+										<th width="15%">#{msgs.label_employee}</th>
+										<td width="20%">
+											<h:commandButton value="&#xf002;" styleClass="btn btn-trans-icon" id="searchEmployeeBtnId" onclick="return getEmployee('#{request.contextPath}');" />
+											<h:inputHidden id="employeeSearchIdId" value="#{securityChecksSearch.employeeId}" />
+											<h:outputText id="employeeSearchNameId" value="#{securityChecksSearch.employeeName}" />
+										</td>
+									</tr>
+								</h:panelGroup>
+
+								<h:panelGroup rendered="#{securityChecksSearch.viewMode == 2}">
+									<tr>
+										<th width="15%">#{msgs.label_nonEmployees}</th>
+										<td width="20%">
+											<h:commandButton value="&#xf002;" styleClass="btn btn-trans-icon" onclick="return getNonEmployee('#{request.contextPath}');" />
+											<h:inputHidden id="selectedNonemployeeIdId" value="#{securityChecksSearch.nonEmployeeId}" />
+											<h:outputText id="selectedNonemployeeNameId" value="#{securityChecksSearch.nonEmployeeName}" />
+										</td>
+
+									</tr>
+								</h:panelGroup>
+								<tr>
+									<th width="15%">#{msgs.label_region}</th>
+									<td width="20%">
+										<h:commandButton rendered="#{securityChecksSearch.orderRegionId == null || securityChecksSearch.orderRegionId == securityChecksSearch.headQuarter}" value="&#xf002;" styleClass="btn btn-trans-icon" onclick="return getRegionDepartment('#{request.contextPath}',2);" title="#{msgs.label_addDepartment}" />
+										<h:inputHidden id="selectedDepartmentId" value="#{securityChecksSearch.orderRegionId}" />
+										<h:inputHidden id="selectedDepartmentNameId" value="#{securityChecksSearch.orderRegionName}" />
+										<h:outputText id="departmentNameId" value="#{securityChecksSearch.orderRegionName}" />
+									</td>
+
+									<th width="15%">#{msgs.label_securityCheckSearchReason}</th>
+									<td width="20%">
+										<h:selectOneMenu value="#{securityChecksSearch.securityCheckReason}" styleClass="form-control">
+											<f:selectItem itemValue="#{null}" itemLabel=" " />
+											<f:selectItems value="#{securityChecksSearch.securityCheckReasonsEnum}" var="scr" itemLabel="#{scr.arabicDescription}" itemValue="#{scr.code}" />
+										</h:selectOneMenu>
+									</td>
+
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td width="100%">
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:commandButton styleClass="btn btn-default" id="resetBtnId" value="&#xf021; #{msgs.label_reset}" action="#{securityChecksSearch.init()}">
+										<f:ajax render="securityChecksSearchFormId:searchContainerId" />
+									</h:commandButton>
+
+									<h:commandButton styleClass="btn btn-default" id="searchBtnId" value="&#xf002; #{msgs.label_search}" action="#{securityChecksSearch.searchSecurityChecks()}">
+										<f:ajax render="securityChecksSearchFormId:securityCheckDataTableId" execute="securityChecksSearchFormId:searchContainerId" />
+									</h:commandButton>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<p:dataTable reflow="true" tableStyle="table-layout: auto" paginator="true" id="securityCheckDataTableId" rows="10" rowIndexVar="index" var="row" value="#{securityChecksSearch.securityCheckList}" rowHover="true">
+							<p:column styleClass='centerText'>
+								<f:facet name="header">#</f:facet>
+                                #{index + 1}
+                            </p:column>
+							<p:column styleClass='centerText'>
+								<f:facet name="header">#{msgs.label_requestNumber} </f:facet>
+								<h:outputText value="#{row.requestNumber}" />
+							</p:column>
+							<p:column styleClass='centerText'>
+								<f:facet name="header">#{msgs.label_requestDate} </f:facet>
+								<h:outputText value="#{row.requestDateString}" />
+							</p:column>
+							<p:column styleClass='centerText'>
+								<f:facet name="header">#{msgs.label_region} </f:facet>
+								<h:outputText value="#{row.regionName}" />
+							</p:column>
+							<p:column styleClass='centerText'>
+								<f:facet name="header">#{msgs.label_requestSource} </f:facet>
+								<h:outputText value="#{row.requestSource}" rendered="#{row.requestSource != securityChecksSearch.othersRequestSource}"/>
+								<h:outputText value="#{row.departmentOrderSrcName}" rendered="#{row.requestSource == securityChecksSearch.othersRequestSource}"/>
+							</p:column>
+							<p:column styleClass='centerText'>
+								<f:facet name="header">#{msgs.label_reasons} </f:facet>
+								<h:outputText value="#{row.reason}" />
+							</p:column>
+							<p:column styleClass='centerText'>
+								<f:facet name="header">#{msgs.label_requestStatus} </f:facet>
+								<h:outputText rendered="#{row.status == 1}" value="#{msgs.label_inProgress}" />
+								<h:outputText rendered="#{row.status == 2}" value="#{msgs.label_underApproval}" />
+								<h:outputText rendered="#{row.status == 3}" value="#{msgs.label_underProccessing}" />
+								<h:outputText rendered="#{row.status == 4}" value="#{msgs.label_processingUnderApproval}" />
+								<h:outputText rendered="#{row.status == 5}" value="#{msgs.label_approved}" />
+								<h:outputText rendered="#{row.status == 6}" value="#{msgs.label_rejected}" />
+							</p:column>
+							<p:column styleClass='centerText'>
+								<f:facet name="header"> #{msgs.label_viewEdit} </f:facet>
+								<h:commandButton id="viewEditBtnId" value="&#xf05a;" styleClass="btn btn-trans-icon" action="#{securityChecksSearch.viewSecurityCheck(row.id)}" />
+							</p:column>
+							<p:column styleClass='centerText'>
+								<f:facet name="header"> #{msgs.label_delete} </f:facet>
+								<h:commandButton id="deleteBtnId" rendered="#{row.wFInstanceId == null}" value="&#xf00d;" styleClass="btn btn-trans-icon" action="#{securityChecksSearch.deleteSecurityCheck(row)}" onclick="return confirm('#{msgs.q_delete}');">
+									<f:ajax render="securityChecksSearchFormId:notifyMessagesId securityChecksSearchFormId:securityCheckDataTableId" />
+								</h:commandButton>
+							</p:column>
+							<p:column>
+								<f:facet name="header"> #{msgs.label_print} </f:facet>
+								<h:commandButton id="printBtnId" rendered="#{row.status == 5}" value="&#xf02f;" styleClass="btn btn-trans-icon" action="#{securityChecksSearch.print(row)}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#{msgs.label_workFlowProgress}" />
+								</f:facet>
+								<p:commandButton value="&#xf03a;" rendered="#{row.wFInstanceId != null}" styleClass="btn btn-trans-icon" onclick="getWorkflow('#{request.contextPath}', '#{row.wFInstanceId}'); return false;" />
+							</p:column>
+						</p:dataTable>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+			</table>
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>

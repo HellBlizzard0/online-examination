@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+	<script type="text/javascript">
+
+          window.onunload = unloadPage;
+
+          function unloadPage()
+          {
+        	  window.opener.releaseMask();
+          }
+          
+        
+  	        
+        </script>
+</h:head>
+<h:body styleClass="screenBg" onunload="unloadPage();">
+	<h:form id="monthlyRewardDetailFormId" dir="#{msgs.dir}">
+
+		<p:growl showDetail="true" autoUpdate="true" id="notifyMessagesId" />
+		<p:ajaxStatus onstart="PF('reload').show();" onsuccess="PF('reload').hide();" />
+		<p:dialog id="reload" widgetVar="reload" modal="true" showHeader="false" resizable="false" closable="false">
+			<h:graphicImage value="/resources/images/wait.png" alt="ai" />
+		</p:dialog>
+
+		<table border="0" cellpadding="0" cellspacing="0" width="100%" class="bgcolor-pup">
+			<tr>
+				<td width="100%" height="5" />
+			</tr>
+
+			<tr>
+				<td class="screenTitle">
+					<h:outputText value="#{msgs.title_assignments}" />
+				</td>
+			</tr>
+
+			<tr>
+				<td width="100%" height="5" />
+			</tr>
+
+			<tr>
+				<td width="100%">
+					<h:panelGroup id="detailsListId">
+						<p:dataTable sortBy="#{row.sectorId}" tableStyle="table-layout:auto" reflow="true" liveResize="true" id="detailsId" paginator="true" style="width:100%" rowIndexVar="index" rows="11" var="row" value="#{mnthRewardDetail.assignmentDetailDataList}" widgetVar="table" rowHover="true">
+							<p:summaryRow>
+								<p:column colspan="6" style="text-align:right !important">
+									<h:outputText value="#{row.sectorName}" />
+								</p:column>
+							</p:summaryRow>
+							<p:column styleClass='centerText'>
+								<f:facet name="header">
+											#
+									</f:facet>
+					                        #{index + 1}
+				                    </p:column>
+
+							<p:column styleClass='centerText'>
+								<f:facet name="header">
+									<h:outputText value="#{msgs.label_agentCode}" />
+								</f:facet>
+								<h:outputText value="#{row.agentCode}" />
+							</p:column>
+							<p:column styleClass='centerText'>
+								<f:facet name="header">
+									<h:outputText value="#{msgs.label_name}" />
+								</f:facet>
+								<h:outputText value="#{row.fullName}" />
+							</p:column>
+							<p:column styleClass='centerText'>
+								<f:facet name="header">
+									<h:outputText value="#{msgs.label_amount}" />
+								</f:facet>
+								<h:outputText value="#{row.monthlyReward}">
+									<f:converter converterId="com.code.ui.converters.CSNumberConverter" />
+								</h:outputText>
+							</p:column>
+
+							<p:column styleClass='centerText'>
+								<f:facet name="header">
+									<h:outputText value="#{msgs.label_paymentMethod}" />
+								</f:facet>
+								<h:outputText rendered="#{row.paymentMethod==mnthRewardDetail.bankAccountEnum}" value="#{msgs.label_bankAccount}" />
+								<h:outputText rendered="#{row.paymentMethod==mnthRewardDetail.chequeAcountEnum}" value="#{msgs.label_cheque}" />
+								<h:outputText rendered="#{row.paymentMethod==mnthRewardDetail.cashAccountEnum}" value="#{msgs.label_cash}" />
+							</p:column>
+
+							<p:column styleClass='centerText'>
+								<f:facet name="header">
+									<h:outputText value="#{msgs.label_description}" />
+								</f:facet>
+								<h:outputText value="#{row.iban}" />
+							</p:column>
+						</p:dataTable>
+					</h:panelGroup>
+				</td>
+			</tr>
+		</table>
+	</h:form>
+</h:body>
+</html>

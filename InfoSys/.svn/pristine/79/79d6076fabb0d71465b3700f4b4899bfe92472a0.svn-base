@@ -1,0 +1,403 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:util="http://java.sun.com/jsf/composite/util">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+	<script type="text/javascript">
+	var m;
+	function getEmployee(contextPath,mode){
+		m = mode;
+		openEmpsMiniSearch(contextPath);
+   		return false;
+   	}
+
+	function getPermitOwner(contextPath,type){
+		if (type==0) {
+			m =1;
+			openEmpsMiniSearch(contextPath);
+		} else {
+			m=4;
+			openNonEmpsMiniSearch(contextPath);
+		}
+   		return false;
+   	}
+
+	function getDepartment(contextPath,mode){
+		m=mode;
+		openDepartmentsMiniSearch(contextPath);
+		return false;
+	}
+	
+	function getNonEmployee(contextPath,mode){
+		m=mode;
+		openNonEmpsMiniSearch(contextPath);
+   		return false;
+   	}
+
+	function releaseMask(){
+		unMaskScreen();
+   	}
+	
+	function HandlePopupResult(ret) { 
+		unMaskScreen();
+		if(ret!=null){ 
+			if(m==1){
+				document.getElementById('permitsSynchFormId:permitsAccordionPanelId:selectedEmpCarId').value = ret[0];
+				document.getElementById('permitsSynchFormId:permitsAccordionPanelId:empCarHiddenNameId').value = ret[1];
+				document.getElementById('permitsSynchFormId:permitsAccordionPanelId:empCarNameViewId').innerHTML = ret[1];
+   	         	return true;
+			} else if(m==2){
+				document.getElementById('permitsSynchFormId:permitsAccordionPanelId:selectedNonEmpId').value = ret[0];
+				document.getElementById('permitsSynchFormId:permitsAccordionPanelId:nonEmpHiddenNameId').value = ret[1];
+				document.getElementById('permitsSynchFormId:permitsAccordionPanelId:nonEmpNameViewId').innerHTML= ret[1];
+   	         	return true;
+			} else if(m==3){  
+				document.getElementById('permitsSynchFormId:permitsAccordionPanelId:selectedDepartmentId').value=ret[0];
+	    		document.getElementById('permitsSynchFormId:permitsAccordionPanelId:selectedDepartmentNameId').value=ret[1];
+	    		document.getElementById('permitsSynchFormId:permitsAccordionPanelId:departmentNameId').innerHTML=ret[1];
+    	   		return true;
+        	} else if(m==4){
+				document.getElementById('permitsSynchFormId:permitsAccordionPanelId:selectedNonEmpCarId').value = ret[0];
+				document.getElementById('permitsSynchFormId:permitsAccordionPanelId:nonEmpCarHiddenNameId').value = ret[1];
+				document.getElementById('permitsSynchFormId:permitsAccordionPanelId:nonEmpCarNameViewId').innerHTML= ret[1];
+   	         	return true;
+			} else if(m==5){
+				document.getElementById('permitsSynchFormId:permitsAccordionPanelId:selectedCarDepartmentId').value=ret[0];
+	    		document.getElementById('permitsSynchFormId:permitsAccordionPanelId:selectedCarDepartmentNameId').value=ret[1];
+	    		document.getElementById('permitsSynchFormId:permitsAccordionPanelId:departmentCarNameId').innerHTML=ret[1];
+    	   		return true;
+        	}
+   		}
+   		return false;
+	}
+
+	function clearData() {
+		document.getElementById('permitsSynchFormId:permitsAccordionPanelId:selectedNonEmpCarId').value = null;
+		document.getElementById('permitsSynchFormId:permitsAccordionPanelId:nonEmpCarHiddenNameId').value =  null;
+		document.getElementById('permitsSynchFormId:permitsAccordionPanelId:nonEmpCarNameViewId').innerHTML=  null;
+
+		document.getElementById('permitsSynchFormId:permitsAccordionPanelId:selectedEmpCarId').value = null;
+		document.getElementById('permitsSynchFormId:permitsAccordionPanelId:empCarHiddenNameId').value = null;
+		document.getElementById('permitsSynchFormId:permitsAccordionPanelId:empCarNameViewId').innerHTML = null;
+		return false;
+	}
+	
+	</script>
+</h:head>
+<h:body styleClass="screenBg">
+	<h:form id="permitsSynchFormId" dir="#{msgs.dir}" enctype="multipart/form-data">
+		<ui:decorate template="/Main/Template.xhtml">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tr>
+					<td class="screenTitle">#{msgs.title_permitsSynchronization}</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<p:accordionPanel id="permitsAccordionPanelId" activeIndex="-1">
+							<p:tab title="#{msgs.label_addNonEmployeesPermits}">
+								<h:panelGroup id="personsPermitsPanelId">
+									<table width="100%">
+										<tr>
+											<td>
+												<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+													<tr>
+														<th width="15%">#{msgs.label_region}</th>
+														<td width="30%">
+															<h:outputText value="#{permitsSynchronization.loginEmpRegionName}" />
+														</td>
+
+													</tr>
+													<tr>
+														<th width="15%">
+															#{msgs.label_nonEmployees}
+															<h:outputText value="*" style="color:red;" />
+															<h:commandButton value="&#xf002;" styleClass="btn btn-trans-icon" onclick="return getNonEmployee('#{request.contextPath}',2);" />
+														</th>
+														<td width="30%">
+															<h:inputHidden id="selectedNonEmpId" value="#{permitsSynchronization.nonEmpPermit.nonEmployeeId}" />
+															<h:inputHidden id="nonEmpHiddenNameId" value="#{permitsSynchronization.nonEmpName}" />
+															<h:outputText id="nonEmpNameViewId" value="#{permitsSynchronization.nonEmpName}" />
+														</td>
+
+														<th width="15%">
+															#{msgs.label_permitEndDate}
+															<h:outputText value="*" style="color:red;" />
+														</th>
+														<td width="30%">
+															<util:advancedHijriDate value="#{permitsSynchronization.nonEmpPermit.endDate}" />
+														</td>
+													</tr>
+													<tr>
+														<th width="15%">
+															#{msgs.label_department}
+															<h:commandButton value="&#xf002;" styleClass="btn btn-trans-icon" onclick="return getDepartment('#{request.contextPath}',3);" />
+															<h:outputText value="*" style="color:red;" />
+														</th>
+														<td width="30%">
+															<h:inputHidden id="selectedDepartmentId" value="#{permitsSynchronization.nonEmpPermit.departmentId}" />
+															<h:inputHidden id="selectedDepartmentNameId" value="#{permitsSynchronization.depName}" />
+															<h:outputText id="departmentNameId" value="#{permitsSynchronization.depName}" />
+														</td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+													<tr>
+														<td width="100%" height="10" />
+													</tr>
+													<tr>
+														<td>
+															<h:commandButton styleClass="btn btn-default" id="resetBtnNonEmp" value="&#xf021;#{msgs.label_reset}" action="#{permitsSynchronization.resetEmpPermit()}">
+																<f:ajax render="permitsSynchFormId:permitsAccordionPanelId:personsPermitsPanelId" />
+															</h:commandButton>
+
+															<h:commandButton styleClass="btn btn-default" id="saveBtnNonEmp" value="&#xf0c7; #{msgs.label_save}" action="#{permitsSynchronization.saveNonEmpPermit()}">
+																<f:ajax render="permitsSynchFormId:permitsAccordionPanelId:personsPermitsPanelId" execute="permitsSynchFormId:permitsAccordionPanelId:personsPermitsPanelId" />
+															</h:commandButton>
+														</td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+									</table>
+								</h:panelGroup>
+							</p:tab>
+							<p:tab title="#{msgs.label_addCarPermits}">
+								<h:panelGroup id="carsPermitsPanelId">
+									<table width="100%">
+										<tr>
+											<td>
+												<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+												<tr>
+														<th width="15%">#{msgs.label_region}</th>
+														<td width="30%">
+															<h:outputText value="#{permitsSynchronization.loginEmpRegionName}" />
+														</td>
+
+													</tr>
+													<tr>
+														<th width="15%">
+															#{msgs.label_permitOwnerType}
+															<h:outputText value="*" style="color:red;" />
+														</th>
+														<td width="30%">
+															<h:selectOneRadio value="#{permitsSynchronization.permitCarType}">
+																<f:selectItem itemLabel="#{msgs.label_employee}" itemValue="0" />
+																<f:selectItem itemLabel="#{msgs.label_nonEmployee}" itemValue="1" />
+																<f:ajax event="change" execute="@this" render="permitsSynchFormId:permitsAccordionPanelId:permitOwnerBtnId" onevent="clearData()" />
+															</h:selectOneRadio>
+														</td>
+
+														<th width="15%">
+															#{msgs.label_permitOwner}
+															<h:outputText value="*" style="color:red;" />
+															<h:commandButton id="permitOwnerBtnId" value="&#xf002;" styleClass="btn btn-trans-icon" onclick="return getPermitOwner('#{request.contextPath}',#{permitsSynchronization.permitCarType});" />
+														</th>
+														<td width="30%">
+															<h:inputHidden id="selectedNonEmpCarId" value="#{permitsSynchronization.employeeNonEmployeeCars.nonEmployeeId}" />
+															<h:inputHidden id="nonEmpCarHiddenNameId" value="#{permitsSynchronization.nonEmpName}" />
+															<h:outputText id="nonEmpCarNameViewId" value="#{permitsSynchronization.nonEmpName}" />
+
+															<h:inputHidden id="selectedEmpCarId" value="#{permitsSynchronization.employeeNonEmployeeCars.employeeId}" />
+															<h:inputHidden id="empCarHiddenNameId" value="#{permitsSynchronization.empName}" />
+															<h:outputText id="empCarNameViewId" value="#{permitsSynchronization.empName}" />
+														</td>
+													</tr>
+													<tr>
+														<th>
+															#{msgs.label_permitNo}
+															<h:outputText value="*" style="color:red;" />
+														</th>
+														<td>
+															<h:inputText styleClass="form-control inputnumber" value="#{permitsSynchronization.carPermit.permitNo}" />
+														</td>
+
+														<th width="15%">
+															#{msgs.label_department}
+															<h:commandButton value="&#xf002;" styleClass="btn btn-trans-icon" onclick="return getDepartment('#{request.contextPath}',5);" />
+														</th>
+														<td width="30%">
+															<h:inputHidden id="selectedCarDepartmentId" value="#{permitsSynchronization.carPermit.departmentId}" />
+															<h:inputHidden id="selectedCarDepartmentNameId" value="#{permitsSynchronization.depName}" />
+															<h:outputText id="departmentCarNameId" value="#{permitsSynchronization.depName}" />
+														</td>
+													</tr>
+													<tr>
+														<th>
+															#{msgs.label_carModelDescription}
+															<h:outputText value="*" style="color:red;" />
+														</th>
+
+														<td>
+															<h:selectOneMenu id="newNonEmployeeCarModelId" styleClass="form-control" value="#{permitsSynchronization.employeeNonEmployeeCars.domainCarModelId}">
+																<f:selectItems value="#{permitsSynchronization.carModels}" var="car" itemLabel="#{car.description}" itemValue="#{car.id}" />
+															</h:selectOneMenu>
+														</td>
+
+														<th>
+															#{msgs.label_plateNumber}
+															<h:outputText value="*" style="color:red;" />
+														</th>
+														<td>
+															<h:panelGroup id="newPlateNumberId">
+																<h:inputText style="width:10%;" styleClass="form-control inputnumber" value="#{permitsSynchronization.employeeNonEmployeeCars.plateChar1}" maxlength="1" />
+																<h:inputText style="width:10%;" styleClass="form-control inputnumber" value="#{permitsSynchronization.employeeNonEmployeeCars.plateChar2}" maxlength="1" />
+																<h:inputText style="width:10%;" styleClass="form-control inputnumber" value="#{permitsSynchronization.employeeNonEmployeeCars.plateChar3}" maxlength="1" />
+																<h:inputText style="width:20%;" styleClass="form-control inputnumber" value="#{permitsSynchronization.employeeNonEmployeeCars.plateNumber}" maxlength="4" onkeypress="return checkDigit(event)" />
+															</h:panelGroup>
+														</td>
+													</tr>
+
+												</table>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+													<tr>
+														<td width="100%" height="10" />
+													</tr>
+													<tr>
+														<td>
+															<h:commandButton styleClass="btn btn-default" value="&#xf021;#{msgs.label_reset}" action="#{permitsSynchronization.resetCarPermit()}">
+																<f:ajax render="permitsSynchFormId:permitsAccordionPanelId:carsPermitsPanelId" />
+															</h:commandButton>
+
+															<h:commandButton styleClass="btn btn-default" value="&#xf0c7; #{msgs.label_save}" action="#{permitsSynchronization.saveCarPermit()}">
+																<f:ajax render="permitsSynchFormId:permitsAccordionPanelId:carsPermitsPanelId" execute="permitsSynchFormId:permitsAccordionPanelId:carsPermitsPanelId" />
+															</h:commandButton>
+														</td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+									</table>
+								</h:panelGroup>
+							</p:tab>
+						</p:accordionPanel>
+					</td>
+				</tr>
+
+				<tr>
+					<td>
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.title_permitsSynchronization}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td>
+						<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<th width="15%">
+									#{msgs.label_permitType}
+									<h:outputText value="*" style="color:red;" />
+								</th>
+								<td width="35%">
+									<h:selectOneRadio value="#{permitsSynchronization.permitsPatchType}">
+										<f:selectItem itemLabel="#{msgs.label_persons}" itemValue="0" />
+										<f:selectItem itemLabel="#{msgs.label_cars}" itemValue="1" />
+										<f:ajax event="change" execute="@this" render="permitsSynchFormId:downTemplateId" />
+									</h:selectOneRadio>
+								</td>
+								<td>
+									<h:outputLink id="downTemplateId" value="#{request.contextPath}#{permitsSynchronization.templatePath}">#{msgs.label_downloadTemplate}</h:outputLink>
+								</td>
+							</tr>
+							<tr>
+								<td width="100%" colspan="3">
+									<p:fileUpload value="#{permitsSynchronization.file}" allowTypes="/(\.|\/)(xls|xlsx)$/" mode="simple" label="#{msgs.label_choose}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:commandButton styleClass="btn btn-default btn-print" value="&#xf093; #{msgs.label_uploadAndSynch}" action="#{permitsSynchronization.synchrnoziePermits}">
+									</h:commandButton>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+				<tr>
+					<td>
+						<h:outputText value="#{permitsSynchronization.comleteMsg}" style="color:red;" />
+					</td>
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup rendered="#{not empty permitsSynchronization.patch}">
+							<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<td>
+										<h:outputText value="#{msgs.label_failurePermits}" />
+									</td>
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="permitsDetailsTableId">
+							<h:panelGroup rendered="#{not empty permitsSynchronization.patch}">
+								<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+									<tr>
+										<td>
+											<p:dataTable id="detailsId" tableStyle="table-layout:auto" reflow="true" liveResize="true" paginatorPosition="bottom" paginator="true" style="width:100%" rowIndexVar="index" rows="10" var="permit" value="#{permitsSynchronization.permitsPatchDetailsList}" widgetVar="table" rowHover="true">
+												<p:column styleClass='centerText'>
+													<f:facet name="header">#</f:facet>
+						                                    #{index + 1}
+				                                </p:column>
+												<p:columns value="#{permitsSynchronization.columns}" var="column" columnIndexVar="colIndex">
+													<f:facet name="header">
+														<h:outputText value="#{column.header}" />
+													</f:facet>
+													<h:outputText value="#{permit[column.property]}" />
+												</p:columns>
+											</p:dataTable>
+										</td>
+									</tr>
+								</table>
+							</h:panelGroup>
+						</h:panelGroup>
+					</td>
+				</tr>
+			</table>
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>

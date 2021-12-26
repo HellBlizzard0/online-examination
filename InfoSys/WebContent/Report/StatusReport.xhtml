@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:util="http://java.sun.com/jsf/composite/util">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+	
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+	</h:head>
+<h:body styleClass="screenBg">
+	<h:form id="formId" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/Template.xhtml">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tr>
+					<td class="screenTitle">#{msgs.title_reviewingSystemWorkReports}</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+				
+				<tr>
+					<td>
+						<h:panelGroup id="reportParametersPanelId">
+						<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<th width="15%">#{msgs.label_region}</th>
+								<td width="20%">
+									<h:selectOneMenu rendered="#{empty statusReport.employeeRegionName}" id="regionMenuId" value="#{statusReport.regionId}">
+										<f:selectItem itemValue="-1" itemLabel="#{msgs.label_all}" />
+										<f:selectItems value="#{statusReport.regionList}" var="var" itemLabel="#{var.arabicName}" itemValue="#{var.id}"/>
+									</h:selectOneMenu>
+									
+									<h:outputText rendered="#{not empty statusReport.employeeRegionName}" value="#{statusReport.employeeRegionName}" />
+								</td>
+								
+								
+							</tr>
+							
+							<tr>
+								<th width="15%">
+									#{msgs.label_fromRegistrationDate}
+								</th>
+								<td width="20%">
+									<util:advancedHijriDate value="#{statusReport.startDate}" />
+								</td>
+									
+								
+								<th width="15%">
+									#{msgs.label_toRegistrationDate}
+								</th>
+								<td width="20%">
+									<util:advancedHijriDate value="#{statusReport.endDate}" />
+								</td>
+									
+							</tr>
+						</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+				
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+				
+				<tr>
+					<td width="100%">
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:commandButton styleClass="btn btn-default" value="&#xf021; #{msgs.label_reset}" action="#{statusReport.reset()}">
+										<f:ajax render="formId:reportParametersPanelId" />
+									</h:commandButton>
+									
+									<h:commandButton styleClass="btn btn-success" value="&#xf02f; #{msgs.label_print}" action="#{statusReport.printReport()}"/>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr> 
+				
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+			</table>
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>

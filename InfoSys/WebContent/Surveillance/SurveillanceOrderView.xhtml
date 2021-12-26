@@ -1,0 +1,220 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:code="http://java.sun.com/jsf/composite/code" xmlns:of="http://omnifaces.org/functions" xmlns:o="http://omnifaces.org/ui" xmlns:h="http://java.sun.com/jsf/html" xmlns:util="http://java.sun.com/jsf/composite/util" xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+
+	<script type="text/javascript">
+    	window.onunload = unloadPage;
+
+        function unloadPage()
+        {
+      	  window.opener.releaseMask();
+        }
+        
+    	function releaseMask(){
+    		unMaskScreen();
+       	}
+     </script>
+
+</h:head>
+<h:body styleClass="screenBg">
+	<h:form id="surveillanceOrderRegFormId" dir="#{msgs.dir}">
+
+		<p:growl showDetail="true" autoUpdate="true" id="notifyMessagesId" />
+		<p:ajaxStatus onstart="PF('reload').show();" onsuccess="PF('reload').hide();" />
+		<p:dialog id="reload" widgetVar="reload" modal="true" showHeader="false" resizable="false" closable="false">
+			<h:graphicImage value="/resources/images/wait.png" alt="ai" />
+		</p:dialog>
+
+		<table border="0" cellpadding="0" cellspacing="0" width="100%" class="bgcolor-pup">
+			<tr>
+				<td width="100%" height="5" />
+			</tr>
+
+			<tr>
+				<td class="screenTitle">
+					<h:outputText value="#{msgs.title_surveillanceOrderView}" />
+				</td>
+			</tr>
+
+			<tr>
+				<td width="100%" height="5" />
+			</tr>
+
+			<tr>
+				<td colspan="2">
+					<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+						<tr>
+							<td>
+								<h:outputText value="#{msgs.label_surveillanceOrderDetail}" />
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+
+			<tr>
+				<td width="100%" height="5" />
+			</tr>
+
+			<tr>
+				<td>
+					<h:panelGroup id="surveillanceContainerId">
+						<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<th width="15%">#{msgs.label_orderNumber}</th>
+								<td width="25%">
+									<h:outputText value="#{surveillanceOrderView.surveillanceOrderData.orderNumber}" />
+
+								</td>
+								
+								<th width="15%">#{msgs.label_orderDate}</th>
+								<td width="25%">
+									<h:outputText value="#{surveillanceOrderView.surveillanceOrderData.orderDateString}" />
+								</td>
+
+							</tr>
+
+							<tr>
+								<th>#{msgs.label_departmentFinalApproval}</th>
+								<td>
+									<h:outputText style=" width: 358px;" value="#{surveillanceOrderView.surveillanceOrderData.finalApprovalEntity}" />
+								</td>
+
+							</tr>
+
+							<tr>
+								<th>#{msgs.label_orderPeriod}</th>
+								<td>
+									<h:outputText value="#{surveillanceOrderView.surveillanceOrderData.periodMonths}" />
+									#{msgs.label_month}
+								</td>
+								
+
+								<th>#{msgs.label_surveillanceStartDate}</th>
+								<td>
+									<h:outputText value="#{surveillanceOrderView.surveillanceOrderData.startDateString}" />
+								</td>
+
+							</tr>
+
+							<tr>
+								<th>#{msgs.label_reportPeriod}</th>
+								<td width="25%">
+									<h:selectOneMenu disabled="true" styleClass="selectMenuWithIcon" value="#{surveillanceOrderView.surveillanceOrderData.periodicReporting}">
+										<f:selectItem itemValue="3" itemLabel="3" />
+										<f:selectItem itemValue="4" itemLabel="4" />
+									</h:selectOneMenu>
+									#{msgs.label_month}
+								</td>
+								<td colspan="6"></td>
+							</tr>
+
+							<tr>
+								<th>#{msgs.label_comment}</th>
+								<td width="25%" colspan="1">
+									<h:inputTextarea disabled="true" styleClass="form-control" rows="4" cols="40" value="#{surveillanceOrderView.surveillanceOrderData.notes}" />
+								</td>
+
+							</tr>
+						</table>
+					</h:panelGroup>
+				</td>
+			</tr>
+
+			<tr>
+				<td width="100%" height="5" />
+			</tr>
+
+			<tr>
+				<td>
+					<h:panelGroup id="surveillanceEmployeesPaneId">
+						<table width="100%">
+							<tr>
+								<td colspan="2">
+									<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+										<tr>
+											<td>
+												<h:outputText value="#{msgs.label_observerDetails}" />
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+
+							<tr>
+								<td>
+									<table width="100%">
+										<tr>
+											<td>
+												<p:dataTable tableStyle="table-layout:auto" reflow="true" liveResize="true" paginatorPosition="bottom" id="surveillanceorderRegEmployeeId" paginator="true" style="width:100%" rowIndexVar="index" rows="10" var="surveillanceEmpRow" value="#{surveillanceOrderView.surveillanceEmployeesList}" widgetVar="table" rowHover="true">
+													<p:column styleClass='centerText'>
+														<f:facet name="header">
+																#
+															</f:facet>
+					                                    	#{index + 1}
+				                                   		</p:column>
+
+													<p:column styleClass='centerText'>
+														<f:facet name="header">
+																#{msgs.label_name}
+															</f:facet>
+														<h:outputText value="#{surveillanceEmpRow.employeeFullName}" />
+													</p:column>
+
+													<p:column styleClass='centerText'>
+														<f:facet name="header">
+																#{msgs.label_socialNumber}
+															</f:facet>
+														<h:outputText value="#{surveillanceEmpRow.socialId}" />
+													</p:column>
+
+													<p:column styleClass='centerText'>
+														<f:facet name="header"> 
+																#{msgs.label_militaryNumber}
+															</f:facet>
+														<h:outputText value="#{surveillanceEmpRow.militaryNumber}" />
+													</p:column>
+
+													<p:column styleClass='centerText'>
+														<f:facet name="header"> 
+																#{msgs.label_rank}
+															</f:facet>
+														<h:outputText value="#{surveillanceEmpRow.rank}" />
+													</p:column>
+
+													<p:column styleClass='centerText'>
+														<f:facet name="header"> 
+																#{msgs.label_periodDays}
+														</f:facet>
+														<h:outputText value="#{surveillanceEmpRow.periodMonths}" />
+													</p:column>
+
+													<p:column styleClass='centerText'>
+														<f:facet name="header"> 
+																#{msgs.label_surveillanceReasons}
+															</f:facet>
+														<p:selectCheckboxMenu value="#{surveillanceEmpRow.surveillanceOrderReasonsList}" styleClass="btn btn_normal" label="#{msgs.label_reasons}" filter="true" filterMatchMode="startsWith">
+															<f:selectItems itemDisabled="true" value="#{surveillanceOrderView.surveillanceOrderReasonsList}" var="reason" itemLabel="#{reason}" itemValue="#{reason}" />
+														</p:selectCheckboxMenu>
+													</p:column>
+												</p:dataTable>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</h:panelGroup>
+				</td>
+			</tr>
+		</table>
+	</h:form>
+</h:body>
+</html>

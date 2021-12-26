@@ -1,0 +1,917 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:util="http://java.sun.com/jsf/composite/util">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+	<script type="text/javascript">
+		var m;
+		function getEmployee(contextPath, mode) {
+			m = 1;
+			openEmpsMiniSearch(contextPath, mode);
+			return false;
+		}
+		function getDepartment(contextPath, mode) {
+			m = 2;
+			openDepartmentsMiniSearch(contextPath, mode);
+			return false;
+		}
+		function getDepartmentEmployee(contextPath, mode) {
+			m = 3;
+			openEmpsMiniSearch(contextPath, mode);
+			return false;
+		}
+		function releaseMask() {
+			unMaskScreen();
+		}
+
+		function handleDownloadFiles(e){
+    		openDownloadPopupFlagId = document.getElementById('missionReportRegisterationFormId:openDownloadPopupFlagId').value;
+    		openDownloadDialogueFlagId = document.getElementById('missionReportRegisterationFormId:openDownloadDialogueFlagId').value;
+    		
+    		if(e.status == 'success'){
+    			if(openDownloadPopupFlagId == 'true'){
+    				downloadFile();
+        		}else if (openDownloadDialogueFlagId == 'true'){
+        			PF('dlg').show();
+            	}
+    		}
+        }
+
+    	function uploadFile(){
+    		fileArchivingParam = document.getElementById('missionReportRegisterationFormId:fileArchivingParamId').value;
+    		openUploadFile('#{missionReportRegisteration.boolServerUploadPath}', fileArchivingParam);
+    		return false;
+        }
+
+    	function downloadFile(){
+    		downloadedFileParamId = document.getElementById('missionReportRegisterationFormId:downloadedFileParamId').value;
+    		openDownloadFile('#{missionReportRegisteration.boolServerDownloadPath}',downloadedFileParamId);
+    		return false;
+        }
+        
+		function HandlePopupResult(ret) {
+			unMaskScreen();
+			if (ret != null) {
+				if (m == 1) {
+					document.getElementById('missionReportRegisterationFormId:selectedEmployeeId').value = ret[0];
+					document.getElementById('missionReportRegisterationFormId:selectedEmployeeNameId').value = ret[1];
+					document.getElementById('missionReportRegisterationFormId:selectedEmployeeSocialNumberId').value = ret[2];
+					document.getElementById('missionReportRegisterationFormId:selectedEmployeeMilitaryNumberId').value = ret[3];
+					document.getElementById('missionReportRegisterationFormId:selectedEmployeeRankId').value = ret[4];
+					document.getElementById('missionReportRegisterationFormId:selectedEmployeeNameShowId').innerHTML= ret[1];
+					return true;
+				} else if (m == 2) {
+					document.getElementById('missionReportRegisterationFormId:selectedDepartmentId').value = ret[0];
+					document.getElementById('missionReportRegisterationFormId:selectedDepartmentNameId').value = ret[1];
+					document.getElementById('missionReportRegisterationFormId:departmentNameId').innerHTML = ret[1];
+					return true;
+				} else if (m == 3) {
+					document.getElementById('missionReportRegisterationFormId:selectedDepartmentEmployeeId').value = ret[0];
+					document.getElementById('missionReportRegisterationFormId:selectedDepartmentEmployeeNameId').value = ret[1];
+					document	.getElementById('missionReportRegisterationFormId:departmentEmployeeNameId').innerHTML = ret[1];
+					return true;
+				}
+			}
+			return false;
+		}
+
+		function validateEmployeeMandatoryData() {
+
+			var employeeId = document.getElementById("missionReportRegisterationFormId:selectedEmployeeId").value;
+
+			var errorMsg;
+			var successValidation = true;
+			if (employeeId == null || employeeId == "") {
+				successValidation = false;
+				errorMsg='#{msgs.error_employeeMandatory}';
+			}
+
+			if (!successValidation) {
+				showErrorMessage(errorMsg);
+			}
+			return successValidation;
+		}
+		
+		function validateSectorMandatoryData() {
+
+			var departmentId = document.getElementById("missionReportRegisterationFormId:selectedDepartmentId").value;
+			var forcesNumber = document.getElementById("missionReportRegisterationFormId:forcesNumberId").value;
+			var forcesActual = document.getElementById("missionReportRegisterationFormId:forcesActualId").value;
+
+			var errorMsg;
+			var successValidation = true;
+			if (departmentId == null || departmentId == "") {
+				successValidation = false;
+				errorMsg='#{msgs.error_sectorMandatory}';
+			}
+			else if (forcesNumber == null || forcesNumber == "") {
+				successValidation = false;
+				errorMsg='#{msgs.error_forcesNumberMandatory}';
+			}
+			else if (forcesActual == null || forcesActual == "") {
+				successValidation = false;
+				errorMsg='#{msgs.error_forcesActualMandatory}';
+			}
+
+			if (!successValidation) {
+				showErrorMessage(errorMsg);
+			}
+			return successValidation;
+		}
+
+		function validateSectorActivityMandatoryData() {
+
+			var activityName = document.getElementById("missionReportRegisterationFormId:activityNameId").value;
+			var activityLocation = document.getElementById("missionReportRegisterationFormId:activityLocationId").value;
+
+			var errorMsg;
+			var successValidation = true;
+			if (activityName == null || activityName == "") {
+				successValidation = false;
+				errorMsg='#{msgs.error_actionNameMandatory}';
+			}
+			else if (activityLocation == null || activityLocation == "") {
+				successValidation = false;
+				errorMsg='#{msgs.error_actionLocationMandatory}';
+			}
+
+			if (!successValidation) {
+				showErrorMessage(errorMsg);
+			}
+			return successValidation;
+		}
+
+		function validateMandatoryData() {
+
+			var orderNumber = document.getElementById("missionReportRegisterationFormId:orderNumberId").value;
+			var destinationDepartment = document.getElementById("missionReportRegisterationFormId:destinationDepartmentId").value;
+			var missionType = document.getElementById("missionReportRegisterationFormId:missionTypeId").value;
+			var pros = document.getElementById("missionReportRegisterationFormId:prosId");
+			var cons = document.getElementById("missionReportRegisterationFormId:consId");
+			var remarks = document.getElementById("missionReportRegisterationFormId:remarksId");
+			
+			var errorMsg;
+			var successValidation = true;
+			if (orderNumber == null || orderNumber == "") {
+				successValidation = false;
+				errorMsg='#{msgs.error_orderNumberMandatory}';
+			}
+			else if (destinationDepartment == null || destinationDepartment == "") {
+				successValidation = false;
+				errorMsg='#{msgs.error_destinationDepartmentMandatory}';
+			}
+			else if (missionType == null || missionType == "") {
+				successValidation = false;
+				errorMsg='#{msgs.error_missionTypeMandatory}';
+			}
+			else if (pros.value == null || pros.value == "") {
+				successValidation = false;
+				errorMsg='#{msgs.error_prosMandatory}';
+			}
+			else if($(pros).val().length>500){
+				successValidation = false;
+				errorMsg='#{msgs.error_prosExceedMaxLength}';
+			}
+			else if (cons.value == null || cons.value == "") {
+				successValidation = false;
+				errorMsg='#{msgs.error_consMandatory}';
+			}
+			else if($(cons).val().length>500){
+				successValidation = false;
+				errorMsg='#{msgs.error_consExceedMaxLength}';
+			}
+			else if($(remarks).val().length>500){
+				successValidation = false;
+				errorMsg='#{msgs.error_remarksExceedMaxLength}';
+			}
+			
+			if (!successValidation) {
+				showErrorMessage(errorMsg);
+			}
+
+			return successValidation;
+		}
+	</script>
+</h:head>
+<h:body styleClass="screenBg">
+	<h:form id="missionReportRegisterationFormId" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/Template.xhtml">
+
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+
+
+				<tr>
+					<td class="screenTitle">#{msgs.title_randomMissionReportRegisteration}</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.label_missionDetails}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="orderDataPnlId">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<th width="15%">
+										#{msgs.label_labCheckOrderNumber}
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<h:inputText id="orderNumberId" styleClass="form-control inputnumber" value="#{missionReportRegisteration.labCheckReport.orderNumber}" maxlength="20" />
+									</td>
+									
+
+									<th width="15%">
+										#{msgs.label_destinationDepartment}
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<h:selectOneMenu id="destinationDepartmentId" styleClass="form-control" value="#{missionReportRegisteration.labCheckReport.destinationDepartmentId}">
+											<f:selectItems value="#{missionReportRegisteration.regionList}" var="region" itemLabel="#{region.arabicName}" itemValue="#{region.id}" />
+										</h:selectOneMenu>
+									</td>
+
+								</tr>
+								<tr>
+									<th width="15%">
+										#{msgs.label_missionFrom}
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<util:advancedHijriDate id="missionStartDateId" value="#{missionReportRegisteration.labCheckReport.startDate}" />
+									</td>
+									
+
+									<th width="15%">
+										#{msgs.label_to}
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<util:advancedHijriDate id="missionEndDateId" value="#{missionReportRegisteration.labCheckReport.endDate}" />
+									</td>
+
+								</tr>
+								<tr>
+									<th width="15%">
+										#{msgs.label_missionType}
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<h:selectOneMenu id="missionTypeId" styleClass="form-control" value="#{missionReportRegisteration.labCheckReport.missionTypeId}">
+											<f:selectItems value="#{missionReportRegisteration.missionTypes}" var="type" itemLabel="#{type.description}" itemValue="#{type.id}" />
+										</h:selectOneMenu>
+									</td>
+									
+									<th width="15%">#{msgs.label_remarks}</th>
+									<td width="20%">
+										<h:inputTextarea id="remarksId" styleClass="form-control" value="#{missionReportRegisteration.labCheckReport.remarks}" />
+									</td>
+
+								</tr>
+								<tr>
+									<th width="15%">#{msgs.label_missionPeriod}</th>
+									<td width="20%">
+										<h:outputText value="#{missionReportRegisteration.labCheckReport.period}" />
+										<h:outputText value="   #{msgs.label_day}" style="font-size: 13px;font-weight:bold;" />
+									</td>
+									
+									<th width="15%">#{msgs.label_checkedCount}</th>
+									<td width="20%">
+										<h:outputText id="checkedCountId" value="#{missionReportRegisteration.labCheckReport.checkedNumber}" />
+									</td>
+
+								</tr>
+								<tr>
+									<th width="15%">
+										#{msgs.label_checkDateFrom}
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<util:advancedHijriDate id="checkStartDateId" value="#{missionReportRegisteration.labCheckReport.checkStartDate}" />
+									</td>
+									
+
+									<th width="15%">
+										#{msgs.label_to}
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<util:advancedHijriDate id="checkEndDateId" value="#{missionReportRegisteration.labCheckReport.checkEndDate}" />
+									</td>
+
+								</tr>
+								<tr>
+									<th width="15%">
+										#{msgs.label_pros}
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<h:inputTextarea id="prosId" styleClass="form-control" value="#{missionReportRegisteration.labCheckReport.pros}" />
+									</td>
+									
+
+									<th width="15%">
+										#{msgs.label_cons}
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<h:inputTextarea id="consId" styleClass="form-control" value="#{missionReportRegisteration.labCheckReport.cons}" />
+									</td>
+
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="4">
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td width="100%">
+									<h:commandButton id="printBtnId" styleClass="btn btn-success" action="#{missionReportRegisteration.print()}" value="&#xf02f; #{msgs.label_print}" rendered="#{not empty missionReportRegisteration.labCheckReport.id}" />
+
+									<h:commandButton styleClass="btn btn-success" id="saveMissionReportBtnId" value="&#xf0c7; #{msgs.label_save}" action="#{missionReportRegisteration.saveMissionReport}" onclick="return validateMandatoryData();">
+										<f:ajax render="missionReportRegisterationFormId:orderDataPnlId missionReportRegisterationFormId:detailsPanelIdWrapper" execute="missionReportRegisterationFormId:orderDataPnlId" />
+									</h:commandButton>
+									<h:commandButton rendered="#{not empty missionReportRegisteration.labCheckReport.id}" styleClass="btn btn-success" id="archiveBtnUploadId" value="&#xf187; #{msgs.label_archiveDocuments}">
+										<f:ajax listener="#{missionReportRegisteration.getUploadParam(missionReportRegisteration.labCheckReport.id)}" render="missionReportRegisterationFormId:fileArchivingParamId" onevent="function(e){if(e.status == 'success') return uploadFile();}" />
+									</h:commandButton>
+
+									<h:commandButton rendered="#{not empty missionReportRegisteration.labCheckReport.id}" styleClass="btn btn-success" id="archiveBtnDownloadId" value="&#xf0c5; #{msgs.label_archiveDocumentsShow}">
+										<f:ajax render="missionReportRegisterationFormId:downloadDlgPanelId missionReportRegisterationFormId:openDownloadDialogueFlagId missionReportRegisterationFormId:openDownloadPopupFlagId missionReportRegisterationFormId:downloadedFileParamId" listener="#{missionReportRegisteration.getDownloadedAttachmentsIdList(missionReportRegisteration.labCheckReport.id)}" onevent="handleDownloadFiles" />
+									</h:commandButton>
+
+									<h:inputHidden id="fileArchivingParamId" value="#{missionReportRegisteration.fileArchivingParam}" />
+									<h:inputHidden id="downloadedFileParamId" value="#{missionReportRegisteration.downloadFileParamId}" />
+									<h:inputHidden id="openDownloadPopupFlagId" value="#{missionReportRegisteration.openDownloadPopupFlag}" />
+									<h:inputHidden id="openDownloadDialogueFlagId" value="#{missionReportRegisteration.openDownloadDialogueFlag}" />
+
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="4">
+						<h:panelGroup id="detailsPanelIdWrapper">
+							<h:panelGroup id="detailsPanelId" rendered="#{missionReportRegisteration.labCheckReport.id !=null}">
+								<table width="100%">
+									<tr>
+										<td colspan="4">
+											<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+												<tr>
+													<td>
+														<h:outputText value="#{msgs.title_missionEmployees}" />
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+
+									<tr>
+										<td colspan="4">
+											<p:fieldset toggleable="true" id="employeeDataPanelId" legend="#{msgs.title_addMissionEmployee}" collapsed="#{not missionReportRegisteration.addNewEmployeeCollapseFlag}">
+												<table width="100%">
+													<tr>
+														<th width="15%" style="text-align: right; border: 0">
+															#{msgs.label_employeeName}
+															<h:outputText value="*" style="color:red;" />
+															<h:commandButton value="&#xf002;" styleClass="btn btn-trans-icon" onclick="return getEmployee('#{request.contextPath}',1);" title="#{msgs.label_employeeName}" />
+														</th>
+														<td width="85%">
+															<h:inputHidden id="selectedEmployeeId" value="#{missionReportRegisteration.selectedLabCheckReportEmployeeData.employeeId}" />
+															<h:inputHidden id="selectedEmployeeNameId" value="#{missionReportRegisteration.selectedLabCheckReportEmployeeData.fullName}" />
+															<h:inputHidden id="selectedEmployeeSocialNumberId" value="#{missionReportRegisteration.selectedLabCheckReportEmployeeData.socialID}" />
+															<h:inputHidden id="selectedEmployeeMilitaryNumberId" value="#{missionReportRegisteration.selectedLabCheckReportEmployeeData.militaryNo}" />
+															<h:inputHidden id="selectedEmployeeRankId" value="#{missionReportRegisteration.selectedLabCheckReportEmployeeData.rank}" />
+															<h:outputText value="#{missionReportRegisteration.selectedLabCheckReportEmployeeData.fullName}" id="selectedEmployeeNameShowId" />
+														</td>
+													</tr>
+													<tr>
+														<td colspan="4">
+															<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+																<tr>
+																	<td width="100%">
+																		<h:commandButton styleClass="btn btn-success" id="saveNewMissionEmployeeBtnId" value="#{msgs.label_save}" action="#{missionReportRegisteration.saveEmployee}" onclick="return validateEmployeeMandatoryData();">
+																			<f:ajax execute="missionReportRegisterationFormId:employeeDataPanelId" render="missionReportRegisterationFormId:employeeDataPanelId missionReportRegisterationFormId:employeeDataTablePanelId">
+																			</f:ajax>
+																		</h:commandButton>
+																	</td>
+																</tr>
+															</table>
+														</td>
+													</tr>
+												</table>
+											</p:fieldset>
+										</td>
+									</tr>
+
+									<tr>
+										<td colspan="4">
+											<h:panelGroup id="employeeDataTablePanelId">
+												<table width="100%" border="0" cellpadding="0" cellspacing="0">
+													<tr>
+														<td>
+															<p:dataTable tableStyle="table-layout:auto" reflow="true" liveResize="true" paginatorPosition="bottom" id="missionEmployeeList" paginator="true" rowIndexVar="index" rows="10" var="employee" value="#{missionReportRegisteration.labCheckReportEmployeeDataList}" rowHover="true">
+																<p:column styleClass='centerText'>
+																	<f:facet name="header">
+																		#
+																</f:facet>
+												                   #{index + 1}
+											           		</p:column>
+
+																<p:column styleClass='centerText'>
+																	<f:facet name="header"> 
+																	#{msgs.label_militaryNumber}
+																</f:facet>
+																	<h:outputText value="#{employee.militaryNo}" />
+																</p:column>
+
+																<p:column styleClass='centerText'>
+																	<f:facet name="header"> 
+																	#{msgs.label_socialId}
+																</f:facet>
+																	<h:outputText value="#{employee.socialID}" />
+																</p:column>
+
+																<p:column styleClass='centerText'>
+																	<f:facet name="header">
+																	#{msgs.label_employeeName}
+																</f:facet>
+																	<h:outputText value="#{employee.fullName}" />
+																</p:column>
+
+																<p:column styleClass='centerText'>
+																	<f:facet name="header"> 
+																	#{msgs.label_rank}
+																</f:facet>
+																	<h:outputText value="#{employee.rank}" />
+																</p:column>
+
+																<p:column styleClass='centerText'>
+																	<f:facet name="header">
+																		<h:outputText value="#{msgs.label_delete}" />
+																	</f:facet>
+																	<h:commandButton value="&#xf00d;" styleClass="btn btn-trans-icon" action="#{missionReportRegisteration.deleteMissionEmployee(employee)}" onclick="return confirm('#{msgs.q_delete}');">
+																		<f:ajax render="missionReportRegisterationFormId:missionEmployeeList">
+																		</f:ajax>
+																	</h:commandButton>
+																</p:column>
+															</p:dataTable>
+														</td>
+													</tr>
+												</table>
+											</h:panelGroup>
+										</td>
+									</tr>
+
+									<tr>
+										<td width="100%" height="5" />
+									</tr>
+
+									<tr>
+										<td colspan="4">
+											<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+												<tr>
+													<td>
+														<h:outputText value="#{msgs.title_missionDetails}" />
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+
+									<tr>
+										<td width="100%" height="5" />
+									</tr>
+
+									<tr>
+										<td colspan="4">
+											<p:fieldset toggleable="true" id="addNewSectorPanelId" legend="#{msgs.title_addEditSector}" collapsed="#{not missionReportRegisteration.addNewSectorCollapseFlag}">
+												<table width="100%">
+													<tr>
+														<th width="15%" style="text-align: right; border: 0">
+															#{msgs.label_sector}
+															<h:outputText value="*" style="color:red;" />
+															<h:commandButton value="&#xf002;" styleClass="btn btn-trans-icon" onclick="return getDepartment('#{request.contextPath}',1);" title="#{msgs.label_sector}" />
+														</th>
+														<td width="35%">
+															<h:inputHidden id="selectedDepartmentId" value="#{missionReportRegisteration.newModifylabCheckReportDepartmentData.departmentId}" />
+															<h:inputHidden id="selectedDepartmentNameId" value="#{missionReportRegisteration.newModifylabCheckReportDepartmentData.departmentName}" />
+															<h:outputText id="departmentNameId" value="#{missionReportRegisteration.newModifylabCheckReportDepartmentData.departmentName}" />
+														</td>
+														<th width="15%" style="text-align: right; border: 0">
+															#{msgs.label_forcesNumber}
+															<h:outputText value="*" style="color:red;" />
+														</th>
+														<td width="35%">
+															<h:inputText id="forcesNumberId" value="#{missionReportRegisteration.newModifylabCheckReportDepartmentData.forcesNumber}" onkeypress="return checkDigit(event);" onblur="return isDigitFloat(this);" />
+														</td>
+													</tr>
+													<tr>
+														<th width="15%" style="text-align: right; border: 0">
+															#{msgs.label_forcesActual}
+															<h:outputText value="*" style="color:red;" />
+														</th>
+														<td width="35%">
+															<h:inputText id="forcesActualId" value="#{missionReportRegisteration.newModifylabCheckReportDepartmentData.forcesActual}" onkeypress="return checkDigit(event);" onblur="return isDigitFloat(this);" />
+														</td>
+													</tr>
+													<tr>
+														<td colspan="4">
+															<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+																<tr>
+																	<td width="100%">
+																		<h:commandButton styleClass="btn btn-success" id="saveNewSectorBtnId" value="#{msgs.label_save}" action="#{missionReportRegisteration.saveSector}" onclick="return validateSectorMandatoryData();">
+																			<f:ajax render="missionReportRegisterationFormId:addNewSectorPanelId missionReportRegisterationFormId:sectorListId" execute="missionReportRegisterationFormId:addNewSectorPanelId" />
+																		</h:commandButton>
+
+																		<h:commandButton id="sectorCancelBtnId" styleClass="btn btn-default" value="#{msgs.label_cancel}" action="#{missionReportRegisteration.cancelEditingDetails('sector')}">
+																			<f:ajax render="missionReportRegisterationFormId:addNewSectorPanelId" execute="missionReportRegisterationFormId:addNewSectorPanelId" />
+																		</h:commandButton>
+																	</td>
+																</tr>
+															</table>
+														</td>
+													</tr>
+												</table>
+											</p:fieldset>
+										</td>
+									</tr>
+
+									<tr>
+										<td colspan="4">
+											<table width="100%">
+												<tr>
+													<td>
+														<p:dataTable tableStyle="table-layout:auto" reflow="true" liveResize="true" paginatorPosition="bottom" id="sectorListId" paginator="true" rowIndexVar="index" rows="10" var="sector" value="#{missionReportRegisteration.labCheckReportDepartmentDataList}" widgetVar="departmentTable" rowHover="true">
+															<p:column styleClass='centerText'>
+																<f:facet name="header">
+																#
+															</f:facet>
+					                                    	#{index + 1}
+				                                   		</p:column>
+
+															<p:column styleClass='centerText'>
+																<f:facet name="header">
+																#{msgs.label_sector}
+															</f:facet>
+																<h:outputText value="#{sector.departmentName}" />
+															</p:column>
+
+															<p:column styleClass='centerText'>
+																<f:facet name="header">
+																#{msgs.label_forcesActual}
+															</f:facet>
+																<h:outputText value="#{sector.forcesActual}" />
+															</p:column>
+
+															<p:column styleClass='centerText'>
+																<f:facet name="header">
+																#{msgs.label_forcesNumber}
+															</f:facet>
+																<h:outputText value="#{sector.forcesNumber}" />
+															</p:column>
+
+															<p:column styleClass='centerText'>
+																<f:facet name="header">
+																	<h:outputText value="#{msgs.label_details}" />
+																</f:facet>
+																<h:commandButton value="&#xf05a;" styleClass="btn btn-trans-icon" action="#{missionReportRegisteration.selectSector(sector)}">
+																	<f:ajax render="missionReportRegisterationFormId:missionDetailsPanelsId">
+																	</f:ajax>
+																</h:commandButton>
+															</p:column>
+
+															<p:column styleClass='centerText'>
+																<f:facet name="header">
+																	<h:outputText value="#{msgs.label_edit}" />
+																</f:facet>
+																<h:commandButton value="&#xf14b;" styleClass="btn btn-trans-icon" action="#{missionReportRegisteration.editSector(sector)}">
+																	<f:ajax render="missionReportRegisterationFormId:addNewSectorPanelId missionReportRegisterationFormId:sectorListId">
+																	</f:ajax>
+																</h:commandButton>
+															</p:column>
+
+															<p:column styleClass='centerText'>
+																<f:facet name="header">
+																	<h:outputText value="#{msgs.label_delete}" />
+																</f:facet>
+																<h:commandButton value="&#xf00d;" styleClass="btn btn-trans-icon" action="#{missionReportRegisteration.deleteSector(sector)}" onclick="return confirm('#{msgs.q_delete}');">
+																	<f:ajax render="missionReportRegisterationFormId:notifyMessagesId missionReportRegisterationFormId:sectorListId">
+																	</f:ajax>
+																</h:commandButton>
+															</p:column>
+														</p:dataTable>
+													</td>
+												</tr>
+
+											</table>
+										</td>
+									</tr>
+
+									<tr>
+										<td colspan="4">
+											<h:panelGroup id="missionDetailsPanelsId">
+												<h:panelGroup rendered="#{not empty missionReportRegisteration.selectedLabCheckReportDepartmentData}">
+													<table width="100%">
+														<tr>
+															<td colspan="4">
+																<p:fieldset toggleable="true" id="addNewDepartmentActionPanelId" legend="#{msgs.title_addEditActivity}" collapsed="#{not missionReportRegisteration.addNewActionCollapseFlag}">
+																	<table width="100%">
+																		<tr>
+																			<th width="15%" style="text-align: right; border: 0">
+																				#{msgs.label_activityName}
+																				<h:outputText value="*" style="color:red;" />
+																			</th>
+																			<td width="35%">
+																				<h:inputText maxlength="50" styleClass="form-control" id="activityNameId" value="#{missionReportRegisteration.newModifyLabCheckReportDepartmentAction.actionName}" />
+																			</td>
+
+																			<th width="15%" style="text-align: right; border: 0">
+																				#{msgs.label_activityLocation}
+																				<h:outputText value="*" style="color:red;" />
+																			</th>
+																			<td width="35%">
+																				<h:inputText maxlength="50" styleClass="form-control" id="activityLocationId" value="#{missionReportRegisteration.newModifyLabCheckReportDepartmentAction.actionLocation}" />
+																			</td>
+																		</tr>
+																		<tr>
+																			<th width="15%" style="text-align: right; border: 0">
+																				#{msgs.label_activityDate}
+																				<h:outputText value="*" style="color:red;" />
+																			</th>
+																			<td width="35%">
+																				<util:advancedHijriDate id="activityDateId" value="#{missionReportRegisteration.newModifyLabCheckReportDepartmentAction.actionDate}" />
+																			</td>
+																		</tr>
+																		<tr>
+																			<td colspan="4">
+																				<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+																					<tr>
+																						<td width="100%">
+																							<h:commandButton styleClass="btn btn-success" id="saveNewActionBtnId" value="#{msgs.label_save}" action="#{missionReportRegisteration.saveDepartmentActivity}">
+																								<f:ajax render="missionReportRegisterationFormId:addNewDepartmentActionPanelId missionReportRegisterationFormId:deptActionListId" execute="missionReportRegisterationFormId:addNewDepartmentActionPanelId" onclick="return validateSectorActivityMandatoryData();" />
+																							</h:commandButton>
+
+																							<h:commandButton id="actionCancelBtnId" styleClass="btn btn-default" value="#{msgs.label_cancel}" action="#{missionReportRegisteration.cancelEditingDetails('action')}">
+																								<f:ajax render="missionReportRegisterationFormId:addNewDepartmentActionPanelId" execute="missionReportRegisterationFormId:addNewDepartmentActionPanelId" />
+																							</h:commandButton>
+																						</td>
+																					</tr>
+																				</table>
+																			</td>
+																		</tr>
+																	</table>
+																</p:fieldset>
+															</td>
+														</tr>
+														<tr>
+															<td colspan="4">
+																<p:dataTable tableStyle="table-layout:auto" reflow="true" liveResize="true" paginatorPosition="bottom" id="deptActionListId" paginator="true" rowIndexVar="index" rows="10" var="action" value="#{missionReportRegisteration.labCheckReportDepartmentActionList}" widgetVar="departmentActionsTable" rowHover="true">
+																	<p:column styleClass='centerText'>
+																		<f:facet name="header">
+																			#
+																		</f:facet>
+								                                    	#{index + 1}
+							                                   		</p:column>
+
+																	<p:column styleClass='centerText'>
+																		<f:facet name="header">
+																			#{msgs.label_activityName}
+																		</f:facet>
+																		<h:outputText value="#{action.actionName}" />
+																	</p:column>
+
+																	<p:column styleClass='centerText'>
+																		<f:facet name="header">
+																			#{msgs.label_activityLocation}
+																		</f:facet>
+																		<h:outputText value="#{action.actionLocation}" />
+																	</p:column>
+
+																	<p:column styleClass='centerText'>
+																		<f:facet name="header">
+																			#{msgs.label_activityDate}
+																		</f:facet>
+																		<h:outputText value="#{action.actionDateString}" />
+																	</p:column>
+
+																	<p:column styleClass='centerText'>
+																		<f:facet name="header">
+																			<h:outputText value="#{msgs.label_edit}" />
+																		</f:facet>
+																		<h:commandButton value="&#xf14b;" styleClass="btn btn-trans-icon" action="#{missionReportRegisteration.editDepartmentActivity(action)}">
+																			<f:ajax render="missionReportRegisterationFormId:addNewDepartmentActionPanelId missionReportRegisterationFormId:notifyMessagesId missionReportRegisterationFormId:deptActionListId">
+																			</f:ajax>
+																		</h:commandButton>
+																	</p:column>
+
+																	<p:column styleClass='centerText'>
+																		<f:facet name="header">
+																			<h:outputText value="#{msgs.label_delete}" />
+																		</f:facet>
+																		<h:commandButton value="&#xf00d;" styleClass="btn btn-trans-icon" action="#{missionReportRegisteration.deleteDepartmentActivity(action)}" onclick="return confirm('#{msgs.q_delete}');">
+																			<f:ajax render="missionReportRegisterationFormId:notifyMessagesId missionReportRegisterationFormId:deptActionListId">
+																			</f:ajax>
+																		</h:commandButton>
+																	</p:column>
+																</p:dataTable>
+															</td>
+														</tr>
+														<tr>
+															<td colspan="4">
+																<p:fieldset toggleable="true" id="addNewDepartmentBeneficiaryPanelId" legend="#{msgs.title_addEditBeneficiary}" collapsed="#{not missionReportRegisteration.addNewBeneficiaryCollapseFlag}">
+																	<table width="100%">
+																		<tr>
+																			<th width="15%" style="text-align: right; border: 0">
+																				#{msgs.label_healthCareCenterName}
+																				<h:outputText value="*" style="color:red;" />
+																			</th>
+																			<td width="35%">
+																				<h:selectOneMenu id="hospitalNameId" styleClass="form-control" value="#{missionReportRegisteration.newModifyLabCheckReportDepartmentEmployeeData.domainHospitalId}">
+																					<f:selectItems value="#{missionReportRegisteration.healthCareCenters}" var="type" itemLabel="#{type.description}" itemValue="#{type.id}" />
+																				</h:selectOneMenu>
+																			</td>
+																			<th width="15%" style="text-align: right; border: 0">
+																				#{msgs.label_employeeName}
+																				<h:outputText value="*" style="color:red;" />
+																				<h:commandButton value="&#xf002;" styleClass="btn btn-trans-icon" onclick="return getDepartmentEmployee('#{request.contextPath}',1);" title="#{msgs.label_employee}" />
+																			</th>
+																			<td width="35%">
+																				<h:inputHidden id="selectedDepartmentEmployeeId" value="#{missionReportRegisteration.newModifyLabCheckReportDepartmentEmployeeData.employeeId}" />
+																				<h:inputHidden id="selectedDepartmentEmployeeNameId" value="#{missionReportRegisteration.newModifyLabCheckReportDepartmentEmployeeData.employeeName}" />
+																				<h:outputText id="departmentEmployeeNameId" value="#{missionReportRegisteration.newModifyLabCheckReportDepartmentEmployeeData.employeeName}" />
+																			</td>
+																		</tr>
+																		<tr>
+																			<th width="15%" style="text-align: right; border: 0">
+																				#{msgs.label_referenceDate}
+																				<h:outputText value="*" style="color:red;" />
+																			</th>
+																			<td width="35%">
+																				<util:advancedHijriDate id="referenceDateId" value="#{missionReportRegisteration.newModifyLabCheckReportDepartmentEmployeeData.forwardDate}" />
+																			</td>
+																		</tr>
+																		<tr>
+																			<td colspan="4">
+																				<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+																					<tr>
+																						<td width="100%">
+																							<h:commandButton styleClass="btn btn-success" id="saveNewDepartmentBeneficiaryBtnId" value="#{msgs.label_save}" action="#{missionReportRegisteration.saveDepartmentEmployee}">
+																								<f:ajax render="missionReportRegisterationFormId:addNewDepartmentBeneficiaryPanelId missionReportRegisterationFormId:deptEmployeeListId missionReportRegisterationFormId:notifyMessagesId" execute="missionReportRegisterationFormId:addNewDepartmentBeneficiaryPanelId" />
+																							</h:commandButton>
+
+																							<h:commandButton id="beneficiaryEmployeeCancelBtnId" styleClass="btn btn-default" value="#{msgs.label_cancel}" action="#{missionReportRegisteration.cancelEditingDetails('beneficiaryEmployee')}">
+																								<f:ajax render="missionReportRegisterationFormId:addNewDepartmentBeneficiaryPanelId" execute="missionReportRegisterationFormId:addNewDepartmentBeneficiaryPanelId" />
+																							</h:commandButton>
+																						</td>
+																					</tr>
+																				</table>
+																			</td>
+																		</tr>
+																	</table>
+																</p:fieldset>
+															</td>
+														</tr>
+														<tr>
+															<td colspan="4">
+																<p:dataTable tableStyle="table-layout:auto" reflow="true" liveResize="true" paginatorPosition="bottom" id="deptEmployeeListId" paginator="true" rowIndexVar="index" rows="10" var="employee" value="#{missionReportRegisteration.labCheckReportDepartmentEmployeeDataList}" widgetVar="departmentEmployeesTable" rowHover="true">
+																	<p:column styleClass='centerText'>
+																		<f:facet name="header">
+																			#
+																		</f:facet>
+								                                    	#{index + 1}
+							                                   		</p:column>
+
+																	<p:column styleClass='centerText'>
+																		<f:facet name="header">
+																			#{msgs.label_healthCareCenterName}
+																		</f:facet>
+																		<h:outputText value="#{employee.domainHospitalDescription}" />
+																	</p:column>
+
+																	<p:column styleClass='centerText'>
+																		<f:facet name="header">
+																			#{msgs.label_beneficiaryEmployeeName}
+																		</f:facet>
+																		<h:outputText value="#{employee.employeeName}" />
+																	</p:column>
+
+																	<p:column styleClass='centerText'>
+																		<f:facet name="header">
+																			#{msgs.label_referenceDate}
+																		</f:facet>
+																		<h:outputText value="#{employee.forwardDateString}" />
+																	</p:column>
+
+																	<p:column styleClass='centerText'>
+																		<f:facet name="header">
+																			<h:outputText value="#{msgs.label_edit}" />
+																		</f:facet>
+																		<h:commandButton value="&#xf14b;" styleClass="btn btn-trans-icon" action="#{missionReportRegisteration.editDepartmentEmployee(employee)}">
+																			<f:ajax render="missionReportRegisterationFormId:addNewDepartmentBeneficiaryPanelId missionReportRegisterationFormId:notifyMessagesId missionReportRegisterationFormId:deptEmployeeListId">
+																			</f:ajax>
+																		</h:commandButton>
+																	</p:column>
+
+																	<p:column styleClass='centerText'>
+																		<f:facet name="header">
+																			<h:outputText value="#{msgs.label_delete}" />
+																		</f:facet>
+																		<h:commandButton value="&#xf00d;" styleClass="btn btn-trans-icon" action="#{missionReportRegisteration.deleteDepartmentEmployee(employee)}" onclick="return confirm('#{msgs.q_delete}');">
+																			<f:ajax render="missionReportRegisterationFormId:notifyMessagesId missionReportRegisterationFormId:deptEmployeeListId">
+																			</f:ajax>
+																		</h:commandButton>
+																	</p:column>
+																</p:dataTable>
+															</td>
+														</tr>
+													</table>
+												</h:panelGroup>
+											</h:panelGroup>
+										</td>
+									</tr>
+								</table>
+							</h:panelGroup>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+
+			</table>
+
+			<h:panelGroup id="downloadDlgPanelId">
+				<p:dialog dir="#{msgs.dir}" header="#{msgs.label_archiveDocumentsShow}" id="dlgId" widgetVar="dlg" modal="true" height="180px;" width="720px">
+					<h:panelGroup id="internalDlgPanelId">
+						<table width="100%">
+							<tr>
+								<td>
+									<p:dataTable tableStyle="table-layout:auto" reflow="true" liveResize="true" paginatorPosition="bottom" id="fileListIds" paginator="true" style="width:100%" rowIndexVar="index" rows="10" var="row" value="#{missionReportRegisteration.attachmentList}" rowHover="true">
+										<p:column styleClass='centerText'>
+											<f:facet name="header">#</f:facet>
+		                                    #{index + 1}
+	                                   	</p:column>
+										<p:column styleClass='centerText'>
+											<f:facet name="header">
+													#{msgs.label_fileName}
+												</f:facet>
+											<h:outputText value="#{row.fileName}" />
+										</p:column>
+										<p:column styleClass='centerText'>
+											<f:facet name="header">
+												#{msgs.label_download}
+											</f:facet>
+											<h:commandButton styleClass="btn btn-success" value="&#xf019; #{msgs.label_download}">
+												<f:ajax render="missionReportRegisterationFormId:internalDlgPanelId missionReportRegisterationFormId:downloadedFileParamId" listener="#{missionReportRegisteration.getDownloadParam(row.attachmentId)}" onevent="function(e){if(e.status == 'success') return downloadFile();}" />
+											</h:commandButton>
+										</p:column>
+										<p:column styleClass='centerText'>
+											<f:facet name="header">
+												#{msgs.label_delete}
+											</f:facet>
+											<h:commandButton styleClass="btn btn-trans-icon" value="&#xf00d;">
+												<f:ajax render="missionReportRegisterationFormId:internalDlgPanelId missionReportRegisterationFormId:downloadedFileParamId" listener="#{missionReportRegisteration.getDeleteParam(row)}" />
+											</h:commandButton>
+										</p:column>
+									</p:dataTable>
+								</td>
+							</tr>
+						</table>
+					</h:panelGroup>
+				</p:dialog>
+			</h:panelGroup>
+		</ui:decorate>
+	</h:form>
+	<h:inputHidden value="#{msgs.error_mandatory}" id="mandatoryErrorId" />
+</h:body>
+</html>

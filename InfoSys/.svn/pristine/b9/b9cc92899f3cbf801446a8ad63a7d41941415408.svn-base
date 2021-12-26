@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:util="http://java.sun.com/jsf/composite/util" xmlns:code="http://java.sun.com/jsf/composite/code">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+	<script type="text/javascript">
+	function getEmployee(contextPath){
+		openEmpsMiniSearch(contextPath, 2);
+		return false;
+	}
+
+	function releaseMask(){
+		unMaskScreen();
+   	}
+   	
+	function HandlePopupResult(ret) {
+	   	unMaskScreen();
+		if(ret!=null){ 
+			document.getElementById('penaltyArrestsSearchFormId:selectedEmployeeIdId').value=ret[0];
+         	document.getElementById('penaltyArrestsSearchFormId:selectedEmployeeNameId').value=ret[1];
+         	document.getElementById('penaltyArrestsSearchFormId:selectedEmployeeNameViewId').innerHTML=ret[1];
+		    return true;
+		}
+		return false;
+	}
+
+	function decisionDialog(flag){
+		 if(flag){
+			 return confirm('#{msgs.q_endArrest}');
+		 }else{
+			 return confirm('#{msgs.q_endArrestBeforeDate}');
+		 }
+	}
+	</script>
+</h:head>
+<h:body styleClass="screenBg">
+	<h:form id="penaltyArrestsSearchFormId" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/Template.xhtml">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td class="screenTitle">#{msgs.title_penaltyArrestsSearch}</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.label_searchData}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="searchContainerId">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<th width="15%">#{msgs.label_arrestDateFrom}</th>
+									<td width="35%">
+										<util:advancedHijriDate id="fromDateId" value="#{penaltyArrestsSearch.fromDate}" />
+									</td>
+
+									<th width="15%">#{msgs.label_to}</th>
+									<td width="35%">
+										<util:advancedHijriDate id="toDateId" value="#{penaltyArrestsSearch.toDate}" />
+									</td>
+								</tr>
+
+								<tr>
+									<th width="15%">#{msgs.label_arrestDuration}</th>
+									<td width="35%">
+										<h:inputText style="width:30%" styleClass="form-control" id="arrestDurationId" value="#{penaltyArrestsSearch.period}" onkeypress="return checkDigit(event)" onblur="return isDigitFloat(this)" maxlength="32" />
+										#{msgs.label_hour}
+									</td>
+
+									<th width="15%">#{msgs.label_arrested}</th>
+									<td width="35%">
+										<h:commandButton id="selectEmployeeBtnId" image="/resources/images/search.png" onclick="return getEmployee('#{request.contextPath}');" />
+
+										<h:inputHidden id="selectedEmployeeIdId" value="#{penaltyArrestsSearch.employeeId}" />
+										<h:inputHidden id="selectedEmployeeNameId" value="#{penaltyArrestsSearch.employeeName}" />
+										<h:outputText id="selectedEmployeeNameViewId" value="#{penaltyArrestsSearch.employeeName}" />
+									</td>
+								</tr>
+
+								<tr>
+									<th width="15%">#{msgs.label_arrestEndDate}</th>
+									<td width="35%">
+										<util:advancedHijriDate id="arrestEndDateId" value="#{penaltyArrestsSearch.arrestEndDate}" />
+									</td>
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td width="100%">
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:commandButton styleClass="btn btn-default" id="resetBtnId" value="#{msgs.label_reset}" action="#{penaltyArrestsSearch.init()}">
+										<f:ajax render="penaltyArrestsSearchFormId:searchContainerId" />
+									</h:commandButton>
+
+									<h:commandButton styleClass="btn btn-default" id="searchBtnId" value="#{msgs.label_search}" action="#{penaltyArrestsSearch.searchPenaltyArrests()}">
+										<f:ajax render="penaltyArrestsSearchFormId:penaltyArrestDataTableId" execute="penaltyArrestsSearchFormId:searchContainerId" />
+									</h:commandButton>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<p:dataTable reflow="true" tableStyle="table-layout: auto" paginator="true" id="penaltyArrestDataTableId" rows="10" rowIndexVar="index" var="row" value="#{penaltyArrestsSearch.penaltyArrestList}" rowHover="true">
+							<p:column styleClass='centerText'>
+								<f:facet name="header">#</f:facet>
+                                #{index + 1}
+                            </p:column>
+							<p:column styleClass='centerText'>
+								<f:facet name="header">#{msgs.label_requestNumber} </f:facet>
+								<h:outputText value="#{row.requestNumber}" />
+							</p:column>
+							<p:column styleClass='centerText'>
+								<f:facet name="header">#{msgs.label_requestDate} </f:facet>
+								<h:outputText value="#{row.requestDateString}" />
+							</p:column>
+							<p:column styleClass='centerText'>
+								<f:facet name="header">#{msgs.label_requesterEmployee} </f:facet>
+								<h:outputText value="#{row.requesterEmployeeName}" />
+							</p:column>
+							<p:column styleClass='centerText'>
+								<f:facet name="header">#{msgs.label_arrested} </f:facet>
+								<h:outputText value="#{row.arrestedEmployeeName}" />
+							</p:column>
+							<p:column styleClass='centerText'>
+								<f:facet name="header">#{msgs.label_arrestDuration} </f:facet>
+								<h:outputText value="#{row.arrestPeriod}" />
+							</p:column>
+							<p:column styleClass='centerText'>
+								<f:facet name="header">#{msgs.label_arrestStartDate} </f:facet>
+								<h:outputText value="#{row.entryDateString}" />
+							</p:column>
+							<p:column styleClass='centerText'>
+								<f:facet name="header">#{msgs.label_arrestStartTime} </f:facet>
+								<h:outputText value="#{row.entryTime}" />
+							</p:column>
+							<p:column styleClass='centerText'>
+								<f:facet name="header">#{msgs.label_arrestEndDate} </f:facet>
+								<h:outputText value="#{row.exitDateString}" />
+							</p:column>
+							<p:column styleClass='centerText'>
+								<f:facet name="header">#{msgs.label_arrestEndTime} </f:facet>
+								<h:outputText value="#{row.exitTime}" />
+							</p:column>
+							<p:column styleClass='centerText'>
+								<f:facet name="header">#{msgs.label_status} </f:facet>
+								<h:outputText rendered="#{row.entryDate == null}" value="#{msgs.label_notArrestedYet}" />
+								<h:outputText rendered="#{row.entryDate != null and row.exitDate == null}" value="#{msgs.label_arrestedStatus}" />
+								<h:outputText rendered="#{row.exitDate != null}" value="#{msgs.label_released}" />
+							</p:column>'complete'
+							<p:column styleClass='centerText'>
+								<f:facet name="header">#{msgs.label_actions} </f:facet>
+								<h:commandButton styleClass="btn btn-default" id="startArrestBtn" value="#{msgs.label_startArrest}" action="#{penaltyArrestsSearch.startArrest(row)}" onclick="return confirm('#{msgs.q_startArrest}');" rendered="#{row.entryDate == null}">
+									<f:ajax render="penaltyArrestsSearchFormId:notifyMessagesId penaltyArrestsSearchFormId:penaltyArrestDataTableId" />
+								</h:commandButton>
+								<h:commandButton styleClass="btn btn-default" id="endArrestBtn" value="#{msgs.label_endArrest}" action="#{penaltyArrestsSearch.endArrest(row)}" onclick="return decisionDialog(#{penaltyArrestsSearch.checkArrestEndDate(row)});" rendered="#{row.entryDate != null and row.exitDate == null}">
+									<f:ajax render="penaltyArrestsSearchFormId:notifyMessagesId penaltyArrestsSearchFormId:penaltyArrestDataTableId" />
+								</h:commandButton>
+							</p:column>
+							<p:column styleClass='centerText'>
+								<f:facet name="header"> #{msgs.label_view} </f:facet>
+								<h:commandButton id="viewBtnId" image="/resources/images/details.png" action="#{penaltyArrestsSearch.viewPenaltyArrest(row)}" />
+							</p:column>
+						</p:dataTable>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+			</table>
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>

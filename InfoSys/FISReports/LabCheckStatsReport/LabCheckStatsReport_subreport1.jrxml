@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Test_subreport1" pageWidth="900" pageHeight="802" columnWidth="900" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="1a297bf6-5555-43e8-a4b6-68283208ceaf">
+	<property name="ireport.zoom" value="0.6830134553650706"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<subDataset name="chart" uuid="73563fe4-8109-44c0-abc2-c3179a180f17">
+		<parameter name="P_DATE_FROM" class="java.lang.String">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<parameter name="P_DATE_TO" class="java.lang.String">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<parameter name="P_DATE_FROM_FLAG" class="java.lang.String">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<parameter name="P_DATE_TO_FLAG" class="java.lang.String">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<parameter name="P_MODE" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<parameter name="P_REGION_NAME" class="java.lang.String"/>
+		<parameter name="P_SCHEMA_NAME" class="java.lang.String">
+			<defaultValueExpression><![CDATA["INFOSYS"]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT
+    REGIONS.ARABIC_NAME AS REGION_NAME,$P!{P_SCHEMA_NAME}.PKG_NUMBER_TO_CHAR (LCE.CHECK_REASON) AS DESCRIPTION,$P!{P_SCHEMA_NAME}.PKG_CHAR_TO_NUMBER(COUNT(LCE.ID)) AS COUNT
+FROM
+    $P!{P_SCHEMA_NAME}.STP_VW_DEPARTMENTS REGIONS
+	LEFT OUTER JOIN $P!{P_SCHEMA_NAME}.FIS_VW_LAB_CHECK_EMPLOYEES LCE ON REGIONS.ARABIC_NAME = (
+	CASE $P{P_MODE} WHEN 1 THEN LCE.EMPLOYEE_REGION_NAME WHEN 2 THEN LCE.EMPLOYEE_DEP_NAME END)
+WHERE
+    REGIONS.ARABIC_NAME = $P{P_REGION_NAME}
+    AND LCE.LAB_CHECK_STATUS = 2
+    AND   LCE.CHECK_STATUS = 5
+    AND   (
+        $P{P_DATE_FROM_FLAG} =-1
+        OR    LCE.ORDER_DATE >= $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_DATE ($P{P_DATE_FROM},'MI/mm/YYYY')
+    )
+    AND   (
+        $P{P_DATE_TO_FLAG} =-1
+        OR    LCE.ORDER_DATE <= $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_DATE ($P{P_DATE_TO},'MI/mm/YYYY')
+    )
+GROUP BY
+    REGIONS.ARABIC_NAME,$P!{P_SCHEMA_NAME}.PKG_NUMBER_TO_CHAR (LCE.CHECK_REASON)
+ORDER BY
+    $P!{P_SCHEMA_NAME}.PKG_NUMBER_TO_CHAR (LCE.CHECK_REASON) DESC]]>
+		</queryString>
+		<field name="REGION_NAME" class="java.lang.String"/>
+		<field name="DESCRIPTION" class="java.lang.String"/>
+		<field name="COUNT" class="java.math.BigDecimal"/>
+	</subDataset>
+	<parameter name="P_DATE_FROM" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_DATE_TO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_DATE_FROM_FLAG" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_DATE_TO_FLAG" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_MODE" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_REPORTS_ROOT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["C://u01//WorkFiles//FISReports//"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_SCHEMA_NAME" class="java.lang.String">
+		<defaultValueExpression><![CDATA["INFOSYS"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+    DISTINCT DEP.ARABIC_NAME AS REGION_NAME, DEP.ID
+FROM
+    $P!{P_SCHEMA_NAME}.STP_VW_DEPARTMENTS DEP LEFT OUTER JOIN $P!{P_SCHEMA_NAME}.FIS_VW_LAB_CHECK_EMPLOYEES LCE ON
+	DEP.ARABIC_NAME = (CASE $P{P_MODE} WHEN 1 THEN LCE.EMPLOYEE_REGION_NAME WHEN 2 THEN LCE.EMPLOYEE_DEP_NAME END )
+WHERE
+(
+    (
+          DEP.DEPARTMENT_TYPEID IN (100,75)
+          AND $P{P_MODE} = 1
+    )
+    OR
+   (
+          DEP.DEPARTMENT_TYPEID = 38
+          AND $P{P_MODE} = 2
+    )
+)
+    AND   LCE.LAB_CHECK_STATUS = 2
+    AND   LCE.CHECK_STATUS = 5
+    AND ($P{P_DATE_FROM_FLAG} = - 1 OR LCE.ORDER_DATE >= $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_DATE($P{P_DATE_FROM} , 'MI/mm/YYYY'))
+    AND ($P{P_DATE_TO_FLAG} = - 1 OR LCE.ORDER_DATE <= $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_DATE($P{P_DATE_TO} , 'MI/mm/YYYY'))
+ORDER BY DEP.ID]]>
+	</queryString>
+	<field name="REGION_NAME" class="java.lang.String"/>
+	<field name="ID" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="377" splitType="Stretch">
+			<ellipse>
+				<reportElement x="328" y="40" width="247" height="242" uuid="18856e26-3ecf-4eff-91cb-cd751f0c34fa"/>
+			</ellipse>
+			<pieChart>
+				<chart renderType="image">
+					<reportElement x="0" y="0" width="900" height="347" uuid="3ed797be-ff0e-4cc8-8348-7061a7e665f1">
+						<property name="net.sf.jasperreports.chart.range.axis.integer.unit" value="true"/>
+					</reportElement>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend>
+						<font fontName="Arial" size="16"/>
+					</chartLegend>
+				</chart>
+				<pieDataset>
+					<dataset>
+						<datasetRun subDataset="chart" uuid="3e3551b0-71c7-42bc-9095-dc8f2debce18">
+							<datasetParameter name="P_DATE_FROM">
+								<datasetParameterExpression><![CDATA[$P{P_DATE_FROM}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="P_DATE_TO">
+								<datasetParameterExpression><![CDATA[$P{P_DATE_TO}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="P_DATE_FROM_FLAG">
+								<datasetParameterExpression><![CDATA[$P{P_DATE_FROM_FLAG}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="P_DATE_TO_FLAG">
+								<datasetParameterExpression><![CDATA[$P{P_DATE_TO_FLAG}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="P_REGION_NAME">
+								<datasetParameterExpression><![CDATA[$F{REGION_NAME}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="P_MODE">
+								<datasetParameterExpression><![CDATA[$P{P_MODE}]]></datasetParameterExpression>
+							</datasetParameter>
+						</datasetRun>
+					</dataset>
+					<keyExpression><![CDATA[$F{DESCRIPTION}.equals("1") ? "فحص الترقية" :
+$F{DESCRIPTION}.equals("2") ? "فحص مفاجىء" :
+$F{DESCRIPTION}.equals("3") ? "قضايا المخدرات" :
+$F{DESCRIPTION}.equals("4") ? "مهام المديرية" :
+$F{DESCRIPTION}.equals("5") ? "التقدم بطلب العلاج" :
+$F{DESCRIPTION}.equals("6") ? "عرض للجنة الطبية" : "فحص الدورة"]]></keyExpression>
+					<valueExpression><![CDATA[$F{COUNT}]]></valueExpression>
+					<labelExpression><![CDATA[$F{COUNT}.toString()]]></labelExpression>
+				</pieDataset>
+				<piePlot>
+					<plot/>
+					<itemLabel>
+						<font fontName="Arial" size="16" pdfEncoding="Identity-V"/>
+					</itemLabel>
+				</piePlot>
+			</pieChart>
+			<textField>
+				<reportElement x="230" y="357" width="440" height="20" uuid="b02e336b-87ef-437c-a058-4a7cb034a42a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="16" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REGION_NAME}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

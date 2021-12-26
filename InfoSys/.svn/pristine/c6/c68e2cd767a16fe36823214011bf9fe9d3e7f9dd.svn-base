@@ -1,0 +1,1205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PostiveCheckStatusBasedOnAge" pageWidth="850" pageHeight="890" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="810" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d6ead13d-c690-4f89-9986-434f966d88f3">
+	<property name="ireport.zoom" value="0.5131581182307067"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<parameter name="P_REPORTS_ROOT" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C://u01//WorkFiles//FISReports//"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_DATE_FROM" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_DATE_TO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_DATE_FROM_FLAG" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_DATE_TO_FLAG" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_HIJRI_SYS_DATE" class="java.util.Date"/>
+	<parameter name="P_HIJRI_SYS_DATE_STRING" class="java.lang.String"/>
+	<parameter name="P_LOGIN_EMPLOYEE" class="java.lang.String"/>
+	<parameter name="P_SCHEMA_NAME" class="java.lang.String">
+		<defaultValueExpression><![CDATA["INFOSYS"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+    REGIONS_TABLE.REG "المنطقة",
+	$P!{P_SCHEMA_NAME}.PKG_NVL(REGIONS_TABLE.CO,0) "القوة العمومية للمنطقة",
+	$P!{P_SCHEMA_NAME}.PKG_NVL(POSITIVE_TABLE.CO,0) "عدد الإيجابى بالمنطقة",
+	$P!{P_SCHEMA_NAME}.PKG_NVL(UNDER_26_TABLE.CO,0) "Under26",
+	$P!{P_SCHEMA_NAME}.PKG_NVL(UNDER_31_TABLE.CO,0) "Under31",
+	$P!{P_SCHEMA_NAME}.PKG_NVL(UNDER_36_TABLE.CO,0) "Under36",
+	$P!{P_SCHEMA_NAME}.PKG_NVL(UNDER_41_TABLE.CO,0) "Under41",
+	$P!{P_SCHEMA_NAME}.PKG_NVL(UNDER_46_TABLE.CO,0) "Under46",
+	$P!{P_SCHEMA_NAME}.PKG_NVL(UNDER_51_TABLE.CO,0) "Under51",
+          	$P!{P_SCHEMA_NAME}.PKG_NVL(OVER_51_TABLE.CO,0) "Over51"
+FROM
+    (SELECT COUNT(EMP.ID) AS CO,REGIONS.ARABIC_NAME AS REG,REGIONS.ID AS REGION_ID
+        FROM
+            $P!{P_SCHEMA_NAME}.STP_VW_EMPLOYEES EMP,$P!{P_SCHEMA_NAME}.STP_VW_DEPARTMENTS EMP_REGION,$P!{P_SCHEMA_NAME}.STP_VW_DEPARTMENTS REGIONS
+        WHERE
+            EMP.ACTUAL_DEPT_ID = EMP_REGION.ID AND   EMP_REGION.ID = EMP.ACTUAL_DEPT_ID
+            AND EMP.STATUS_ID >= 15
+			AND EMP.STATUS_ID <= 45
+            AND   REGIONS.DEPARTMENT_TYPEID IN (100,75) AND   REGIONS.ID = EMP_REGION.REGIONID
+        GROUP BY
+            REGIONS.ARABIC_NAME,REGIONS.ID
+        ORDER BY
+            REGIONS.ARABIC_NAME   offset 0 rows
+    ) REGIONS_TABLE LEFT OUTER JOIN  (
+        SELECT
+            COUNT(LCE."ID") AS CO,DEP.ARABIC_NAME AS REG,DEP.ID AS REGION_ID
+        FROM
+            $P!{P_SCHEMA_NAME}.STP_VW_DEPARTMENTS DEP LEFT OUTER JOIN (
+                SELECT
+                    LCE.ID,LCE.CHECK_DATE,LCE.CHECK_STATUS,LCE.CUREMENT,LCE.DOMAINS_ID_CURE_HOSPITAL,LCE.DOMAINS_ID_MATERIAL_TYPE,
+					LCE.DOMNS_ID_NATNL_FORC_MTRL_TYP,LCE.LAB_CHECKS_ID,LCE.NATIONAL_FORCE_SAMPLE_NUMBER,
+					LCE.NATNAL_FORCE_SMPLE_SENT_DATE,LCE.SAMPLE_DATE,LCE.SAMPLE_NUMBER,LCE.PERIODIC_RETEST_DATE,LCE.STP_VW_EMPLOYEES_ID,
+					LCE.EDITOR_EMPLOYEE_ID,LCE.EDITING_DATE,LCE.SAMPLE_NUMBER_BEFORE_EDIT,LCE.SAMPLE_DATE_BEFORE_EDIT,LCE.CHECK_STATUS_BEFORE_EDIT,
+					LCE.DMNS_ID_MAT_TYPE_BEFORE_EDIT,LCE.NTNAL_FRC_SMPL_NUM_BEFORE_EDIT,LCE.NTNL_FRC_SMPL_SNT_DT_BFR_EDIT,LCE.DMNS_ID_CURE_HOSPITAL_BFR_EDIT,
+					LCE.CUREMENT_BEFORE_EDIT,LCE.DMN_ID_NTNL_FRC_MTRL_BFR_EDT,LCE.PRIODIC_RETST_DATE_BEFORE_EDIT,LCE.EMPLOYEE_FULL_NAME,LCE.EMPLOYEE_SOCIAL_ID,
+					LCE.EMPLOYEE_MILITARY_NO,LCE.EMPLOYEE_RANK_ID,LCE.EMPLOYEE_RANK,LCE.EMPLOYEE_DEP_NAME,LCE.EMPLOYEE_DEP_ID,LCE.EMPLOYEE_TITLE_DESCRIPTION,
+					LCE.EDITOR_EMPLOYEE_NAME,LCE.EDITOR_EMPLOYEE_RANK,LCE.EDITOR_EMPLOYEE_DEP_ID,LCE.EDITOR_EMPLOYEE_DEP_NAME,LCE.EMPLOYEE_REGION_ID,
+					LCE.EMPLOYEE_REGION_NAME,LCE.ORDER_NUMBER,LCE.ORDER_DATE,LCE.WF_INSTANCES_ID,LCE.CHECK_REASON,LCE.LAB_CHECK_STATUS,
+					LCE.STP_VW_DEPARTMENT_REGION_ID,LCE.LAB_CHECK_ORDER_REMARKS,LCE.ORDER_SOURCE_DOMAIN_DESC,LCE.DOMNS_MATERIAL_TYPE_DESC,
+					LCE.DOMNS_NTIONAL_MAT_TYPE_DESC,LCE.DMNS_MAT_TYPE_DESC_BFOR_EDIT,LCE.DMNS_NTNL_MAT_TYP_DSC_BFR_EDT,LCE.HOSPITAL_NAME,
+					LCE.HOSPITAL_NAME_BEFORE_EDIT,LCE.RETEST_NUMBER,LCE.RETESTED,LCE.SECURITY_FORCES_REMARKS,LCE.MEDICAL_AFFARIS_REMARKS,LCE.TEMP_MIG_1,
+					LCE.TEMP_MIG_2,LCE.TEMP_MIG_3,LCE.TEMP_MIG_4,EMP.BIRTH_DATE
+                FROM
+                    $P!{P_SCHEMA_NAME}.FIS_VW_LAB_CHECK_EMPLOYEES LCE, $P!{P_SCHEMA_NAME}.STP_VW_EMPLOYEES EMP
+                WHERE
+                    LCE.STP_VW_EMPLOYEES_ID = EMP.ID AND LCE.LAB_CHECK_STATUS = 2 AND   LCE.CHECK_STATUS = 5
+                    AND (($P{P_DATE_FROM_FLAG} =-1 OR    LCE.ORDER_DATE >= $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_DATE ($P{P_DATE_FROM},'MI/mm/YYYY'))
+                    AND ($P{P_DATE_TO_FLAG} =-1 OR    LCE.ORDER_DATE <= $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_DATE ($P{P_DATE_TO},'MI/mm/YYYY')))) LCE
+        ON DEP.ID = LCE.EMPLOYEE_REGION_ID
+		WHERE DEP.DEPARTMENT_TYPEID IN (100,75)
+        GROUP BY
+            DEP.ARABIC_NAME,DEP.ID
+        ORDER BY
+            DEP.ARABIC_NAME offset 0 rows
+    ) POSITIVE_TABLE ON REGIONS_TABLE.REGION_ID = POSITIVE_TABLE.REGION_ID LEFT OUTER JOIN (
+        SELECT
+            COUNT(LCE."ID") AS CO,DEP.ARABIC_NAME AS REG,DEP.ID AS REGION_ID
+        FROM
+            $P!{P_SCHEMA_NAME}.STP_VW_EMPLOYEES EMP,$P!{P_SCHEMA_NAME}.STP_VW_DEPARTMENTS DEP LEFT OUTER JOIN (
+                SELECT
+                    LCE.ID,LCE.CHECK_DATE,LCE.CHECK_STATUS,LCE.CUREMENT,LCE.DOMAINS_ID_CURE_HOSPITAL,LCE.DOMAINS_ID_MATERIAL_TYPE,LCE.DOMNS_ID_NATNL_FORC_MTRL_TYP,LCE.LAB_CHECKS_ID,LCE.NATIONAL_FORCE_SAMPLE_NUMBER,LCE.NATNAL_FORCE_SMPLE_SENT_DATE,LCE.SAMPLE_DATE,LCE.SAMPLE_NUMBER,LCE.PERIODIC_RETEST_DATE,LCE.STP_VW_EMPLOYEES_ID,LCE.EDITOR_EMPLOYEE_ID,LCE.EDITING_DATE,LCE.SAMPLE_NUMBER_BEFORE_EDIT,LCE.SAMPLE_DATE_BEFORE_EDIT,LCE.CHECK_STATUS_BEFORE_EDIT,LCE.DMNS_ID_MAT_TYPE_BEFORE_EDIT,LCE.NTNAL_FRC_SMPL_NUM_BEFORE_EDIT,LCE.NTNL_FRC_SMPL_SNT_DT_BFR_EDIT,LCE.DMNS_ID_CURE_HOSPITAL_BFR_EDIT,LCE.CUREMENT_BEFORE_EDIT,LCE.DMN_ID_NTNL_FRC_MTRL_BFR_EDT,LCE.PRIODIC_RETST_DATE_BEFORE_EDIT,LCE.EMPLOYEE_FULL_NAME,LCE.EMPLOYEE_SOCIAL_ID,LCE.EMPLOYEE_MILITARY_NO,LCE.EMPLOYEE_RANK_ID,LCE.EMPLOYEE_RANK,LCE.EMPLOYEE_DEP_NAME,LCE.EMPLOYEE_DEP_ID,LCE.EMPLOYEE_TITLE_DESCRIPTION,LCE.EDITOR_EMPLOYEE_NAME,LCE.EDITOR_EMPLOYEE_RANK,LCE.EDITOR_EMPLOYEE_DEP_ID,LCE.EDITOR_EMPLOYEE_DEP_NAME,LCE.EMPLOYEE_REGION_ID,LCE.EMPLOYEE_REGION_NAME,LCE.ORDER_NUMBER,LCE.ORDER_DATE,LCE.WF_INSTANCES_ID,LCE.CHECK_REASON,LCE.LAB_CHECK_STATUS,LCE.STP_VW_DEPARTMENT_REGION_ID,LCE.LAB_CHECK_ORDER_REMARKS,LCE.ORDER_SOURCE_DOMAIN_DESC,LCE.DOMNS_MATERIAL_TYPE_DESC,LCE.DOMNS_NTIONAL_MAT_TYPE_DESC,LCE.DMNS_MAT_TYPE_DESC_BFOR_EDIT,LCE.DMNS_NTNL_MAT_TYP_DSC_BFR_EDT,LCE.HOSPITAL_NAME,LCE.HOSPITAL_NAME_BEFORE_EDIT,LCE.RETEST_NUMBER,LCE.RETESTED,LCE.SECURITY_FORCES_REMARKS,LCE.MEDICAL_AFFARIS_REMARKS,LCE.TEMP_MIG_1,LCE.TEMP_MIG_2,LCE.TEMP_MIG_3,LCE.TEMP_MIG_4
+                FROM
+                    $P!{P_SCHEMA_NAME}.FIS_VW_LAB_CHECK_EMPLOYEES LCE
+                WHERE
+                    LCE.LAB_CHECK_STATUS = 2 AND   LCE.CHECK_STATUS = 5
+                   AND   (($P{P_DATE_FROM_FLAG} =-1 OR    LCE.ORDER_DATE >= $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_DATE ($P{P_DATE_FROM},'MI/mm/YYYY'))
+                   AND   ($P{P_DATE_TO_FLAG} =-1 OR    LCE.ORDER_DATE <= $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_DATE ($P{P_DATE_TO},'MI/mm/YYYY')))) LCE
+        ON DEP.ID = LCE.EMPLOYEE_REGION_ID
+		WHERE  DEP.DEPARTMENT_TYPEID IN (100,75)
+            AND   EMP.ID = LCE.STP_VW_EMPLOYEES_ID
+            AND   ($P!{P_SCHEMA_NAME}.PKG_CHAR_TO_NUMBER($P!{P_SCHEMA_NAME}.PKG_SUBSTRING($P{P_HIJRI_SYS_DATE_STRING},7,10)) - $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_NUMBER($P!{P_SCHEMA_NAME}.PKG_SUBSTRING($P!{P_SCHEMA_NAME}.PKG_DATE_TO_CHAR (EMP.BIRTH_DATE,'dd/mm/yyyy'),7,10)) < 26)
+        GROUP BY
+            DEP.ARABIC_NAME,DEP.ID
+        ORDER BY
+            DEP.ARABIC_NAME   offset 0 rows
+    ) UNDER_26_TABLE ON  REGIONS_TABLE.REGION_ID = UNDER_26_TABLE.REGION_ID LEFT OUTER JOIN (
+        SELECT
+            COUNT(LCE."ID") AS CO,DEP.ARABIC_NAME AS REG,DEP.ID AS REGION_ID
+        FROM
+            $P!{P_SCHEMA_NAME}.STP_VW_DEPARTMENTS DEP LEFT OUTER JOIN (
+                SELECT
+                    LCE.ID,LCE.CHECK_DATE,LCE.CHECK_STATUS,LCE.CUREMENT,LCE.DOMAINS_ID_CURE_HOSPITAL,LCE.DOMAINS_ID_MATERIAL_TYPE,LCE.DOMNS_ID_NATNL_FORC_MTRL_TYP,LCE.LAB_CHECKS_ID,LCE.NATIONAL_FORCE_SAMPLE_NUMBER,LCE.NATNAL_FORCE_SMPLE_SENT_DATE,LCE.SAMPLE_DATE,LCE.SAMPLE_NUMBER,LCE.PERIODIC_RETEST_DATE,LCE.STP_VW_EMPLOYEES_ID,LCE.EDITOR_EMPLOYEE_ID,LCE.EDITING_DATE,LCE.SAMPLE_NUMBER_BEFORE_EDIT,LCE.SAMPLE_DATE_BEFORE_EDIT,LCE.CHECK_STATUS_BEFORE_EDIT,LCE.DMNS_ID_MAT_TYPE_BEFORE_EDIT,LCE.NTNAL_FRC_SMPL_NUM_BEFORE_EDIT,LCE.NTNL_FRC_SMPL_SNT_DT_BFR_EDIT,LCE.DMNS_ID_CURE_HOSPITAL_BFR_EDIT,LCE.CUREMENT_BEFORE_EDIT,LCE.DMN_ID_NTNL_FRC_MTRL_BFR_EDT,LCE.PRIODIC_RETST_DATE_BEFORE_EDIT,LCE.EMPLOYEE_FULL_NAME,LCE.EMPLOYEE_SOCIAL_ID,LCE.EMPLOYEE_MILITARY_NO,LCE.EMPLOYEE_RANK_ID,LCE.EMPLOYEE_RANK,LCE.EMPLOYEE_DEP_NAME,LCE.EMPLOYEE_DEP_ID,LCE.EMPLOYEE_TITLE_DESCRIPTION,LCE.EDITOR_EMPLOYEE_NAME,LCE.EDITOR_EMPLOYEE_RANK,LCE.EDITOR_EMPLOYEE_DEP_ID,LCE.EDITOR_EMPLOYEE_DEP_NAME,LCE.EMPLOYEE_REGION_ID,LCE.EMPLOYEE_REGION_NAME,LCE.ORDER_NUMBER,LCE.ORDER_DATE,LCE.WF_INSTANCES_ID,LCE.CHECK_REASON,LCE.LAB_CHECK_STATUS,LCE.STP_VW_DEPARTMENT_REGION_ID,LCE.LAB_CHECK_ORDER_REMARKS,LCE.ORDER_SOURCE_DOMAIN_DESC,LCE.DOMNS_MATERIAL_TYPE_DESC,LCE.DOMNS_NTIONAL_MAT_TYPE_DESC,LCE.DMNS_MAT_TYPE_DESC_BFOR_EDIT,LCE.DMNS_NTNL_MAT_TYP_DSC_BFR_EDT,LCE.HOSPITAL_NAME,LCE.HOSPITAL_NAME_BEFORE_EDIT,LCE.RETEST_NUMBER,LCE.RETESTED,LCE.SECURITY_FORCES_REMARKS,LCE.MEDICAL_AFFARIS_REMARKS,LCE.TEMP_MIG_1,LCE.TEMP_MIG_2,LCE.TEMP_MIG_3,LCE.TEMP_MIG_4
+                FROM
+                    $P!{P_SCHEMA_NAME}.FIS_VW_LAB_CHECK_EMPLOYEES LCE
+                WHERE
+                    LCE.LAB_CHECK_STATUS = 2 AND   LCE.CHECK_STATUS = 5
+                    AND   (($P{P_DATE_FROM_FLAG} =-1 OR    LCE.ORDER_DATE >= $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_DATE ($P{P_DATE_FROM},'MI/mm/YYYY'))
+                    AND   ($P{P_DATE_TO_FLAG} =-1 OR    LCE.ORDER_DATE <= $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_DATE ($P{P_DATE_TO},'MI/mm/YYYY')))
+            ) LCE
+			ON DEP.ID = LCE.EMPLOYEE_REGION_ID
+			INNER JOIN $P!{P_SCHEMA_NAME}.STP_VW_EMPLOYEES EMP ON EMP.ID = LCE.STP_VW_EMPLOYEES_ID
+        WHERE  DEP.DEPARTMENT_TYPEID IN (
+                100,75
+            )
+            AND   (
+                $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_NUMBER($P!{P_SCHEMA_NAME}.PKG_SUBSTRING($P{P_HIJRI_SYS_DATE_STRING},7,10)) - $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_NUMBER($P!{P_SCHEMA_NAME}.PKG_SUBSTRING($P!{P_SCHEMA_NAME}.PKG_DATE_TO_CHAR (EMP.BIRTH_DATE,'dd/mm/yyyy'),7,10)) < 31
+                AND   $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_NUMBER($P!{P_SCHEMA_NAME}.PKG_SUBSTRING($P{P_HIJRI_SYS_DATE_STRING},7,10)) - $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_NUMBER($P!{P_SCHEMA_NAME}.PKG_SUBSTRING($P!{P_SCHEMA_NAME}.PKG_DATE_TO_CHAR (EMP.BIRTH_DATE,'dd/mm/yyyy'),7,10)) >= 26
+            )
+        GROUP BY
+            DEP.ARABIC_NAME,DEP.ID
+        ORDER BY
+            DEP.ARABIC_NAME   offset 0 rows
+    ) UNDER_31_TABLE ON  REGIONS_TABLE.REGION_ID = UNDER_31_TABLE.REGION_ID LEFT OUTER JOIN (
+        SELECT
+            COUNT(LCE."ID") AS CO,DEP.ARABIC_NAME AS REG,DEP.ID AS REGION_ID
+        FROM
+            $P!{P_SCHEMA_NAME}.STP_VW_DEPARTMENTS DEP LEFT OUTER JOIN (
+                SELECT
+                    LCE.ID,LCE.CHECK_DATE,LCE.CHECK_STATUS,LCE.CUREMENT,LCE.DOMAINS_ID_CURE_HOSPITAL,LCE.DOMAINS_ID_MATERIAL_TYPE,LCE.DOMNS_ID_NATNL_FORC_MTRL_TYP,LCE.LAB_CHECKS_ID,LCE.NATIONAL_FORCE_SAMPLE_NUMBER,LCE.NATNAL_FORCE_SMPLE_SENT_DATE,LCE.SAMPLE_DATE,LCE.SAMPLE_NUMBER,LCE.PERIODIC_RETEST_DATE,LCE.STP_VW_EMPLOYEES_ID,LCE.EDITOR_EMPLOYEE_ID,LCE.EDITING_DATE,LCE.SAMPLE_NUMBER_BEFORE_EDIT,LCE.SAMPLE_DATE_BEFORE_EDIT,LCE.CHECK_STATUS_BEFORE_EDIT,LCE.DMNS_ID_MAT_TYPE_BEFORE_EDIT,LCE.NTNAL_FRC_SMPL_NUM_BEFORE_EDIT,LCE.NTNL_FRC_SMPL_SNT_DT_BFR_EDIT,LCE.DMNS_ID_CURE_HOSPITAL_BFR_EDIT,LCE.CUREMENT_BEFORE_EDIT,LCE.DMN_ID_NTNL_FRC_MTRL_BFR_EDT,LCE.PRIODIC_RETST_DATE_BEFORE_EDIT,LCE.EMPLOYEE_FULL_NAME,LCE.EMPLOYEE_SOCIAL_ID,LCE.EMPLOYEE_MILITARY_NO,LCE.EMPLOYEE_RANK_ID,LCE.EMPLOYEE_RANK,LCE.EMPLOYEE_DEP_NAME,LCE.EMPLOYEE_DEP_ID,LCE.EMPLOYEE_TITLE_DESCRIPTION,LCE.EDITOR_EMPLOYEE_NAME,LCE.EDITOR_EMPLOYEE_RANK,LCE.EDITOR_EMPLOYEE_DEP_ID,LCE.EDITOR_EMPLOYEE_DEP_NAME,LCE.EMPLOYEE_REGION_ID,LCE.EMPLOYEE_REGION_NAME,LCE.ORDER_NUMBER,LCE.ORDER_DATE,LCE.WF_INSTANCES_ID,LCE.CHECK_REASON,LCE.LAB_CHECK_STATUS,LCE.STP_VW_DEPARTMENT_REGION_ID,LCE.LAB_CHECK_ORDER_REMARKS,LCE.ORDER_SOURCE_DOMAIN_DESC,LCE.DOMNS_MATERIAL_TYPE_DESC,LCE.DOMNS_NTIONAL_MAT_TYPE_DESC,LCE.DMNS_MAT_TYPE_DESC_BFOR_EDIT,LCE.DMNS_NTNL_MAT_TYP_DSC_BFR_EDT,LCE.HOSPITAL_NAME,LCE.HOSPITAL_NAME_BEFORE_EDIT,LCE.RETEST_NUMBER,LCE.RETESTED,LCE.SECURITY_FORCES_REMARKS,LCE.MEDICAL_AFFARIS_REMARKS,LCE.TEMP_MIG_1,LCE.TEMP_MIG_2,LCE.TEMP_MIG_3,LCE.TEMP_MIG_4                FROM
+                    $P!{P_SCHEMA_NAME}.FIS_VW_LAB_CHECK_EMPLOYEES LCE
+                WHERE
+                    LCE.LAB_CHECK_STATUS = 2
+                    AND   LCE.CHECK_STATUS = 5
+                    AND   (
+                        (
+                            $P{P_DATE_FROM_FLAG} =-1
+                            OR    LCE.ORDER_DATE >= $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_DATE ($P{P_DATE_FROM},'MI/mm/YYYY')
+                        )
+                        AND   (
+                            $P{P_DATE_TO_FLAG} =-1
+                            OR    LCE.ORDER_DATE <= $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_DATE ($P{P_DATE_TO},'MI/mm/YYYY')
+                        )
+                    )
+            ) LCE
+			ON DEP.ID = LCE.EMPLOYEE_REGION_ID
+			INNER JOIN $P!{P_SCHEMA_NAME}.STP_VW_EMPLOYEES EMP ON EMP.ID = LCE.STP_VW_EMPLOYEES_ID
+        WHERE   DEP.DEPARTMENT_TYPEID IN (
+                100,75
+            )
+            AND   (
+                $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_NUMBER($P!{P_SCHEMA_NAME}.PKG_SUBSTRING($P{P_HIJRI_SYS_DATE_STRING},7,10)) - $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_NUMBER($P!{P_SCHEMA_NAME}.PKG_SUBSTRING($P!{P_SCHEMA_NAME}.PKG_DATE_TO_CHAR (EMP.BIRTH_DATE,'dd/mm/yyyy'),7,10)) < 36
+                AND   $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_NUMBER($P!{P_SCHEMA_NAME}.PKG_SUBSTRING($P{P_HIJRI_SYS_DATE_STRING},7,10)) - $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_NUMBER($P!{P_SCHEMA_NAME}.PKG_SUBSTRING($P!{P_SCHEMA_NAME}.PKG_DATE_TO_CHAR (EMP.BIRTH_DATE,'dd/mm/yyyy'),7,10)) >= 31
+            )
+        GROUP BY
+            DEP.ARABIC_NAME,DEP.ID
+        ORDER BY
+            DEP.ARABIC_NAME   offset 0 rows
+    ) UNDER_36_TABLE ON REGIONS_TABLE.REGION_ID = UNDER_36_TABLE.REGION_ID LEFT OUTER JOIN (
+        SELECT
+            COUNT(LCE."ID") AS CO,DEP.ARABIC_NAME AS REG,DEP.ID AS REGION_ID
+        FROM
+            $P!{P_SCHEMA_NAME}.STP_VW_DEPARTMENTS DEP LEFT OUTER JOIN(
+                SELECT
+                    LCE.ID,LCE.CHECK_DATE,LCE.CHECK_STATUS,LCE.CUREMENT,LCE.DOMAINS_ID_CURE_HOSPITAL,LCE.DOMAINS_ID_MATERIAL_TYPE,LCE.DOMNS_ID_NATNL_FORC_MTRL_TYP,LCE.LAB_CHECKS_ID,LCE.NATIONAL_FORCE_SAMPLE_NUMBER,LCE.NATNAL_FORCE_SMPLE_SENT_DATE,LCE.SAMPLE_DATE,LCE.SAMPLE_NUMBER,LCE.PERIODIC_RETEST_DATE,LCE.STP_VW_EMPLOYEES_ID,LCE.EDITOR_EMPLOYEE_ID,LCE.EDITING_DATE,LCE.SAMPLE_NUMBER_BEFORE_EDIT,LCE.SAMPLE_DATE_BEFORE_EDIT,LCE.CHECK_STATUS_BEFORE_EDIT,LCE.DMNS_ID_MAT_TYPE_BEFORE_EDIT,LCE.NTNAL_FRC_SMPL_NUM_BEFORE_EDIT,LCE.NTNL_FRC_SMPL_SNT_DT_BFR_EDIT,LCE.DMNS_ID_CURE_HOSPITAL_BFR_EDIT,LCE.CUREMENT_BEFORE_EDIT,LCE.DMN_ID_NTNL_FRC_MTRL_BFR_EDT,LCE.PRIODIC_RETST_DATE_BEFORE_EDIT,LCE.EMPLOYEE_FULL_NAME,LCE.EMPLOYEE_SOCIAL_ID,LCE.EMPLOYEE_MILITARY_NO,LCE.EMPLOYEE_RANK_ID,LCE.EMPLOYEE_RANK,LCE.EMPLOYEE_DEP_NAME,LCE.EMPLOYEE_DEP_ID,LCE.EMPLOYEE_TITLE_DESCRIPTION,LCE.EDITOR_EMPLOYEE_NAME,LCE.EDITOR_EMPLOYEE_RANK,LCE.EDITOR_EMPLOYEE_DEP_ID,LCE.EDITOR_EMPLOYEE_DEP_NAME,LCE.EMPLOYEE_REGION_ID,LCE.EMPLOYEE_REGION_NAME,LCE.ORDER_NUMBER,LCE.ORDER_DATE,LCE.WF_INSTANCES_ID,LCE.CHECK_REASON,LCE.LAB_CHECK_STATUS,LCE.STP_VW_DEPARTMENT_REGION_ID,LCE.LAB_CHECK_ORDER_REMARKS,LCE.ORDER_SOURCE_DOMAIN_DESC,LCE.DOMNS_MATERIAL_TYPE_DESC,LCE.DOMNS_NTIONAL_MAT_TYPE_DESC,LCE.DMNS_MAT_TYPE_DESC_BFOR_EDIT,LCE.DMNS_NTNL_MAT_TYP_DSC_BFR_EDT,LCE.HOSPITAL_NAME,LCE.HOSPITAL_NAME_BEFORE_EDIT,LCE.RETEST_NUMBER,LCE.RETESTED,LCE.SECURITY_FORCES_REMARKS,LCE.MEDICAL_AFFARIS_REMARKS,LCE.TEMP_MIG_1,LCE.TEMP_MIG_2,LCE.TEMP_MIG_3,LCE.TEMP_MIG_4
+                FROM
+                    $P!{P_SCHEMA_NAME}.FIS_VW_LAB_CHECK_EMPLOYEES LCE
+                WHERE
+                    LCE.LAB_CHECK_STATUS = 2
+                    AND   LCE.CHECK_STATUS = 5
+                    AND   (
+                        (
+                            $P{P_DATE_FROM_FLAG} =-1
+                            OR    LCE.ORDER_DATE >= $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_DATE ($P{P_DATE_FROM},'MI/mm/YYYY')
+                        )
+                        AND   (
+                            $P{P_DATE_TO_FLAG} =-1
+                            OR    LCE.ORDER_DATE <= $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_DATE ($P{P_DATE_TO},'MI/mm/YYYY')
+                        )
+                    )
+            ) LCE ON DEP.ID = LCE.EMPLOYEE_REGION_ID
+			INNER JOIN $P!{P_SCHEMA_NAME}.STP_VW_EMPLOYEES EMP ON EMP.ID = LCE.STP_VW_EMPLOYEES_ID
+        WHERE  DEP.DEPARTMENT_TYPEID IN (
+                100,75
+            )
+            AND   (
+                $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_NUMBER($P!{P_SCHEMA_NAME}.PKG_SUBSTRING($P{P_HIJRI_SYS_DATE_STRING},7,10)) - $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_NUMBER($P!{P_SCHEMA_NAME}.PKG_SUBSTRING($P!{P_SCHEMA_NAME}.PKG_DATE_TO_CHAR (EMP.BIRTH_DATE,'dd/mm/yyyy'),7,10)) < 41
+                AND   $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_NUMBER($P!{P_SCHEMA_NAME}.PKG_SUBSTRING($P{P_HIJRI_SYS_DATE_STRING},7,10)) - $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_NUMBER($P!{P_SCHEMA_NAME}.PKG_SUBSTRING($P!{P_SCHEMA_NAME}.PKG_DATE_TO_CHAR (EMP.BIRTH_DATE,'dd/mm/yyyy'),7,10)) >= 36
+            )
+        GROUP BY
+            DEP.ARABIC_NAME,DEP.ID
+        ORDER BY
+            DEP.ARABIC_NAME offset 0 rows
+    ) UNDER_41_TABLE ON  REGIONS_TABLE.REGION_ID = UNDER_41_TABLE.REGION_ID LEFT OUTER JOIN (
+        SELECT
+            COUNT(LCE."ID") AS CO,DEP.ARABIC_NAME AS REG,DEP.ID AS REGION_ID
+        FROM
+            $P!{P_SCHEMA_NAME}.STP_VW_DEPARTMENTS DEP LEFT OUTER JOIN (
+                SELECT
+                    LCE.ID,LCE.CHECK_DATE,LCE.CHECK_STATUS,LCE.CUREMENT,LCE.DOMAINS_ID_CURE_HOSPITAL,LCE.DOMAINS_ID_MATERIAL_TYPE,LCE.DOMNS_ID_NATNL_FORC_MTRL_TYP,LCE.LAB_CHECKS_ID,LCE.NATIONAL_FORCE_SAMPLE_NUMBER,LCE.NATNAL_FORCE_SMPLE_SENT_DATE,LCE.SAMPLE_DATE,LCE.SAMPLE_NUMBER,LCE.PERIODIC_RETEST_DATE,LCE.STP_VW_EMPLOYEES_ID,LCE.EDITOR_EMPLOYEE_ID,LCE.EDITING_DATE,LCE.SAMPLE_NUMBER_BEFORE_EDIT,LCE.SAMPLE_DATE_BEFORE_EDIT,LCE.CHECK_STATUS_BEFORE_EDIT,LCE.DMNS_ID_MAT_TYPE_BEFORE_EDIT,LCE.NTNAL_FRC_SMPL_NUM_BEFORE_EDIT,LCE.NTNL_FRC_SMPL_SNT_DT_BFR_EDIT,LCE.DMNS_ID_CURE_HOSPITAL_BFR_EDIT,LCE.CUREMENT_BEFORE_EDIT,LCE.DMN_ID_NTNL_FRC_MTRL_BFR_EDT,LCE.PRIODIC_RETST_DATE_BEFORE_EDIT,LCE.EMPLOYEE_FULL_NAME,LCE.EMPLOYEE_SOCIAL_ID,LCE.EMPLOYEE_MILITARY_NO,LCE.EMPLOYEE_RANK_ID,LCE.EMPLOYEE_RANK,LCE.EMPLOYEE_DEP_NAME,LCE.EMPLOYEE_DEP_ID,LCE.EMPLOYEE_TITLE_DESCRIPTION,LCE.EDITOR_EMPLOYEE_NAME,LCE.EDITOR_EMPLOYEE_RANK,LCE.EDITOR_EMPLOYEE_DEP_ID,LCE.EDITOR_EMPLOYEE_DEP_NAME,LCE.EMPLOYEE_REGION_ID,LCE.EMPLOYEE_REGION_NAME,LCE.ORDER_NUMBER,LCE.ORDER_DATE,LCE.WF_INSTANCES_ID,LCE.CHECK_REASON,LCE.LAB_CHECK_STATUS,LCE.STP_VW_DEPARTMENT_REGION_ID,LCE.LAB_CHECK_ORDER_REMARKS,LCE.ORDER_SOURCE_DOMAIN_DESC,LCE.DOMNS_MATERIAL_TYPE_DESC,LCE.DOMNS_NTIONAL_MAT_TYPE_DESC,LCE.DMNS_MAT_TYPE_DESC_BFOR_EDIT,LCE.DMNS_NTNL_MAT_TYP_DSC_BFR_EDT,LCE.HOSPITAL_NAME,LCE.HOSPITAL_NAME_BEFORE_EDIT,LCE.RETEST_NUMBER,LCE.RETESTED,LCE.SECURITY_FORCES_REMARKS,LCE.MEDICAL_AFFARIS_REMARKS,LCE.TEMP_MIG_1,LCE.TEMP_MIG_2,LCE.TEMP_MIG_3,LCE.TEMP_MIG_4
+                FROM
+                    $P!{P_SCHEMA_NAME}.FIS_VW_LAB_CHECK_EMPLOYEES LCE
+                WHERE
+                    LCE.LAB_CHECK_STATUS = 2
+                    AND   LCE.CHECK_STATUS = 5
+                    AND   (
+                        (
+                            $P{P_DATE_FROM_FLAG} =-1
+                            OR    LCE.ORDER_DATE >= $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_DATE ($P{P_DATE_FROM},'MI/mm/YYYY')
+                        )
+                        AND   (
+                            $P{P_DATE_TO_FLAG} =-1
+                            OR    LCE.ORDER_DATE <= $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_DATE ($P{P_DATE_TO},'MI/mm/YYYY')
+                        )
+                    )
+            ) LCE ON DEP.ID = LCE.EMPLOYEE_REGION_ID
+			INNER JOIN $P!{P_SCHEMA_NAME}.STP_VW_EMPLOYEES EMP ON  EMP.ID = LCE.STP_VW_EMPLOYEES_ID
+        WHERE  DEP.DEPARTMENT_TYPEID IN (
+                100,75
+            )
+            AND   (
+                $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_NUMBER($P!{P_SCHEMA_NAME}.PKG_SUBSTRING($P{P_HIJRI_SYS_DATE_STRING},7,10)) - $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_NUMBER($P!{P_SCHEMA_NAME}.PKG_SUBSTRING($P!{P_SCHEMA_NAME}.PKG_DATE_TO_CHAR (EMP.BIRTH_DATE,'dd/mm/yyyy'),7,10)) < 46
+                AND   $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_NUMBER($P!{P_SCHEMA_NAME}.PKG_SUBSTRING($P{P_HIJRI_SYS_DATE_STRING},7,10)) - $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_NUMBER($P!{P_SCHEMA_NAME}.PKG_SUBSTRING($P!{P_SCHEMA_NAME}.PKG_DATE_TO_CHAR (EMP.BIRTH_DATE,'dd/mm/yyyy'),7,10)) >= 41
+            )
+        GROUP BY
+            DEP.ARABIC_NAME,DEP.ID
+        ORDER BY
+            DEP.ARABIC_NAME offset 0 rows
+    ) UNDER_46_TABLE ON REGIONS_TABLE.REGION_ID = UNDER_46_TABLE.REGION_ID LEFT OUTER JOIN  (
+        SELECT
+            COUNT(LCE."ID") AS CO,DEP.ARABIC_NAME AS REG,DEP.ID AS REGION_ID
+        FROM
+            $P!{P_SCHEMA_NAME}.STP_VW_DEPARTMENTS DEP LEFT OUTER JOIN (
+                SELECT
+                    LCE.ID,LCE.CHECK_DATE,LCE.CHECK_STATUS,LCE.CUREMENT,LCE.DOMAINS_ID_CURE_HOSPITAL,LCE.DOMAINS_ID_MATERIAL_TYPE,LCE.DOMNS_ID_NATNL_FORC_MTRL_TYP,LCE.LAB_CHECKS_ID,LCE.NATIONAL_FORCE_SAMPLE_NUMBER,LCE.NATNAL_FORCE_SMPLE_SENT_DATE,LCE.SAMPLE_DATE,LCE.SAMPLE_NUMBER,LCE.PERIODIC_RETEST_DATE,LCE.STP_VW_EMPLOYEES_ID,LCE.EDITOR_EMPLOYEE_ID,LCE.EDITING_DATE,LCE.SAMPLE_NUMBER_BEFORE_EDIT,LCE.SAMPLE_DATE_BEFORE_EDIT,LCE.CHECK_STATUS_BEFORE_EDIT,LCE.DMNS_ID_MAT_TYPE_BEFORE_EDIT,LCE.NTNAL_FRC_SMPL_NUM_BEFORE_EDIT,LCE.NTNL_FRC_SMPL_SNT_DT_BFR_EDIT,LCE.DMNS_ID_CURE_HOSPITAL_BFR_EDIT,LCE.CUREMENT_BEFORE_EDIT,LCE.DMN_ID_NTNL_FRC_MTRL_BFR_EDT,LCE.PRIODIC_RETST_DATE_BEFORE_EDIT,LCE.EMPLOYEE_FULL_NAME,LCE.EMPLOYEE_SOCIAL_ID,LCE.EMPLOYEE_MILITARY_NO,LCE.EMPLOYEE_RANK_ID,LCE.EMPLOYEE_RANK,LCE.EMPLOYEE_DEP_NAME,LCE.EMPLOYEE_DEP_ID,LCE.EMPLOYEE_TITLE_DESCRIPTION,LCE.EDITOR_EMPLOYEE_NAME,LCE.EDITOR_EMPLOYEE_RANK,LCE.EDITOR_EMPLOYEE_DEP_ID,LCE.EDITOR_EMPLOYEE_DEP_NAME,LCE.EMPLOYEE_REGION_ID,LCE.EMPLOYEE_REGION_NAME,LCE.ORDER_NUMBER,LCE.ORDER_DATE,LCE.WF_INSTANCES_ID,LCE.CHECK_REASON,LCE.LAB_CHECK_STATUS,LCE.STP_VW_DEPARTMENT_REGION_ID,LCE.LAB_CHECK_ORDER_REMARKS,LCE.ORDER_SOURCE_DOMAIN_DESC,LCE.DOMNS_MATERIAL_TYPE_DESC,LCE.DOMNS_NTIONAL_MAT_TYPE_DESC,LCE.DMNS_MAT_TYPE_DESC_BFOR_EDIT,LCE.DMNS_NTNL_MAT_TYP_DSC_BFR_EDT,LCE.HOSPITAL_NAME,LCE.HOSPITAL_NAME_BEFORE_EDIT,LCE.RETEST_NUMBER,LCE.RETESTED,LCE.SECURITY_FORCES_REMARKS,LCE.MEDICAL_AFFARIS_REMARKS,LCE.TEMP_MIG_1,LCE.TEMP_MIG_2,LCE.TEMP_MIG_3,LCE.TEMP_MIG_4
+                FROM
+                    $P!{P_SCHEMA_NAME}.FIS_VW_LAB_CHECK_EMPLOYEES LCE
+                WHERE
+                    LCE.LAB_CHECK_STATUS = 2
+                    AND   LCE.CHECK_STATUS = 5
+                    AND   (
+                        (
+                            $P{P_DATE_FROM_FLAG} =-1
+                            OR    LCE.ORDER_DATE >= $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_DATE ($P{P_DATE_FROM},'MI/mm/YYYY')
+                        )
+                        AND   (
+                            $P{P_DATE_TO_FLAG} =-1
+                            OR    LCE.ORDER_DATE <= $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_DATE ($P{P_DATE_TO},'MI/mm/YYYY')
+                        )
+                    )
+            ) LCE ON DEP.ID = LCE.EMPLOYEE_REGION_ID
+			INNER JOIN  $P!{P_SCHEMA_NAME}.STP_VW_EMPLOYEES EMP ON EMP.ID = LCE.STP_VW_EMPLOYEES_ID
+        WHERE  DEP.DEPARTMENT_TYPEID IN (
+                100,75
+            )
+            AND   (
+                $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_NUMBER($P!{P_SCHEMA_NAME}.PKG_SUBSTRING($P{P_HIJRI_SYS_DATE_STRING},7,10)) - $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_NUMBER($P!{P_SCHEMA_NAME}.PKG_SUBSTRING($P!{P_SCHEMA_NAME}.PKG_DATE_TO_CHAR (EMP.BIRTH_DATE,'dd/mm/yyyy'),7,10)) < 51
+                AND   $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_NUMBER($P!{P_SCHEMA_NAME}.PKG_SUBSTRING($P{P_HIJRI_SYS_DATE_STRING},7,10)) - $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_NUMBER($P!{P_SCHEMA_NAME}.PKG_SUBSTRING($P!{P_SCHEMA_NAME}.PKG_DATE_TO_CHAR (EMP.BIRTH_DATE,'dd/mm/yyyy'),7,10)) >= 46
+            )
+        GROUP BY
+            DEP.ARABIC_NAME,DEP.ID
+        ORDER BY
+            DEP.ARABIC_NAME offset 0 rows
+    ) UNDER_51_TABLE ON REGIONS_TABLE.REGION_ID = UNDER_51_TABLE.REGION_ID LEFT OUTER JOIN  (
+        SELECT
+            COUNT(LCE."ID") AS CO,DEP.ARABIC_NAME AS REG,DEP.ID AS REGION_ID
+        FROM
+            $P!{P_SCHEMA_NAME}.STP_VW_DEPARTMENTS DEP LEFT OUTER JOIN (
+                SELECT
+                    LCE.ID,LCE.CHECK_DATE,LCE.CHECK_STATUS,LCE.CUREMENT,LCE.DOMAINS_ID_CURE_HOSPITAL,LCE.DOMAINS_ID_MATERIAL_TYPE,LCE.DOMNS_ID_NATNL_FORC_MTRL_TYP,LCE.LAB_CHECKS_ID,LCE.NATIONAL_FORCE_SAMPLE_NUMBER,LCE.NATNAL_FORCE_SMPLE_SENT_DATE,LCE.SAMPLE_DATE,LCE.SAMPLE_NUMBER,LCE.PERIODIC_RETEST_DATE,LCE.STP_VW_EMPLOYEES_ID,LCE.EDITOR_EMPLOYEE_ID,LCE.EDITING_DATE,LCE.SAMPLE_NUMBER_BEFORE_EDIT,LCE.SAMPLE_DATE_BEFORE_EDIT,LCE.CHECK_STATUS_BEFORE_EDIT,LCE.DMNS_ID_MAT_TYPE_BEFORE_EDIT,LCE.NTNAL_FRC_SMPL_NUM_BEFORE_EDIT,LCE.NTNL_FRC_SMPL_SNT_DT_BFR_EDIT,LCE.DMNS_ID_CURE_HOSPITAL_BFR_EDIT,LCE.CUREMENT_BEFORE_EDIT,LCE.DMN_ID_NTNL_FRC_MTRL_BFR_EDT,LCE.PRIODIC_RETST_DATE_BEFORE_EDIT,LCE.EMPLOYEE_FULL_NAME,LCE.EMPLOYEE_SOCIAL_ID,LCE.EMPLOYEE_MILITARY_NO,LCE.EMPLOYEE_RANK_ID,LCE.EMPLOYEE_RANK,LCE.EMPLOYEE_DEP_NAME,LCE.EMPLOYEE_DEP_ID,LCE.EMPLOYEE_TITLE_DESCRIPTION,LCE.EDITOR_EMPLOYEE_NAME,LCE.EDITOR_EMPLOYEE_RANK,LCE.EDITOR_EMPLOYEE_DEP_ID,LCE.EDITOR_EMPLOYEE_DEP_NAME,LCE.EMPLOYEE_REGION_ID,LCE.EMPLOYEE_REGION_NAME,LCE.ORDER_NUMBER,LCE.ORDER_DATE,LCE.WF_INSTANCES_ID,LCE.CHECK_REASON,LCE.LAB_CHECK_STATUS,LCE.STP_VW_DEPARTMENT_REGION_ID,LCE.LAB_CHECK_ORDER_REMARKS,LCE.ORDER_SOURCE_DOMAIN_DESC,LCE.DOMNS_MATERIAL_TYPE_DESC,LCE.DOMNS_NTIONAL_MAT_TYPE_DESC,LCE.DMNS_MAT_TYPE_DESC_BFOR_EDIT,LCE.DMNS_NTNL_MAT_TYP_DSC_BFR_EDT,LCE.HOSPITAL_NAME,LCE.HOSPITAL_NAME_BEFORE_EDIT,LCE.RETEST_NUMBER,LCE.RETESTED,LCE.SECURITY_FORCES_REMARKS,LCE.MEDICAL_AFFARIS_REMARKS,LCE.TEMP_MIG_1,LCE.TEMP_MIG_2,LCE.TEMP_MIG_3,LCE.TEMP_MIG_4
+                FROM
+                    $P!{P_SCHEMA_NAME}.FIS_VW_LAB_CHECK_EMPLOYEES LCE
+                WHERE
+                    LCE.LAB_CHECK_STATUS = 2 AND   LCE.CHECK_STATUS = 5
+                    AND   (( $P{P_DATE_FROM_FLAG} =-1 OR    LCE.ORDER_DATE >= $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_DATE ($P{P_DATE_FROM},'MI/mm/YYYY'))
+                    AND   ($P{P_DATE_TO_FLAG} =-1 OR    LCE.ORDER_DATE <= $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_DATE ($P{P_DATE_TO},'MI/mm/YYYY')))) LCE
+		ON DEP.ID = LCE.EMPLOYEE_REGION_ID
+		INNER JOIN $P!{P_SCHEMA_NAME}.STP_VW_EMPLOYEES EMP  ON EMP.ID = LCE.STP_VW_EMPLOYEES_ID
+        WHERE  DEP.DEPARTMENT_TYPEID IN (100,75)
+            AND   ($P!{P_SCHEMA_NAME}.PKG_CHAR_TO_NUMBER($P!{P_SCHEMA_NAME}.PKG_SUBSTRING($P{P_HIJRI_SYS_DATE_STRING},7,10)) - $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_NUMBER($P!{P_SCHEMA_NAME}.PKG_SUBSTRING($P!{P_SCHEMA_NAME}.PKG_DATE_TO_CHAR (EMP.BIRTH_DATE,'dd/mm/yyyy'),7,10)) > 51)
+        GROUP BY
+            DEP.ARABIC_NAME,DEP.ID
+        ORDER BY
+            DEP.ARABIC_NAME offset 0 rows
+    ) OVER_51_TABLE ON  REGIONS_TABLE.REGION_ID = OVER_51_TABLE.REGION_ID
+
+
+ORDER BY
+    REGIONS_TABLE.REGION_ID]]>
+	</queryString>
+	<field name="المنطقة" class="java.lang.String"/>
+	<field name="القوة العمومية للمنطقة" class="java.math.BigDecimal"/>
+	<field name="عدد الإيجابى بالمنطقة" class="java.math.BigDecimal"/>
+	<field name="Under26" class="java.math.BigDecimal"/>
+	<field name="Under31" class="java.math.BigDecimal"/>
+	<field name="Under36" class="java.math.BigDecimal"/>
+	<field name="Under41" class="java.math.BigDecimal"/>
+	<field name="Under46" class="java.math.BigDecimal"/>
+	<field name="Under51" class="java.math.BigDecimal"/>
+	<field name="Over51" class="java.math.BigDecimal"/>
+	<variable name="ALL_EMPLOYEES" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{القوة العمومية للمنطقة}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="POSTIVE" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{عدد الإيجابى بالمنطقة}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="Under26" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Under26}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="Under31" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Under31}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="Under36" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Under36}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="Under41" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Under41}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="Under46" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Under46}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="Under51" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Under51}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="POSTIVE_PERCENTAGE" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="Over51" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Over51}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<pageHeader>
+		<band height="228" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="a89c8c9b-6457-4632-9b46-7420faffa3e3" x="300" y="74" width="238" height="34" forecolor="#CC0000"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="20"/>
+				</textElement>
+				<text><![CDATA[سرى للغاية]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2469c4d8-a160-4b73-8a29-09fc7b44f99e" mode="Transparent" x="513" y="191" width="64" height="37" forecolor="#CC0000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="Arial" size="20" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[للفترة من]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a12c6923-86b7-4926-a960-e588ca8a9328" mode="Transparent" x="353" y="191" width="45" height="37" forecolor="#CC0000"/>
+				<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="Arial" size="20" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[إلى]]></text>
+			</staticText>
+			<image>
+				<reportElement uuid="638e702d-ceb7-4696-a03e-c455ccae9428" x="390" y="25" width="71" height="46"/>
+				<imageExpression><![CDATA[$P{P_REPORTS_ROOT} + "//Images//u5.jpg"]]></imageExpression>
+			</image>
+			<textField pattern="yyyy/MM/mm" isBlankWhenNull="true">
+				<reportElement uuid="a7332dbc-e53d-4806-9b3f-9b010695ae8b" mode="Transparent" x="413" y="188" width="100" height="30" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineColor="#000000"/>
+					<topPen lineColor="#000000"/>
+					<leftPen lineColor="#000000"/>
+					<bottomPen lineColor="#000000"/>
+					<rightPen lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="16" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_DATE_FROM}.substring(6,10)
++"/"+
+$P{P_DATE_FROM}.substring(3,5)
++"/"+
+$P{P_DATE_FROM}.substring(0,2)
++"هـ"]]></textFieldExpression>
+			</textField>
+			<textField pattern="yyyy/MM/mm" isBlankWhenNull="true">
+				<reportElement uuid="4cea9a8e-bb9c-438a-bda3-b48a9d16bba5" mode="Transparent" x="253" y="188" width="100" height="30" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineColor="#000000"/>
+					<topPen lineColor="#000000"/>
+					<leftPen lineColor="#000000"/>
+					<bottomPen lineColor="#000000"/>
+					<rightPen lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="16" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_DATE_TO}.substring(6,10)
++"/"+
+$P{P_DATE_TO}.substring(3,5)
++"/"+
+$P{P_DATE_TO}.substring(0,2)
++"هـ"]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement uuid="46f39d4a-6498-4a20-b5fc-cfa42661e40c" mode="Transparent" x="79" y="36" width="91" height="25" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="20" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["صفحة "+$V{PAGE_NUMBER}+" من"]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement uuid="8ba3a834-850f-4f05-bd7b-3e52ad51b79b" mode="Transparent" x="15" y="66" width="95" height="25" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="16" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_HIJRI_SYS_DATE_STRING}.substring(6,10)
++"/"+
+$P{P_HIJRI_SYS_DATE_STRING}.substring(3,5)
++"/"+
+$P{P_HIJRI_SYS_DATE_STRING}.substring(0,2)
++"هـ"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="dbea0168-e13d-42c1-9fae-f42ae33ca557" x="120" y="10" width="65" height="25"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="20"/>
+				</textElement>
+				<text><![CDATA[المستخدم :
+]]></text>
+			</staticText>
+			<textField evaluationTime="Report" pattern="" isBlankWhenNull="false">
+				<reportElement uuid="f2d9d357-c0ee-49e2-a1c0-c0ae04cf11d0" mode="Transparent" x="17" y="36" width="56" height="25" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="16" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="1ce84a6a-2068-4074-823a-7a24f574e543" mode="Transparent" x="110" y="66" width="65" height="25" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="20" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="com/code/resources/reports/arial.ttf" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[الـتـاريـــخ :]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="e2db4f7c-dc13-4717-b81b-11dad627d6dc" x="0" y="10" width="120" height="25"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="16" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_LOGIN_EMPLOYEE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="a491902a-90fe-4790-9f20-4f8dbf8f30bc" x="577" y="0" width="221" height="121"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="20"/>
+				</textElement>
+				<text><![CDATA[المملكة العربية السعودية
+وزارة الداخلية
+المديرية العامة لحرس الحدود
+الادارة العامة للأمن والحماية
+إدارة الوقاية من المخدرات]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="47f37a83-2c80-4bce-b3ef-c2a00699c302" mode="Transparent" x="5" y="129" width="800" height="60" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="20" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[التقرير الإحصائى السنوى لمنسوبى المديرية العامة لحرس الحدود والمناطق التابعة لها الذين تم إجراء الفحص المخبرى لهم
+]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="140">
+			<staticText>
+				<reportElement uuid="28a89c40-9da9-48f2-a066-df174f2da5dd" mode="Transparent" x="424" y="46" width="35" height="93" forecolor="#000000" backcolor="#FFFFFF">
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER}.equals( 1 )]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Arial" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[26 - 30 سنة]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="33d11bf7-b9ce-4a4b-b830-fa0234fc308e" mode="Transparent" x="319" y="46" width="35" height="93" forecolor="#000000" backcolor="#FFFFFF">
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER}.equals( 1 )]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Arial" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[41 - 45 سنة]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="61c5a66e-480c-4f86-aec0-b0dd0b63a94d" mode="Transparent" x="82" y="0" width="67" height="140" forecolor="#000000" backcolor="#FFFFFF">
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER}.equals( 1 )]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="20" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[ملاحظات
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6f2c1dab-d5fd-459a-a3c0-261f4d142a0b" mode="Transparent" x="354" y="46" width="35" height="93" forecolor="#000000" backcolor="#FFFFFF">
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER}.equals( 1 )]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Arial" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[36 - 40 سنة]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1bb86398-24f3-4b7c-af15-8d7c21e81312" mode="Transparent" x="284" y="46" width="35" height="93" forecolor="#000000" backcolor="#FFFFFF">
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER}.equals( 1 )]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Arial" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[46 - 50 سنة]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="601f5b91-7768-44b7-b0f3-23725c40d0a2" mode="Transparent" x="459" y="46" width="35" height="93" forecolor="#000000" backcolor="#FFFFFF">
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER}.equals( 1 )]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Arial" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[أقل من 26 سنة]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e9d80ab1-7ab5-42c5-95a7-9d2642f100f8" mode="Transparent" x="389" y="46" width="35" height="93" forecolor="#000000" backcolor="#FFFFFF">
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER}.equals( 1 )]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Arial" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[31 - 35 سنة]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="07e85cc5-9b9a-46c3-b5f9-17d2c8e62ef7" x="694" y="0" width="90" height="140">
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER}.equals( 1 )]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[المنطقة]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="52378a1b-e257-41d4-bdee-a0d975919795" x="249" y="0" width="245" height="47" forecolor="#CC0000">
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER}.equals( 1 )]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5" lineColor="#000000"/>
+					<topPen lineWidth="0.5" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="20" isBold="true" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[توزيع الإيجابى حسب نوع الفئة العمرية]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e4af0720-2f34-4cc4-9aaa-56b7f368eaba" x="594" y="0" width="100" height="140">
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER}.equals( 1 )]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[القوة العمومية للمنطقة]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b1fa881b-b217-4b49-a5a6-bff165d891df" x="494" y="0" width="100" height="140">
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER}.equals( 1 )]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font fontName="Arial" size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[عدد الحالات الايجابية بالمنطقة]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="951d12b6-1547-4211-9852-f675737a26e8" mode="Transparent" x="149" y="0" width="100" height="140" forecolor="#000000" backcolor="#FFFFFF">
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER}.equals( 1 )]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="20" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[النسبة المئوية للحالات الإيجابية %]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="11b4fabc-c7bb-47f0-9a1b-eceafa590acb" mode="Transparent" x="249" y="46" width="35" height="93" forecolor="#000000" backcolor="#FFFFFF">
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER}.equals( 1 )]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Arial" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[أكبر من 50 سنة]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="32">
+			<staticText>
+				<reportElement uuid="281e73fe-659c-468a-b597-273e47c0a9bc" mode="Transparent" x="82" y="0" width="67" height="32" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="20" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="5ba25d65-17a6-4e32-b15c-0e25b40e8deb" mode="Transparent" x="424" y="0" width="35" height="32" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="16" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Under31}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="14eb20f0-1d0d-4bcf-a1d1-b24bd754fb64" mode="Transparent" x="284" y="0" width="35" height="32" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="16" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Under51}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="db84d2ae-231b-4a2e-b3dc-80850b175022" mode="Transparent" x="459" y="0" width="35" height="32" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="16" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Under26}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8de99f40-ba3b-422f-b377-5b7a75d226de" x="594" y="0" width="100" height="32"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="16" isBold="false" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{القوة العمومية للمنطقة}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="edd60a56-aa3b-4813-8d12-e893d4a80105" x="494" y="0" width="100" height="32"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="16" isBold="false" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{عدد الإيجابى بالمنطقة}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f92b621e-fcbc-466f-a8c7-c4b274468cf2" mode="Transparent" x="354" y="0" width="35" height="32" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="16" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Under41}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a317f11a-00ac-4699-91c4-658f7bb3e39a" mode="Transparent" x="319" y="0" width="35" height="32" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="16" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Under46}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a34b5b77-4754-4516-ac9e-536182ac48d0" mode="Transparent" x="389" y="0" width="35" height="32" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="16" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Under36}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="bed9e696-6cd3-403c-a292-743254b342d6" x="694" y="0" width="90" height="32"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="16" isBold="true" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{المنطقة}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.000">
+				<reportElement uuid="c3123f11-e771-4fc8-b218-f542a0f0da6a" mode="Transparent" x="149" y="0" width="100" height="32" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="16" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{عدد الإيجابى بالمنطقة}.doubleValue() / $F{القوة العمومية للمنطقة}.doubleValue())*100]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d2973440-2cd9-4f8b-9b56-8fb2aa822383" mode="Transparent" x="249" y="0" width="35" height="32" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="16" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Over51}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<lastPageFooter>
+		<band height="480">
+			<staticText>
+				<reportElement uuid="33bb021f-b630-4b4f-88a9-8807c769f788" mode="Transparent" x="7" y="445" width="800" height="35" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="20" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[		هذا التقرير مستخرج الكترونيا ولايحتاج الى توقيع
+]]></text>
+			</staticText>
+			<barChart>
+				<chart renderType="svg">
+					<reportElement uuid="1d386c8a-2ca4-4d46-b569-9d2a2c6c06c6" x="30" y="-1" width="752" height="446">
+						<property name="net.sf.jasperreports.chart.range.axis.integer.unit" value="true"/>
+					</reportElement>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{المنطقة}]]></seriesExpression>
+						<categoryExpression><![CDATA["أقل من 26 سنة"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{Under26}]]></valueExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{المنطقة}]]></seriesExpression>
+						<categoryExpression><![CDATA["26 - 30 سنة"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{Under31}]]></valueExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{المنطقة}]]></seriesExpression>
+						<categoryExpression><![CDATA["31 - 35 سنة"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{Under36}]]></valueExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{المنطقة}]]></seriesExpression>
+						<categoryExpression><![CDATA["36 - 40 سنة"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{Under41}]]></valueExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{المنطقة}]]></seriesExpression>
+						<categoryExpression><![CDATA["41 - 45 سنة"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{Under46}]]></valueExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{المنطقة}]]></seriesExpression>
+						<categoryExpression><![CDATA["46 - 50 سنة"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{Under51}]]></valueExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{المنطقة}]]></seriesExpression>
+						<categoryExpression><![CDATA["أكبر من 50 سنة"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{Over51}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot isShowLabels="true" isShowTickLabels="true" isShowTickMarks="true">
+					<plot labelRotation="-45.0">
+						<seriesColor seriesOrder="0" color="#3366FF"/>
+						<seriesColor seriesOrder="1" color="#66FF00"/>
+						<seriesColor seriesOrder="2" color="#FA0000"/>
+						<seriesColor seriesOrder="3" color="#333333"/>
+						<seriesColor seriesOrder="4" color="#00FFFF"/>
+						<seriesColor seriesOrder="5" color="#FFFF00"/>
+						<seriesColor seriesOrder="6" color="#990099"/>
+						<seriesColor seriesOrder="7" color="#00CCCC"/>
+						<seriesColor seriesOrder="8" color="#006666"/>
+						<seriesColor seriesOrder="9" color="#9999FF"/>
+						<seriesColor seriesOrder="10" color="#FF9933"/>
+					</plot>
+					<itemLabel/>
+					<categoryAxisFormat labelRotation="-45.0">
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+					<rangeAxisMinValueExpression><![CDATA[0.001]]></rangeAxisMinValueExpression>
+				</barPlot>
+			</barChart>
+			<staticText>
+				<reportElement uuid="0a0fc69f-e0e7-4e5c-a499-f97c225533ff" mode="Transparent" x="698" y="0" width="100" height="31" forecolor="#FF0000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="16" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[(الرسم البيانى)
+]]></text>
+			</staticText>
+		</band>
+	</lastPageFooter>
+	<summary>
+		<band height="32">
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement uuid="d367e38e-019d-4765-9bb4-2d1444561ec1" mode="Transparent" x="424" y="0" width="35" height="32" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Under31}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement uuid="1fb103e5-208d-4986-94b3-21f6f2620ddd" mode="Transparent" x="389" y="0" width="35" height="32" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Under36}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="eec6fcff-af6a-4bb6-a989-ea1aa88861bb" mode="Transparent" x="82" y="0" width="67" height="32" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement uuid="acc99446-3b0e-49dd-a363-f7e8d03c7edb" mode="Transparent" x="354" y="0" width="35" height="32" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Under41}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement uuid="0f1bb7bd-dc1b-4e65-b190-e9c3252c1369" mode="Transparent" x="284" y="0" width="35" height="32" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Under51}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement uuid="65a10e95-ce1c-43b4-9bbf-11deeaf36c95" mode="Transparent" x="594" y="0" width="100" height="32" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{ALL_EMPLOYEES}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement uuid="f4147cbd-e8f4-4128-b3dd-d338929f2b70" mode="Transparent" x="459" y="0" width="35" height="32" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Under26}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement uuid="49790171-1e8b-4cd2-a337-96314a82189c" mode="Transparent" x="319" y="0" width="35" height="32" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Under46}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="fe84a025-bc10-4b9b-8268-8538e3513515" mode="Opaque" x="694" y="0" width="90" height="32" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[المجموع]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement uuid="902dd3c7-86e6-4dbc-8dfb-af4da035c275" mode="Transparent" x="494" y="0" width="100" height="32" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{POSTIVE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.000" isBlankWhenNull="false">
+				<reportElement uuid="bb274ec9-d293-4dd2-8ea9-0668f9e3276e" mode="Transparent" x="149" y="0" width="100" height="32" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{ALL_EMPLOYEES} == 0 ? 0 :new DecimalFormat("##.####").format((new Double($V{POSTIVE})/new Double($V{ALL_EMPLOYEES}))*100)]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement uuid="045479c8-253e-4524-9b55-9606f446f22a" mode="Transparent" x="249" y="0" width="35" height="32" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Over51}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

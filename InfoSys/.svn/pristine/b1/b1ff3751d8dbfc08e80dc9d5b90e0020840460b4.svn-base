@@ -1,0 +1,657 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:util="http://java.sun.com/jsf/composite/util">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+	<script type="text/javascript">
+		function handleDownloadFiles(e) {
+			openDownloadPopupFlagId = document
+					.getElementById('nationalForceFormId:openDownloadPopupFlagId').value;
+			openDownloadDialogueFlagId = document
+					.getElementById('nationalForceFormId:openDownloadDialogueFlagId').value;
+
+			if (e.status == 'success') {
+				if (openDownloadPopupFlagId == 'true') {
+					downloadFile();
+				} else if (openDownloadDialogueFlagId == 'true') {
+					PF('dlg').show();
+				}
+			}
+		}
+
+		function uploadFile() {
+			fileArchivingParam = document
+					.getElementById('nationalForceFormId:fileArchivingParamId').value;
+			openUploadFile('#{nationalForceSample.boolServerUploadPath}',
+					fileArchivingParam);
+			return false;
+		}
+
+		function downloadFile() {
+			downloadedFileParamId = document
+					.getElementById('nationalForceFormId:downloadedFileParamId').value;
+			openDownloadFile('#{nationalForceSample.boolServerDownloadPath}',
+					downloadedFileParamId);
+			return false;
+		}
+	</script>
+</h:head>
+<h:body styleClass="screenBg">
+	<h:form id="nationalForceFormId" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/Template.xhtml">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td class="screenTitle">
+						<h:outputText value="#{msgs.title_sendToForce}" rendered="#{nationalForceSample.mode==1}" />
+						<h:outputText value="#{msgs.title_nationalForceTitle}" rendered="#{nationalForceSample.mode==2}" />
+						<h:outputText value="#{msgs.title_labCheckDetails}" rendered="#{nationalForceSample.mode==3}" />
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.label_checkOrderData}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup>
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<th width="15%">
+										<h:outputText value="#{msgs.label_missionOrderNumber}" />
+									</th>
+									<td width="35%">
+										<h:outputText value="#{nationalForceSample.labCheck.orderNumber}" />
+
+									</td>
+
+									<th width="15%">
+										<h:outputText value="#{msgs.label_orderDate}" />
+									</th>
+									<td width="35%">
+										<h:outputText value="#{nationalForceSample.labCheck.orderDateString}" />
+									</td>
+								</tr>
+
+								<tr>
+									<th>
+										<h:outputText value="#{msgs.label_orderIssueSite}" />
+									</th>
+									<td>
+										<h:outputText id="DepartmentNameId" value="#{nationalForceSample.labCheck.orderSourceDomainDescription}" />
+									</td>
+									<td colspan="2">
+										<h:commandButton styleClass="btn btn-default" value="#{msgs.title_perviousChecks}" action="#{nationalForceSample.refreshSubmit()}" onclick="PF('dialog').show();">
+											<f:ajax />
+										</h:commandButton>
+									</td>
+								</tr>
+
+								<tr>
+									<th>
+										<h:outputText value="#{msgs.label_checkReason}" />
+									</th>
+									<td colspan="3">
+										<table>
+											<tr>
+												<td>
+													<h:selectOneMenu disabled="true" value="#{nationalForceSample.labCheck.checkReason}" styleClass="form-control">
+														<f:selectItems value="#{nationalForceSample.labCheckReasonsEnumList}" var="checkReason" itemLabel="#{checkReason.arabicDescription}" itemValue="#{checkReason.code}" />
+													</h:selectOneMenu>
+												</td>
+												<td>
+													<h:panelGroup id="casesPanelId">
+														<h:panelGroup rendered="#{nationalForceSample.labCheck.checkReason ==nationalForceSample.casesReason}">
+															<table>
+																<tr>
+																	<th>
+																		<h:outputText value="#{msgs.label_caseNumber}" />
+																	</th>
+																	<td>
+																		<h:outputText value="#{nationalForceSample.labCheck.caseNumber}" />
+																	</td>
+																	<th>
+																		<h:outputText value="#{msgs.label_caseDate}" />
+																	</th>
+																	<td>
+																		<h:outputText value="#{nationalForceSample.labCheck.caseDateString}" />
+																	</td>
+																</tr>
+															</table>
+														</h:panelGroup>
+													</h:panelGroup>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+
+								<tr>
+									<th>
+										<h:outputText value="#{msgs.label_comment}" />
+									</th>
+									<td colspan="1">
+										<h:inputTextarea styleClass="form-control" disabled="true" value="#{nationalForceSample.labCheck.remarks}" rows="6" cols="100" />
+									</td>
+								</tr>
+							</table>
+						</h:panelGroup>
+						<h:panelGroup>
+							<p:dialog widgetVar="dialog" modal="true" header="#{msgs.title_perviousChecks}" dir="#{msgs.dir}">
+								<h:panelGroup>
+									<table>
+										<tr>
+											<td>
+												<p:dataTable tableStyle="table-layout:auto" reflow="true" liveResize="true" paginatorPosition="bottom" id="labCheckEmployeeDetailsId" paginator="true" style="width:100%" rowIndexVar="index" rows="10" var="empRow" value="#{nationalForceSample.perviousLabCheckEmployeeDataList}" rowHover="true">
+													<p:column styleClass='centerText'>
+														<f:facet name="header">
+															#
+														</f:facet>
+					                                    	#{index + 1}
+				                                   		</p:column>
+
+													<p:column styleClass='centerText'>
+														<f:facet name="header">
+															#{msgs.label_sampleDate}
+														</f:facet>
+														<h:outputText value="#{empRow.sampleDateString}" />
+													</p:column>
+
+													<p:column styleClass='centerText'>
+														<f:facet name="header">
+															#{msgs.label_checkReason}
+														</f:facet>
+														<h:selectOneMenu disabled="true" value="#{empRow.checkReason}" styleClass="form-control">
+															<f:selectItems value="#{nationalForceSample.labCheckReasonsEnumList}" var="checkReason" itemLabel="#{checkReason.arabicDescription}" itemValue="#{checkReason.code}" />
+														</h:selectOneMenu>
+													</p:column>
+
+													<p:column styleClass='centerText'>
+														<f:facet name="header"> 
+															#{msgs.label_checkResult}
+														</f:facet>
+														<h:outputText value="#{msgs.label_noSample}" rendered="#{empRow.checkStatus==nationalForceSample.noSampleCheckResult}" />
+														<h:outputText value="#{msgs.label_checkPrivation}" rendered="#{empRow.checkStatus==nationalForceSample.checkPrivationCheckResult}" />
+														<h:outputText value="#{msgs.label_negative}" rendered="#{empRow.checkStatus==nationalForceSample.negativeCheckResult}" />
+														<h:outputText value="#{msgs.label_positiveUnderApprove}" rendered="#{empRow.checkStatus==nationalForceSample.positiveUnderApproveCheckResult}" />
+														<h:outputText value="#{msgs.label_positive}" rendered="#{empRow.checkStatus==nationalForceSample.positiveCheckResult}" />
+														<h:outputText value="#{msgs.label_sendingToForce}" rendered="#{empRow.checkStatus==nationalForceSample.sendingToForceCheckResult}" />
+														<h:outputText value="#{msgs.label_retest}" rendered="#{empRow.checkStatus==nationalForceSample.retestCheckResult}" />
+														<h:outputText value="#{msgs.label_cheatingInSample}" rendered="#{empRow.checkStatus==nationalForceSample.cheatingInCheckResult}" />
+													</p:column>
+
+													<p:column styleClass='centerText'>
+														<f:facet name="header"> 
+															#{msgs.label_metrial}
+														</f:facet>
+														<h:outputText value="#{empRow.domainMaterialTypeDescripttion}" />
+													</p:column>
+												</p:dataTable>
+											</td>
+										</tr>
+									</table>
+								</h:panelGroup>
+							</p:dialog>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td width="100%">
+									<h:commandButton id="printBtnId" styleClass="btn btn-success" action="#{nationalForceSample.print()}" value="&#xf02f; #{msgs.label_print}" rendered="#{not empty nationalForceSample.labCheckEmployeeData.id}" />
+
+									<h:commandButton rendered="#{not empty nationalForceSample.labCheckEmployeeData.id}" styleClass="btn btn-success" id="archiveBtnUploadId" value="&#xf187; #{msgs.label_archiveDocuments}">
+										<f:ajax listener="#{nationalForceSample.getUploadParam(nationalForceSample.labCheckEmployeeData.id)}" render="nationalForceFormId:fileArchivingParamId" onevent="function(e){if(e.status == 'success') return uploadFile();}" />
+									</h:commandButton>
+
+									<h:commandButton rendered="#{not empty nationalForceSample.labCheckEmployeeData.id}" styleClass="btn btn-success" id="archiveBtnDownloadId" value="&#xf0c5; #{msgs.label_archiveDocumentsShow}">
+										<f:ajax render="nationalForceFormId:downloadDlgPanelId nationalForceFormId:openDownloadDialogueFlagId nationalForceFormId:openDownloadPopupFlagId nationalForceFormId:downloadedFileParamId" listener="#{nationalForceSample.getDownloadedAttachmentsIdList(nationalForceSample.labCheckEmployeeData.id)}" onevent="handleDownloadFiles" />
+									</h:commandButton>
+									<h:inputHidden id="fileArchivingParamId" value="#{nationalForceSample.fileArchivingParam}" />
+									<h:inputHidden id="downloadedFileParamId" value="#{nationalForceSample.downloadFileParamId}" />
+									<h:inputHidden id="openDownloadPopupFlagId" value="#{nationalForceSample.openDownloadPopupFlag}" />
+									<h:inputHidden id="openDownloadDialogueFlagId" value="#{nationalForceSample.openDownloadDialogueFlag}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.label_mainData}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+
+				<tr>
+					<td>
+						<h:panelGroup>
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<th width="15%">
+										<h:outputText value="#{msgs.label_name}" />
+									</th>
+									<td width="35%">
+										<h:outputText value="#{nationalForceSample.labCheckEmployeeData.employeeFullName}" />
+
+									</td>
+
+									<th width="15%">
+										<h:outputText value="#{msgs.label_rank}" />
+									</th>
+									<td width="35%">
+										<h:outputText value="#{nationalForceSample.labCheckEmployeeData.employeeRank}" />
+									</td>
+								</tr>
+								<tr>
+									<th>
+										<h:outputText value="#{msgs.label_unitAndDep}" />
+									</th>
+									<td colspan="3">
+										<h:outputText value="#{nationalForceSample.labCheckEmployeeData.employeeDepartmentName}" />
+
+									</td>
+								</tr>
+								<tr>
+									<th>
+										<h:outputText value="#{msgs.label_socialNumber}" />
+									</th>
+									<td>
+										<h:outputText value="#{nationalForceSample.labCheckEmployeeData.employeeSocialId}" />
+
+									</td>
+
+									<th>
+										<h:outputText value="#{msgs.label_militaryNumber}" />
+									</th>
+									<td>
+										<h:outputText value="#{nationalForceSample.labCheckEmployeeData.employeeMilitaryNumber}" />
+									</td>
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<th width="15%">
+									<h:outputText value="#{msgs.label_currentCheckResult}" />
+								</th>
+								<td>
+									<h:outputText value="#{msgs.label_noSample}" rendered="#{nationalForceSample.labCheckEmployeeData.checkStatus==nationalForceSample.noSampleCheckResult}" />
+									<h:outputText value="#{msgs.label_checkPrivation}" rendered="#{nationalForceSample.labCheckEmployeeData.checkStatus==nationalForceSample.checkPrivationCheckResult}" />
+									<h:outputText value="#{msgs.label_negative}" rendered="#{nationalForceSample.labCheckEmployeeData.checkStatus==nationalForceSample.negativeCheckResult}" />
+									<h:outputText value="#{msgs.label_positiveUnderApprove}" rendered="#{nationalForceSample.labCheckEmployeeData.checkStatus==nationalForceSample.positiveUnderApproveCheckResult}" />
+									<h:outputText value="#{msgs.label_positive}" rendered="#{nationalForceSample.labCheckEmployeeData.checkStatus==nationalForceSample.positiveCheckResult}" />
+									<h:outputText value="#{msgs.label_sendingToForce}" rendered="#{nationalForceSample.labCheckEmployeeData.checkStatus==nationalForceSample.sendingToForceCheckResult}" />
+									<h:outputText value="#{msgs.label_cheatingInSample}" rendered="#{nationalForceSample.labCheckEmployeeData.checkStatus==nationalForceSample.cheatingInCheckResult}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.label_medicalDepartmentCheckResult}" rendered="#{ not empty nationalForceSample.labCheckEmployeeData.sampleNumber}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup rendered="#{ not empty nationalForceSample.labCheckEmployeeData.sampleNumber}">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<th width="15%">
+										<h:outputText value="#{msgs.label_sampleNumber}" />
+									</th>
+									<td width="25%">
+										<h:outputText value="#{nationalForceSample.labCheckEmployeeData.sampleNumber}" />
+									</td>
+
+
+									<th width="15%">
+										<h:outputText value="#{msgs.label_sampleDate}" />
+									</th>
+									<td width="25%">
+										<h:outputText value="#{nationalForceSample.labCheckEmployeeData.sampleDateString}" />
+									</td>
+
+								</tr>
+								<tr>
+									<th width="15%">
+										<h:outputText value="#{msgs.label_checkResult}" />
+									</th>
+									<td width="25%">
+										<h:outputText value="#{msgs.label_positiveUnderApprove}" rendered="#{not empty nationalForceSample.labCheckEmployeeData.domainMaterialTypeId}" />
+										<h:outputText value="#{msgs.label_negative}" rendered="#{ (empty nationalForceSample.labCheckEmployeeData.nationalForceSampleNumber) and (nationalForceSample.labCheckEmployeeData.checkStatus==nationalForceSample.negativeCheckResult)}" />
+									</td>
+
+									<th width="15%">
+										<h:outputText value="#{msgs.label_resultEnteredDate}" />
+									</th>
+									<td width="25%">
+										<h:outputText value="#{nationalForceSample.labCheckEmployeeData.resultEnteredDateString}" />
+									</td>
+
+								</tr>
+								<tr>
+									<th width="15%">
+										<h:outputText value="#{msgs.label_metrialType}" />
+									</th>
+									<td width="25%">
+										<h:outputText value="#{nationalForceSample.labCheckEmployeeData.domainMaterialTypeDescripttion}" />
+									</td>
+									<th width="15%">
+										<h:outputText value="#{msgs.label_resultEnteredEmpName}" />
+									</th>
+									<td width="25%">
+										<h:outputText value="#{nationalForceSample.labCheckEmployeeData.resultEnteredEmpName}" />
+									</td>
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.label_nationaclForceCheck}" rendered="#{ (not empty nationalForceSample.labCheckEmployeeData.nationalForceSampleNumber) or (nationalForceSample.mode!=3)}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="nationalSampleForceCheckPanelId" rendered="#{ (not empty nationalForceSample.labCheckEmployeeData.nationalForceSampleNumber) or (nationalForceSample.mode!=3)}">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<th width="15%">
+										<h:outputText value="#{msgs.label_confirmSampleNumber}" />
+										<h:outputText value="*" style="color:red;" rendered="#{nationalForceSample.mode==1}" />
+									</th>
+									<td width="25%">
+										<h:inputText maxlength="20" styleClass="form-control" size="30" value="#{nationalForceSample.labCheckEmployeeData.nationalForceSampleNumber}" rendered="#{nationalForceSample.mode==1}" onkeypress="return checkDigitSlash(event)" />
+										<h:outputText value="#{nationalForceSample.labCheckEmployeeData.nationalForceSampleNumber}" rendered="#{nationalForceSample.mode!=1}" />
+									</td>
+
+
+									<th width="15%">
+										<h:outputText value="#{msgs.label_sendingDate}" />
+										<h:outputText value="*" style="color:red;" rendered="#{nationalForceSample.mode==1}" />
+									</th>
+									<td width="25%">
+										<util:advancedHijriDate value="#{nationalForceSample.labCheckEmployeeData.nationalForceSampleSentDate}" rendered="#{nationalForceSample.mode==1}" />
+										<h:outputText value="#{nationalForceSample.labCheckEmployeeData.nationalForceSampleSentDateString}" rendered="#{nationalForceSample.mode!=1}" />
+									</td>
+
+								</tr>
+
+								<tr>
+									<td colspan="6">
+										<h:panelGroup rendered="#{nationalForceSample.mode!=1}">
+											<table width="100%">
+												<tr>
+													<th width="15%">
+														<h:outputText value="#{msgs.label_checkResult}" rendered="#{nationalForceSample.mode!=1}" />
+														<h:outputText value="*" style="color:red;" rendered="#{nationalForceSample.mode==2}" />
+													</th>
+													<td width="25%">
+														<h:selectOneMenu value="#{nationalForceSample.labCheckEmployeeData.checkStatus}" styleClass="form-control" rendered="#{nationalForceSample.mode!=1}" disabled="#{nationalForceSample.mode!=2}">
+															<f:selectItem itemLabel="" itemValue="" />
+															<f:selectItem itemLabel="#{msgs.label_negative}" itemValue="#{nationalForceSample.negativeCheckResult}" />
+															<f:selectItem itemLabel="#{msgs.label_positive}" itemValue="#{nationalForceSample.positiveCheckResult}" />
+															<f:selectItem itemLabel="#{msgs.label_cheatingInSample}" itemValue="#{nationalForceSample.cheatingInCheckResult}" />
+															<f:ajax render="nationalForceFormId:nationalSampleForceCheckPanelId" execute="@this" />
+														</h:selectOneMenu>
+													</td>
+
+													<td width="40%">
+														<h:panelGroup rendered="#{nationalForceSample.labCheckEmployeeData.checkStatus==nationalForceSample.positiveCheckResult}">
+															<table width="100%">
+																<tr>
+																	<th width="15%">
+																		<h:outputText value="#{msgs.label_metrialType}" rendered="#{nationalForceSample.labCheckEmployeeData.checkStatus==nationalForceSample.positiveCheckResult}" />
+																		<h:outputText value="*" style="color:red;" rendered="#{nationalForceSample.labCheckEmployeeData.checkStatus==nationalForceSample.positiveCheckResult and nationalForceSample.mode==2}" />
+																	</th>
+																	<td width="25%">
+																		<h:selectOneMenu value="#{nationalForceSample.labCheckEmployeeData.domainNationalForceMaterialTypeId}" styleClass="form-control" rendered="#{nationalForceSample.labCheckEmployeeData.checkStatus==nationalForceSample.positiveCheckResult}" disabled="#{nationalForceSample.mode!=2}">
+																			<f:selectItem itemLabel="" itemValue="" />
+																			<f:selectItems value="#{nationalForceSample.domainMetrialTypeList}" var="dom" itemLabel="#{dom.description}" itemValue="#{dom.id}" />
+																		</h:selectOneMenu>
+																	</td>
+																</tr>
+															</table>
+														</h:panelGroup>
+													</td>
+
+												</tr>
+											</table>
+										</h:panelGroup>
+									</td>
+								</tr>
+
+								<tr>
+									<td colspan="6">
+										<h:panelGroup rendered="#{nationalForceSample.mode==3}">
+											<table width="100%">
+												<tr>
+													<th width="15%">
+														<h:outputText value="#{msgs.label_resultEnteredDate}" />
+													</th>
+													<td width="25%">
+														<h:outputText value="#{nationalForceSample.labCheckEmployeeData.nationalForceResultEnteredDateString}" />
+													</td>
+
+													<th width="15%">
+														<h:outputText value="#{msgs.label_resultEnteredEmpName}" />
+													</th>
+													<td width="25%">
+														<h:outputText value="#{nationalForceSample.labCheckEmployeeData.nationalForceResultEnteredEmpName}" />
+													</td>
+												</tr>
+											</table>
+										</h:panelGroup>
+									</td>
+								</tr>
+
+								<tr>
+									<td colspan="6">
+										<h:panelGroup rendered="#{nationalForceSample.labCheckEmployeeData.checkStatus==nationalForceSample.positiveCheckResult}">
+											<table width="100%">
+												<tr>
+													<td width="50%">
+														<h:selectBooleanCheckbox value="#{nationalForceSample.labCheckEmployeeData.curement}" disabled="#{nationalForceSample.mode!=2}">
+															<f:ajax render="nationalForceFormId:nationalSampleForceCheckPanelId" execute="nationalForceFormId:nationalSampleForceCheckPanelId" />
+														</h:selectBooleanCheckbox>
+														<h:outputText value="#{ msgs.label_transferForCurment}" rendered="#{nationalForceSample.labCheckEmployeeData.checkStatus==nationalForceSample.positiveCheckResult}" />
+													</td>
+													<td width="50%">
+														<h:panelGroup rendered="#{nationalForceSample.labCheckEmployeeData.curement}">
+															<table width="100%">
+																<tr>
+																	<th width="30%">
+																		<h:outputText value="#{msgs.label_hospital}" rendered="#{nationalForceSample.labCheckEmployeeData.curement}" />
+																		<h:outputText value="*" style="color:red;" rendered="#{nationalForceSample.labCheckEmployeeData.curement and nationalForceSample.mode==2}" />
+																	</th>
+																	<td width="50%">
+																		<h:selectOneMenu value="#{nationalForceSample.labCheckEmployeeData.domainCureHospitalId}" styleClass="selectMenuWithIcon" rendered="#{nationalForceSample.labCheckEmployeeData.curement}" disabled="#{nationalForceSample.mode!=2}">
+																			<f:selectItem itemLabel="" itemValue="" />
+																			<f:selectItems value="#{nationalForceSample.domainCurmentHospitalsList}" var="dom" itemLabel="#{dom.description}" itemValue="#{dom.id}" />
+																		</h:selectOneMenu>
+																	</td>
+																	<td width="20%"></td>
+																</tr>
+															</table>
+														</h:panelGroup>
+													</td>
+												</tr>
+
+												<tr>
+													<td colspan="2">
+														<table width="100%">
+															<tr>
+																<th width="15%">
+																	<h:outputText value="#{msgs.label_retestPeriod}" />
+																</th>
+																<td width="25%">
+																	<h:selectOneMenu value="#{nationalForceSample.retestMonthNumber}" styleClass="selectMenuWithIcon" disabled="#{nationalForceSample.mode!=2}">
+																		<f:selectItem itemValue="6" itemLabel="6" />
+																		<f:selectItem itemValue="5" itemLabel="5" />
+																		<f:selectItem itemValue="4" itemLabel="4" />
+																		<f:selectItem itemValue="3" itemLabel="3" />
+																		<f:selectItem itemValue="2" itemLabel="2" />
+																		<f:selectItem itemValue="1" itemLabel="1" />
+																	</h:selectOneMenu>
+																</td>
+																<td width="10%">
+																	<h:outputText value="#{msgs.label_month}" />
+																</td>
+																<td width="50%" />
+															</tr>
+														</table>
+													</td>
+												</tr>
+											</table>
+										</h:panelGroup>
+									</td>
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td width="100%">
+									<h:commandButton class="btn btn-success" value="&#xf0c7; #{msgs.label_save}" action="#{nationalForceSample.save()}" rendered="#{nationalForceSample.mode!=3}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="50" />
+				</tr>
+			</table>
+			<h:panelGroup id="downloadDlgPanelId">
+				<p:dialog dir="#{msgs.dir}" header="#{msgs.label_archiveDocumentsShow}" id="dlgId" widgetVar="dlg" modal="true" height="180px;" width="720px">
+					<h:panelGroup id="internalDlgPanelId" rendered="#{nationalForceSample.attachmentList.size() > 1}">
+						<table width="100%">
+							<tr>
+								<td>
+									<p:dataTable tableStyle="table-layout:auto" reflow="true" liveResize="true" paginatorPosition="bottom" id="fileListIds" paginator="true" style="width:100%" rowIndexVar="index" rows="10" var="row" value="#{nationalForceSample.attachmentList}" rowHover="true">
+										<p:column styleClass='centerText'>
+											<f:facet name="header">#</f:facet>
+		                                    #{index + 1}
+	                                   	</p:column>
+										<p:column styleClass='centerText'>
+											<f:facet name="header">
+													#{msgs.label_fileName}
+												</f:facet>
+											<h:outputText value="#{row.fileName}" />
+										</p:column>
+										<p:column styleClass='centerText'>
+											<f:facet name="header">
+												#{msgs.label_download}
+											</f:facet>
+											<h:commandButton styleClass="btn btn-success" value="&#xf019; #{msgs.label_download}">
+												<f:ajax render="nationalForceFormId:internalDlgPanelId nationalForceFormId:downloadedFileParamId" listener="#{nationalForceSample.getDownloadParam(row.attachmentId)}" onevent="function(e){if(e.status == 'success') return downloadFile();}" />
+											</h:commandButton>
+										</p:column>
+										<p:column styleClass='centerText' rendered="#{nationalForceSample.deletePrivilage}">
+											<f:facet name="header">
+												#{msgs.label_delete}
+											</f:facet>
+											<h:commandButton styleClass="btn btn-trans-icon" value="&#xf00d;">
+												<f:ajax render="nationalForceFormId:internalDlgPanelId nationalForceFormId:downloadedFileParamId" listener="#{nationalForceSample.deleteAttachment(row)}" />
+											</h:commandButton>
+										</p:column>
+									</p:dataTable>
+								</td>
+							</tr>
+						</table>
+					</h:panelGroup>
+				</p:dialog>
+			</h:panelGroup>
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>

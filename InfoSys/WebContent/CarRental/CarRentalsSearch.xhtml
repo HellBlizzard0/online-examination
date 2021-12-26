@@ -1,0 +1,428 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:util="http://java.sun.com/jsf/composite/util">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+	<script type="text/javascript">
+	var m;
+	function getEmployee(contextPath,mode){
+		m=mode;
+		openEmpsMiniSearch(contextPath);
+   		return false;
+   	}
+
+	function releaseMask(){
+		unMaskScreen();
+   	}
+   	
+	function getDepartment(contextPath,mode){
+		m=mode;
+		openDepartmentsMiniSearch(contextPath,m, null, document.getElementById('departmentTypesList').value);
+		return false;
+	}
+
+	function HandlePopupResult(ret) { 
+		unMaskScreen();
+		if(ret!=null){ 
+			if(m==1){
+				document.getElementById('carRentalsSearch:selectedEmpId').value = ret[0];
+   	         	document.getElementById('carRentalsSearch:selectedEmpNameId').value = ret[1];
+   	         	document.getElementById('carRentalsSearch:empNameId').value= ret[1];
+   	         	return true;
+			}
+			else if(m==2){
+				document.getElementById('carRentalsSearch:selectedDepartmentId').value = ret[0];
+   	         	document.getElementById('carRentalsSearch:selectedDepartmentNameId').value = ret[1];
+   	         	document.getElementById('carRentalsSearch:departmentNameId').value= ret[1];
+   	         	return true;
+			}
+   		}
+   		return false;
+	}
+
+	function openChequeDataDialogue(e){
+	    var validState = document.getElementById('carRentalsSearch:validStateId').value;
+		if(e.status == 'success' &amp;&amp; validState=='true'){
+			 PF('dlg').show();
+		}
+	}
+
+	window.onkeypress = function(e) {
+		  var keyCode = window.event.keyCode || e.keyCode || e.which;
+	      if (keyCode == '13') {
+	    	  document.getElementById('carRentalsSearch:searchBtn').click();
+	    	  return false;
+	      }
+	};
+	
+	function changeContractStatus(e) {
+		var savedFlag = document.getElementById('carRentalsSearch:savedFlagId').value;
+		if(e.status == 'success' &amp;&amp; savedFlag=='true'){
+			PF('dlg').hide();
+		}
+	}
+
+	 function uploadFile(){
+   		 fileArchivingParam = document.getElementById('carRentalsSearch:fileArchivingParamId').value;
+   		 if(fileArchivingParam != ""){
+   		 	openUploadFile('#{carRentalsSearch.boolServerUploadPath}', fileArchivingParam);
+   		 }
+   		 return false;
+     }
+     </script>
+</h:head>
+<h:body styleClass="screenBg" onload="uploadFile();">
+	<h:form id="carRentalsSearch" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/Template.xhtml">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tr>
+					<td class="screenTitle">#{msgs.title_carRntReview}</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.label_searchData}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="carRentalSearchContainer">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<th width="15%">#{msgs.label_contractNum}</th>
+									<td width="20%">
+										<h:inputText maxlength="20" styleClass="form-control inputnumber" value="#{carRentalsSearch.contractNum}" />
+									</td>
+									
+
+									<th width="15%">
+										#{msgs.label_sector}/#{msgs.label_region}
+										<h:commandButton value="&#xf002;" styleClass="btn btn-trans-icon" onclick="return getDepartment('#{request.contextPath}',2);" title="#{msgs.label_sector}/#{msgs.label_region}" />
+									</th>
+									<td width="20%">
+										<h:inputHidden id="selectedDepartmentId" value="#{carRentalsSearch.regionOrSector}" />
+										<h:inputHidden id="selectedDepartmentNameId" value="#{carRentalsSearch.selectedDepartmentName}" />
+										<h:inputText styleClass="form-control" id="departmentNameId" disabled="true" value="#{carRentalsSearch.selectedDepartmentName}" />
+									</td>
+
+								</tr>
+								<tr>
+									<th width="15%">
+										#{msgs.label_renterName}
+										<h:outputText value="*" style="color:red;" />
+										<h:commandButton value="&#xf002;" styleClass="btn btn-trans-icon" onclick="return getEmployee('#{request.contextPath}',1);" title="#{msgs.label_renterName}" />
+									</th>
+									<td width="20%">
+										<h:inputHidden id="selectedEmpId" value="#{carRentalsSearch.renterId}" />
+										<h:inputHidden id="selectedEmpNameId" value="#{carRentalsSearch.renterName}" />
+										<h:inputText styleClass="form-control" id="empNameId" disabled="true" value="#{carRentalsSearch.renterName}" />
+									</td>
+									
+
+									<th width="15%">#{msgs.label_contractStatus}</th>
+									<td width="20%">
+										<h:selectOneMenu styleClass="form-control" value="#{carRentalsSearch.contractStatus}">
+											<f:selectItem itemValue="-1" itemLabel="#{msgs.label_all}" />
+											<f:selectItem itemValue="1" itemLabel="#{msgs.label_paidRental}" />
+											<f:selectItem itemValue="0" itemLabel="#{msgs.label_unpaidRental}" />
+										</h:selectOneMenu>
+									</td>
+
+								</tr>
+								<tr>
+									<th width="15%">#{msgs.label_subRentalCompanyName}</th>
+									<td width="20%" colspan="1">
+										<h:selectOneMenu styleClass="form-control" value="#{carRentalsSearch.selectedSubRentalCompanyId}">
+											<f:selectItem itemValue="-1" itemLabel="#{msgs.label_all}" />
+											<f:selectItems value="#{carRentalsSearch.subRentalCompanies}" var="subCompany" itemLabel="#{subCompany.description}" itemValue="#{subCompany.id}" />
+										</h:selectOneMenu>
+									</td>
+
+								</tr>
+
+								<tr>
+									<th width="15%">#{msgs.label_rentalStartDate} #{msgs.label_from}</th>
+									<td width="20%">
+										<util:advancedHijriDate value="#{carRentalsSearch.rentalStartDate}" />
+									</td>
+									
+
+									<th width="15%">#{msgs.label_rentalEndDate} #{msgs.label_to}</th>
+									<td width="20%">
+										<util:advancedHijriDate value="#{carRentalsSearch.rentalEndDate}" />
+									</td>
+
+								</tr>
+
+								<tr>
+									<th width="15%">#{msgs.label_chequeNumber}</th>
+									<td width="20%">
+										<h:inputText styleClass="form-control inputnumber" id="searchChequeNumberId" value="#{carRentalsSearch.searchChequeNumber}" onkeypress="return checkDigit(event);" />
+									</td>
+									
+
+									<th width="15%">#{msgs.label_plateNumber}</th>
+									<td width="20%">
+										<h:inputText maxlength="15" id="searchPlateNumId" styleClass="form-control inputnumber" value="#{carRentalsSearch.searchPlateNumber}" />
+									</td>
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+				<tr>
+					<td width="100%">
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:commandButton styleClass="btn btn-default" id="resetBtn" value="&#xf021; #{msgs.label_reset}" action="#{carRentalsSearch.resetFormParameters}">
+										<f:ajax render="carRentalsSearch:notifyMessagesId carRentalsSearch:carRentalSearchContainer carRentalsSearch:dlgPanelId carRentalsSearch:carRentalsSearchResultsPanelId" />
+									</h:commandButton>
+									<h:commandButton styleClass="btn btn-default" id="searchBtn" value="&#xf002; #{msgs.label_search}" action="#{carRentalsSearch.search}">
+										<f:ajax render="carRentalsSearch:notifyMessagesId carRentalsSearch:carRentalsSearchResultsPanelId" execute="carRentalsSearch:carRentalSearchContainer" />
+									</h:commandButton>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.title_carRentals}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td width="100%">
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:commandButton styleClass="btn btn-success" id="editChequeDataId" value="#{msgs.label_editChequeData}" action="#{carRentalsSearch.insertChequeData(1)}">
+										<f:ajax render="carRentalsSearch:dlgPanelId carRentalsSearch:validStateId" onevent="function(e){if(e.status == 'success') PF('dlg').show();}" />
+									</h:commandButton>
+									<h:commandButton styleClass="btn btn-success" id="changeStatusId" value="&#xf01e; #{msgs.label_changeStatus}" action="#{carRentalsSearch.insertChequeData(2)}">
+										<f:ajax render="carRentalsSearch:dlgPanelId carRentalsSearch:validStateId" onevent="openChequeDataDialogue" />
+									</h:commandButton>
+									<h:commandButton styleClass="btn btn-default" value="&#xf0c9; #{msgs.label_all}" action="#{carRentalsSearch.selectAllUnPaid()}">
+										<f:ajax render="carRentalsSearch:carRentalsSearchResultsPanelId" />
+									</h:commandButton>
+									<h:inputHidden id="validStateId" value="#{carRentalsSearch.validState}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="carRentalsSearchResultsPanelId">
+							<table width="100%">
+								<tr>
+									<td>
+										<p:dataTable tableStyle="table-layout:auto" reflow="true" liveResize="true" paginatorPosition="bottom" id="carRentalsId" paginator="true" style="width:100%" rowIndexVar="index" rows="10" var="row" value="#{carRentalsSearch.carRentalDataList}" widgetVar="table" rowHover="true">
+											<p:column styleClass='centerText'>
+												<f:facet name="header">
+													#
+												</f:facet>
+		                                    	#{index + 1}
+	                                   		</p:column>
+
+											<p:column styleClass='centerText'>
+												<f:facet name="header">
+													#{msgs.label_contractNum}
+												</f:facet>
+												<h:outputText value="#{row.contractNumber}" />
+											</p:column>
+
+											<p:column styleClass='centerText'>
+												<f:facet name="header">
+													#{msgs.label_rentalStartDate}
+												</f:facet>
+												<h:outputText value="#{row.rentStartDateString}" />
+											</p:column>
+
+											<p:column styleClass='centerText'>
+												<f:facet name="header">
+													#{msgs.label_rentalEndDate}
+												</f:facet>
+												<h:outputText value="#{row.rentEndDateString}" />
+											</p:column>
+
+											<p:column styleClass='centerText'>
+												<f:facet name="header">
+													#{msgs.label_totalPaymentAmount}
+												</f:facet>
+												<h:outputText value="#{row.totalAmount}" />
+											</p:column>
+
+											<p:column styleClass='centerText'>
+												<f:facet name="header">
+													#{msgs.label_department}
+												</f:facet>
+												<h:outputText value="#{row.registerDepartmentName}" />
+											</p:column>
+
+											<p:column styleClass='centerText'>
+												<f:facet name="header">
+													#{msgs.label_paid}
+												</f:facet>
+												<h:outputText value="#{msgs.label_paidRental}" rendered="#{row.paid == 1}" />
+												<h:outputText value="#{msgs.label_unpaidRental}" rendered="#{row.paid == 0}" />
+											</p:column>
+
+											<p:column styleClass='centerText'>
+												<f:facet name="header">
+													<h:outputText value="#{msgs.label_edit} / #{msgs.label_view}" />
+												</f:facet>
+												<h:commandButton value="&#xf14b;" styleClass="btn btn-trans-icon" action="#{carRentalsSearch.edit(row.id)}">
+												</h:commandButton>
+											</p:column>
+
+											<p:column styleClass='centerText'>
+												<f:facet name="header">
+													<h:outputText value="#{msgs.label_delete}" />
+												</f:facet>
+												<h:commandButton value="&#xf00d;" styleClass="btn btn-trans-icon" action="#{carRentalsSearch.deleteCarRental(row)}" rendered="#{row.paid == 0}" onclick="return confirm('#{msgs.q_delete}');">
+													<f:ajax render="carRentalsSearch:notifyMessagesId carRentalsSearch:carRentalsId">
+													</f:ajax>
+												</h:commandButton>
+											</p:column>
+
+											<p:column styleClass='centerText'>
+												<f:facet name="header">
+													#{msgs.label_choose}
+												</f:facet>
+												<h:selectBooleanCheckbox value="#{row.selected}" rendered="#{row.paid == 0}">
+													<f:ajax listener="#{carRentalsSearch.selectCarRentalData(row)}" execute="carRentalsSearch:carRentalsId" render="carRentalsSearch:totalAmountId" />
+												</h:selectBooleanCheckbox>
+											</p:column>
+
+										</p:dataTable>
+									</td>
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+			</table>
+
+			<h:panelGroup id="dlgPanelId">
+				<p:dialog dir="#{msgs.dir}" header="#{msgs.label_changeStatus}" id="dlgId" widgetVar="dlg" modal="true" height="180px;" width="720px">
+					<h:panelGroup id="internalDlgPanelId">
+						<table width="100%">
+							<tr>
+								<h:panelGroup rendered="#{carRentalsSearch.dialogueMode == 1}">
+									<th width="15%" style="text-align: right; border: 0">#{msgs.label_chequeNumber}</th>
+									<td width="85%">
+										<h:inputText id="searchChequeNumberEditId" styleClass="form-control inputnumber" value="#{carRentalsSearch.searchChequeNumberEdit}" onkeypress="return checkDigit(event);" />
+									</td>
+								</h:panelGroup>
+							</tr>
+							<tr>
+								<h:panelGroup>
+									<h:panelGroup rendered="#{carRentalsSearch.dialogueMode == 2}">
+										<table width="100%">
+											<tr>
+												<th width="15%" style="text-align: right; border: 0">#{msgs.label_chequeNumber}</th>
+												<td width="35%">
+													<h:inputText id="chequeNumberId" styleClass="form-control inputnumber" value="#{carRentalsSearch.chequeNumber}" onkeypress="return checkDigit(event);" />
+												</td>
+
+												<th width="15%" style="text-align: right; border: 0">#{msgs.label_chequeAmount}</th>
+												<td width="35%">
+													<h:inputText id="chequeAmountId" styleClass="form-control inputnumber" value="#{carRentalsSearch.chequeAmount}" onblur="return isDigitFloat(this, 2);" onkeypress="return checkFloat(event);" />
+												</td>
+											</tr>
+
+											<tr>
+												<h:panelGroup rendered="#{carRentalsSearch.dialogueMode == 2}">
+													<th width="15%" style="text-align: right; border: 0">#{msgs.label_totalPaymentAmount}</th>
+													<td width="35%">
+														<h:outputText id="totalAmountId" value="#{carRentalsSearch.totalAmount}" />
+													</td>
+												</h:panelGroup>
+												<th width="15%" style="text-align: right; border: 0">#{msgs.label_chequeDate}</th>
+												<td width="35%">
+													<util:advancedHijriDate id="chequeDateId" value="#{carRentalsSearch.hijriChequeDate}" />
+												</td>
+											</tr>
+										</table>
+									</h:panelGroup>
+								</h:panelGroup>
+							</tr>
+						</table>
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td colspan="2" height="20px"></td>
+							</tr>
+
+							<tr>
+
+								<td width="100%">
+									<h:commandButton rendered="#{carRentalsSearch.dialogueMode == 1}" styleClass="btn btn-default" id="searchChequeBtnId" value="&#xf002; #{msgs.label_search}" action="#{carRentalsSearch.searchCheque()}">
+										<f:ajax onevent="function(e){if(e.status == 'complete') PF('dlg').show();}" render="carRentalsSearch:internalDlgPanelId" execute="carRentalsSearch:searchChequeNumberEditId" />
+									</h:commandButton>
+								</td>
+
+								<td width="100%">
+									<h:commandButton rendered="#{carRentalsSearch.dialogueMode == 2}" styleClass="btn btn_normal" value="&#xf00d; #{msgs.label_cancel}" action="#{carRentalsSearch.resetChequeData()}">
+										<f:ajax onevent="function(e){if(e.status == 'complete') PF('dlg').hide(); return false;}" render="carRentalsSearch:carRentalsSearchResultsPanelId carRentalsSearch:dlgPanelId" />
+									</h:commandButton>
+								</td>
+
+								<td width="100%">
+									<h:commandButton rendered="#{carRentalsSearch.dialogueMode == 2}" action="#{carRentalsSearch.changeContractStatus()}" styleClass="btn btn-success" value="&#xf0c7; #{msgs.label_save}">
+										<f:ajax render="carRentalsSearch:notifyMessagesId carRentalsSearch:carRentalsId carRentalsSearch:internalDlgPanelId carRentalsSearch:savedFlagId" execute="carRentalsSearch:internalDlgPanelId carRentalsSearch:savedFlagId" onevent="changeContractStatus" />
+									</h:commandButton>
+								</td>
+
+								<h:inputHidden id="savedFlagId" value="#{carRentalsSearch.savedFlag}" />
+							</tr>
+						</table>
+					</h:panelGroup>
+				</p:dialog>
+			</h:panelGroup>
+		</ui:decorate>
+		<h:inputHidden id="fileArchivingParamId" value="#{carRentalsSearch.fileArchivingParam}" />
+	</h:form>
+	<h:inputHidden value="#{carRentalsSearch.departmentTypesList}" id="departmentTypesList" />
+</h:body>
+</html>

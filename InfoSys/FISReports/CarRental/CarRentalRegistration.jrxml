@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CarRentalRegistration" pageWidth="850" pageHeight="842" columnWidth="810" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9cd47935-eec7-40cd-bac9-2f3b95e6d127">
+	<property name="ireport.zoom" value="0.75"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="P_CAR_RENTAL_ID" class="java.lang.Long"/>
+	<parameter name="P_SCHEMA_NAME" class="java.lang.String">
+		<defaultValueExpression><![CDATA["INFOSYS"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT r.REGISTER_DEPARTMENT_NAME,
+r.ORDER_NUMBER,
+r.ORDER_DATE,
+  r.EMPLOYEE_NAME,
+  r.EMPLOYEE_RANK,
+  r.EMPLOYEE_UNIT_NAME,
+  r.INFO_NUMBER,
+  r.MISSION_DESCRIPTION,
+  r.MISSION_CONCLUSION,
+  r.DOMAIN_NAME_SUB_RENTAL_COMPANY,
+  r.CONTRACT_NUMBER,
+  r.RENT_START_DATE,
+  r.RENT_END_DATE,
+  r.RENT_PERIOD,
+  r.DAILY_AMOUNT,
+  r.EXTRA_AMOUNT,
+  ((RENT_PERIOD * r.DAILY_AMOUNT) + r.EXTRA_AMOUNT) TOTAL_AMOUNT,
+  r.DOMAINS_NAME_CAR_MODEL,
+  r.CAR_PLATE_NUMBER,
+r.PAID,
+r.CHEQUE_NUMBER,
+  r.CHEQUE_AMOUNT,
+  r.CHEQUE_DATE
+FROM $P!{P_SCHEMA_NAME}.FIS_VW_CARS_RENTALS r
+WHERE ID = $P{P_CAR_RENTAL_ID}]]>
+	</queryString>
+	<field name="REGISTER_DEPARTMENT_NAME" class="java.lang.String"/>
+	<field name="ORDER_NUMBER" class="java.lang.String"/>
+	<field name="ORDER_DATE" class="java.sql.Timestamp"/>
+	<field name="EMPLOYEE_NAME" class="java.lang.String"/>
+	<field name="EMPLOYEE_RANK" class="java.lang.String"/>
+	<field name="EMPLOYEE_UNIT_NAME" class="java.lang.String"/>
+	<field name="INFO_NUMBER" class="java.lang.String"/>
+	<field name="MISSION_DESCRIPTION" class="java.lang.String"/>
+	<field name="MISSION_CONCLUSION" class="java.lang.String"/>
+	<field name="DOMAIN_NAME_SUB_RENTAL_COMPANY" class="java.lang.String"/>
+	<field name="CONTRACT_NUMBER" class="java.lang.String"/>
+	<field name="RENT_START_DATE" class="java.sql.Timestamp"/>
+	<field name="RENT_END_DATE" class="java.sql.Timestamp"/>
+	<field name="RENT_PERIOD" class="java.math.BigDecimal"/>
+	<field name="DAILY_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="EXTRA_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="TOTAL_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="DOMAINS_NAME_CAR_MODEL" class="java.lang.String"/>
+	<field name="CAR_PLATE_NUMBER" class="java.lang.String"/>
+	<field name="PAID" class="java.math.BigDecimal"/>
+	<field name="CHEQUE_NUMBER" class="java.lang.String"/>
+	<field name="CHEQUE_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="CHEQUE_DATE" class="java.sql.Timestamp"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="656">
+			<staticText>
+				<reportElement mode="Transparent" x="625" y="44" width="185" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="a2165f41-861a-4728-bde3-e168b3c7bb47"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[بيانات داخلية ]]></text>
+			</staticText>
+			<line>
+				<reportElement x="-446" y="69" width="1257" height="1" uuid="600653e8-092e-410a-8b9b-7c48c9a781da"/>
+			</line>
+			<staticText>
+				<reportElement mode="Transparent" x="643" y="371" width="168" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="570c35e9-234d-419e-9f35-1a1dd4de3528"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[بيانات الإيجار
+]]></text>
+			</staticText>
+			<line>
+				<reportElement x="-73" y="396" width="884" height="1" uuid="c0137461-e54a-4d49-afdb-15e2f57919b0"/>
+			</line>
+			<staticText>
+				<reportElement mode="Transparent" x="677" y="102" width="106" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="ae07546a-7f66-4aea-b8a6-1be9c369fdb1"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[إسم المستأجر]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="406" y="102" width="55" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="905a07f3-f62b-486a-b131-3d8f69632364"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[الوحدة]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="158" y="102" width="76" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="4bd18d50-926f-4c17-b53c-c0d0dfc374b8"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[الرتبة]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="677" y="77" width="106" height="25" isRemoveLineWhenBlank="true" forecolor="#000000" backcolor="#FFFFFF" uuid="bef61bdf-f6a4-43a2-82fc-7a829dbef322"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[القسم]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="677" y="127" width="106" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="278f5e6e-e151-46a6-b237-6764d25f9307"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[رقم المعلومة ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="158" y="77" width="76" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="e7aba2da-0728-41a5-9c2e-d9a661ec12b7"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[تاريخ التسجيل]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="406" y="77" width="55" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="9b146e18-60d6-440f-b5d6-bac66bc921da"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[رقم الطلب ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="677" y="152" width="106" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="6420bd6a-3c30-4af1-8ee0-2481d46d8d05"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[وصف موجز للمهمة]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="677" y="254" width="106" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="c009dd56-2f38-4d7c-bdd5-d657f8b8414c"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[ما إنتهت إلية المهمة]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="474" y="77" width="198" height="25" isPrintWhenDetailOverflows="true" uuid="4e5c10af-4db4-43fb-b180-0d068f52031d"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REGISTER_DEPARTMENT_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="474" y="102" width="198" height="25" isPrintWhenDetailOverflows="true" uuid="c625c13d-8e3b-4ea5-a5ba-a52c1001873b"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EMPLOYEE_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="474" y="127" width="198" height="25" isPrintWhenDetailOverflows="true" uuid="0673473a-57b8-4c70-be8f-f627cb4e7d67"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{INFO_NUMBER} == null? "غير مرتبط بمعلومة" : $F{INFO_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="154" width="672" height="85" isPrintWhenDetailOverflows="true" uuid="75349d32-e103-4734-86b7-fea6a9d77a6c"/>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font fontName="Arial" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MISSION_DESCRIPTION}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="255" width="672" height="104" isPrintWhenDetailOverflows="true" uuid="d1ccab5c-f409-4b40-8db3-b236d1a34db6"/>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font fontName="Arial" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MISSION_CONCLUSION}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="234" y="77" width="162" height="25" isPrintWhenDetailOverflows="true" uuid="d3a25394-787c-4c73-b43c-5ba2d14f0259"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ORDER_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="234" y="102" width="162" height="25" isPrintWhenDetailOverflows="true" uuid="d2804ff6-11c1-40cc-b8b0-1ace91809029"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EMPLOYEE_UNIT_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="yyyy/MM/mm">
+				<reportElement x="17" y="77" width="131" height="25" isPrintWhenDetailOverflows="true" uuid="88477bf9-fc59-4fbf-a293-d305fbc40a22"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ORDER_DATE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="17" y="102" width="131" height="25" isPrintWhenDetailOverflows="true" uuid="32d602ae-a954-479c-bd47-e6ebd826c8a7"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EMPLOYEE_RANK}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="677" y="430" width="106" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="b5c22c37-ebb8-4bcc-8dad-7dcb7dbe055f"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[رقم العقد ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="677" y="405" width="106" height="25" isRemoveLineWhenBlank="true" forecolor="#000000" backcolor="#FFFFFF" uuid="cb7491ba-1029-4b3e-8865-b0760018a68c"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[إسم الشركة ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="677" y="455" width="106" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="95f0073f-8557-4947-910c-63e8d8e7d852"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[تاريخ بداية الإيجار]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="677" y="480" width="106" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="9a8fa37f-d944-4230-8539-13829b96f866"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[مدة الإيجار ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="355" y="405" width="106" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="32326b1e-bc36-44e9-aa93-65877eac024b"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[إسم الشركة الوسيط]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="355" y="455" width="106" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="20ee0d4b-69df-433c-8e53-79fdc6ab1b1a"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[تاريخ نهاية الإيجار ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="355" y="480" width="106" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="05596193-536c-42d1-aac3-c9e22c30ed78"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[المبلغ اليومي ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="355" y="505" width="106" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="0a4203b9-8b78-4ae6-8ec8-0386f8f1e341"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[المبلغ الإجمالي ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="677" y="505" width="106" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="2719dda9-e7b6-4fe9-8957-a60ca87704e8"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[المبلغ الإضافي ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="677" y="530" width="106" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="9bd87a61-1818-4b9e-95b3-5461bcc23a7a"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[نوع السيارة]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="355" y="530" width="106" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="5af2f60d-b7bc-44a2-9f9b-15e08919e140"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[رقم اللوحة ]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="474" y="430" width="198" height="25" isPrintWhenDetailOverflows="true" uuid="ea974382-8efa-4768-8069-af0aa74b102a"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CONTRACT_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="474" y="480" width="198" height="25" isPrintWhenDetailOverflows="true" uuid="b0bbd0ec-34c9-4a14-8bcb-712a7933eb39"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{RENT_PERIOD}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="yyyy/MM/mm">
+				<reportElement x="474" y="455" width="198" height="25" isPrintWhenDetailOverflows="true" uuid="1e81d27d-f37a-47d3-a9ff-cc640163d510"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{RENT_START_DATE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="474" y="530" width="198" height="25" isPrintWhenDetailOverflows="true" uuid="91410804-5c25-4bab-ac8b-22acd59801e6"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DOMAINS_NAME_CAR_MODEL}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="474" y="505" width="198" height="25" isPrintWhenDetailOverflows="true" uuid="ce20818b-9d5c-40db-822f-303662bc97cf"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EXTRA_AMOUNT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="148" y="480" width="198" height="25" isPrintWhenDetailOverflows="true" uuid="1432d8dd-c320-4904-a96a-e5965bbc935b"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DAILY_AMOUNT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="148" y="505" width="198" height="25" isPrintWhenDetailOverflows="true" uuid="0dc982be-70b1-4992-888c-6f5fca010d46"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TOTAL_AMOUNT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="148" y="530" width="198" height="25" isPrintWhenDetailOverflows="true" uuid="bbee9d15-f63c-48ec-b094-f6becc744b9c"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CAR_PLATE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="yyyy/MM/mm">
+				<reportElement x="148" y="455" width="198" height="25" isPrintWhenDetailOverflows="true" uuid="7dfa8a96-a206-408f-9ab0-cc002194f0e6"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{RENT_END_DATE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="148" y="405" width="198" height="25" isPrintWhenDetailOverflows="true" uuid="ef7c3a0a-70ed-43ec-9d7e-31e697db078c"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DOMAIN_NAME_SUB_RENTAL_COMPANY} == null? "" : $F{DOMAIN_NAME_SUB_RENTAL_COMPANY}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="474" y="405" width="198" height="25" isRemoveLineWhenBlank="true" forecolor="#000000" backcolor="#FFFFFF" uuid="9f7008a5-e187-4f5c-8217-afbcde5887cd"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[شركة الوفاق]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="289" y="4" width="185" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="3dfe5a3e-cdd1-4206-bbe2-a869f9f49523"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[عقد إستئجار سيارة]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="642" y="580" width="168" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="0c6cf423-b915-4782-ab5b-06d3917d1cb6">
+					<printWhenExpression><![CDATA[$F{PAID}.longValue() == new Long(1)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="16" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[بيانات الشيك ]]></text>
+			</staticText>
+			<line>
+				<reportElement x="-74" y="605" width="884" height="1" uuid="12dafb83-31f5-42b4-9fe0-e8fd0c51e260">
+					<printWhenExpression><![CDATA[$F{PAID}.longValue() == new Long(1)]]></printWhenExpression>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement mode="Transparent" x="350" y="631" width="106" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="6a5ea4fd-8e62-47a2-84a2-5a56004905ab">
+					<printWhenExpression><![CDATA[$F{PAID}.longValue() == new Long(1)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[مبلغ الشيك]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="471" y="606" width="198" height="25" isPrintWhenDetailOverflows="true" uuid="41147aab-9293-42e9-8770-d54e4407ac7f">
+					<printWhenExpression><![CDATA[$F{PAID}.longValue() == new Long(1)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CHEQUE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="148" y="631" width="198" height="25" isPrintWhenDetailOverflows="true" uuid="ab08b34e-e2db-4607-bbd7-ab1d516fdb25">
+					<printWhenExpression><![CDATA[$F{PAID}.longValue() == new Long(1)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CHEQUE_AMOUNT}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="672" y="631" width="106" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="76418ee0-8e74-417a-9306-ce5d8b5b5ea7">
+					<printWhenExpression><![CDATA[$F{PAID}.longValue() == new Long(1)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[تاريخ الشيك]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="672" y="606" width="106" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="3a0ac918-2817-4a61-b7a6-35e672c3f873">
+					<printWhenExpression><![CDATA[$F{PAID}.longValue() == new Long(1)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[رقم الشيك]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="471" y="631" width="198" height="25" isPrintWhenDetailOverflows="true" uuid="1f74634b-b308-4433-96ea-0c604c20f8af">
+					<printWhenExpression><![CDATA[$F{PAID}.longValue() == new Long(1)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CHEQUE_DATE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

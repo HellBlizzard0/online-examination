@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+	<script type="text/javascript">
+		window.onkeypress = function(e) {
+			var keyCode = window.event.keyCode || e.keyCode || e.which;
+			if (keyCode == '13') {
+				document.getElementById('searchInfoForm:searchInfoBtnID').click();
+				return false;
+			}
+		};
+
+		function back() {
+			window.close();
+		}
+
+		function selectInfo(callerId) {
+			var idTokens = callerId.split(':');
+			var infoId = document.getElementById('searchInfoForm:infoListDataTableId:' + idTokens[2] + ':infoId').value;
+			var infoNumber = document.getElementById('searchInfoForm:infoListDataTableId:' + idTokens[2] + ':infoNumberId').innerHTML;
+			returnVal = new Array();
+			returnVal[0] = infoId;
+			returnVal[1] = infoNumber;
+			window.returnValue = returnVal;
+
+			window.opener.HandlePopupResult(returnVal);
+			window.close();
+		}
+
+		function handleDownloadFiles(e) {
+			openDownloadPopupFlagId = document.getElementById('searchInfoForm:openDownloadPopupFlagId').value;
+			openDownloadDialogueFlagId = document.getElementById('searchInfoForm:openDownloadDialogueFlagId').value;
+
+			if (e.status == 'success') {
+				if (openDownloadPopupFlagId == 'true') {
+					downloadFile();
+				} else if (openDownloadDialogueFlagId == 'true') {
+					PF('dlg').show();
+				}
+			}
+		}
+
+		function downloadFile() {
+			downloadedFileParamId = document.getElementById('searchInfoForm:downloadedFileParamId').value;
+			openDownloadFile('#{followUpConversations.boolServerDownloadPath}', downloadedFileParamId);
+			return false;
+		}
+
+		window.onunload = unloadPage;
+		function unloadPage() {
+			window.opener.releaseMask();
+		}
+	</script>
+</h:head>
+<h:body styleClass="screenBg" onunload="unloadPage();">
+	<h:form id="searchInfoForm" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/Template.xhtml">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%" class="bgcolor-pup">
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+				<tr>
+					<td class="screenTitle">
+						<h:outputText value="#{msgs.title_followUpConversations}" />
+					</td>
+				</tr>
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td width="100%">
+						<h:panelGroup id="sectionFollowUpDataId">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<th width="10%">
+										<h:outputText value="#{msgs.label_contactNumber}" />
+									</th>
+									<td width="40%">
+										<h:inputText disabled="true" value="#{followUpConversations.followUpData.contactNumber}" />
+									</td>
+									<td width="50%" colspan="4"></td>
+								</tr>
+								<tr>
+									<td width="100%;" colspan="6">
+										<p:accordionPanel activeIndex="-1">
+											<p:tab title="#{msgs.label_followUpConversations}">
+												<h:panelGroup id="infoListId">
+													<p:dataTable var="result" value="#{followUpConversations.conversationData}" widgetVar="followUpConversations" emptyMessage="#{msgs.title_emptyFollowUpConversations}" paginator="true" rowHover="true" reflow="true" filteredValue="#{followUpConversations.conversationData}">
+														<p:column style="text-align: center;">
+															<f:facet name="header"> # </f:facet>
+							                                #{index + 1}
+							                            </p:column>
+
+														<p:column filterBy="#{result.conversationDateString} #{result.conversationTime}" headerText="#{msgs.label_ResultDateAndTime}" filterMatchMode="contains">
+															<h:outputText value="#{result.conversationDateString} #{result.conversationTime}" />
+														</p:column>
+
+														<p:column filterBy="#{result.conversationLocation}" headerText="#{msgs.label_conversationLocation}" filterMatchMode="contains">
+															<h:outputText value="#{result.conversationLocation}" />
+														</p:column>
+
+														<p:column filterBy="#{result.conversationType}" headerText="#{msgs.label_conversationType}" filterMatchMode="exact">
+															<f:facet name="filter">
+																<p:selectOneMenu onchange="PF('followUpConversations').filter()" style="width:100%">
+																	<f:selectItem itemLabel="#{msgs.label_all}" itemValue="#{null}" />
+																	<f:selectItem itemLabel="#{msgs.label_direct}" itemValue="0" />
+																	<f:selectItem itemLabel="#{msgs.label_injection}" itemValue="1" />
+																</p:selectOneMenu>
+															</f:facet>
+															<h:outputText rendered="#{result.conversationType == 0}" value="#{msgs.label_direct}" style="width:100%" />
+															<h:outputText rendered="#{result.conversationType == 1}" value="#{msgs.label_injection}" style="width:100%" />
+														</p:column>
+
+														<p:column filterBy="#{result.conversationResult}" headerText="#{msgs.label_conversationResult}" filterMatchMode="exact">
+															<f:facet name="filter">
+																<p:selectOneMenu onchange="PF('followUpConversations').filter()" style="width:100%">
+																	<f:selectItem itemLabel="#{msgs.label_all}" itemValue="#{null}" />
+																	<f:selectItem itemLabel="#{msgs.label_conversationNoResults}" itemValue="0" />
+																	<f:selectItem itemLabel="#{msgs.label_negative}" itemValue="1" />
+																	<f:selectItem itemLabel="#{msgs.label_positive}" itemValue="2" />
+																</p:selectOneMenu>
+															</f:facet>
+															<h:outputText rendered="#{result.conversationResult == 0}" value="#{msgs.label_conversationNoResults}" style="width:100%" />
+															<h:outputText rendered="#{result.conversationResult == 1}" value="#{msgs.label_negative}" style="width:100%" />
+															<h:outputText rendered="#{result.conversationResult == 2}" value="#{msgs.label_positive}" style="width:100%" />
+														</p:column>
+														<p:column styleClass='centerText'>
+															<f:facet name="header"> #{msgs.label_details} </f:facet>
+															<h:commandButton value="&#xf06e;" styleClass="btn btn-trans-icon" onclick="this.form.target='_blank'" action="#{followUpConversations.showConversationDetails(result.id)}" />
+
+														</p:column>
+														<p:column styleClass='centerText'>
+															<f:facet name="header"> #{msgs.label_edit} </f:facet>
+															<h:commandButton value="&#xf14b;" styleClass="btn btn-trans-icon" onclick="this.form.target='_blank'" action="#{followUpConversations.editConversationDetails(result.id)}" />
+														</p:column>
+														<p:column styleClass='centerText' headerText="#{msgs.label_archiveDocumentsShow}">
+															<h:commandButton styleClass="btn btn-success" value="&#xf0c5; #{msgs.label_archiveDocumentsShow}">
+																<f:ajax render="searchInfoForm:downloadDlgPanelId searchInfoForm:openDownloadDialogueFlagId searchInfoForm:openDownloadPopupFlagId searchInfoForm:downloadedFileParamId" listener="#{followUpConversations.getDownloadedAttachmentsIdList(result.id)}" onevent="handleDownloadFiles" />
+															</h:commandButton>
+														</p:column>
+													</p:dataTable>
+												</h:panelGroup>
+											</p:tab>
+										</p:accordionPanel>
+									</td>
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+				<tr>
+					<td width="100%">
+						<h:panelGroup id="downloadDlgPanelId">
+							<p:dialog dir="#{msgs.dir}" header="#{msgs.label_archiveDocumentsShow}" id="dlgId" widgetVar="dlg" modal="true" height="180px;" width="720px">
+								<h:panelGroup id="internalDlgPanelId">
+									<table width="100%">
+										<tr>
+											<td>
+												<p:dataTable tableStyle="table-layout:auto" reflow="true" liveResize="true" paginatorPosition="bottom" id="fileListIds" paginator="true" style="width:100%" rowIndexVar="index" rows="10" var="row" value="#{followUpConversations.attachmentList}" widgetVar="table" rowHover="true">
+													<p:column styleClass='centerText'>
+														<f:facet name="header">#</f:facet>
+					                                    #{index + 1}
+				                                   	</p:column>
+													<p:column styleClass='centerText'>
+														<f:facet name="header">
+																#{msgs.label_fileName}
+															</f:facet>
+														<h:outputText value="#{row.fileName}" />
+													</p:column>
+													<p:column styleClass='centerText'>
+														<f:facet name="header">
+															#{msgs.label_download}
+														</f:facet>
+														<h:commandButton styleClass="btn btn-success" value="&#xf019; #{msgs.label_download}">
+															<f:ajax render="searchInfoForm:internalDlgPanelId searchInfoForm:downloadedFileParamId" listener="#{followUpConversations.getDownloadParam(row.attachmentId)}" onevent="function(e){if(e.status == 'success') return downloadFile();}" />
+														</h:commandButton>
+													</p:column>
+												</p:dataTable>
+											</td>
+										</tr>
+									</table>
+								</h:panelGroup>
+							</p:dialog>
+							<h:inputHidden id="downloadedFileParamId" value="#{followUpConversations.downloadFileParamId}" />
+							<h:inputHidden id="openDownloadPopupFlagId" value="#{followUpConversations.openDownloadPopupFlag}" />
+							<h:inputHidden id="openDownloadDialogueFlagId" value="#{followUpConversations.openDownloadDialogueFlag}" />
+						</h:panelGroup>
+					</td>
+				</tr>
+			</table>
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>

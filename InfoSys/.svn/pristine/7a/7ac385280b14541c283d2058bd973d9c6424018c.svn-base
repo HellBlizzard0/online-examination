@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:util="http://java.sun.com/jsf/composite/util" xmlns:code="http://java.sun.com/jsf/composite/code">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+	<h:outputStylesheet library="css" name="dateRangePicker.css" />
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+	<script type="text/javascript">
+		window.onkeypress = function(e) {
+			var keyCode = window.event.keyCode || e.keyCode || e.which;
+			if (keyCode == '13') {
+				document.getElementById('searchFollowUpForm:searchInfoBtnID').click();
+				return false;
+			}
+		};
+
+		function back() {
+			window.close();
+		}
+
+		function selectInfo(callerId) {
+			var idTokens = callerId.split(':');
+			var infoId = document.getElementById('searchFollowUpForm:infoListDataTableId:' + idTokens[2] + ':infoId').value;
+			var infoNumber = document.getElementById('searchFollowUpForm:infoListDataTableId:' + idTokens[2] + ':infoNumberId').innerHTML;
+			returnVal = new Array();
+			returnVal[0] = infoId;
+			returnVal[1] = infoNumber;
+			window.returnValue = returnVal;
+
+			window.opener.HandlePopupResult(returnVal);
+			window.close();
+		}
+
+		window.onunload = unloadPage;
+
+		function unloadPage() {
+			window.opener.releaseMask();
+		}
+	</script>
+</h:head>
+<h:body styleClass="screenBg" onunload="unloadPage();">
+	<h:form id="searchFollowUpForm" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/Template.xhtml">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%" class="bgcolor-pup">
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+				<tr>
+					<td class="screenTitle">#{msgs.title_followUpActions}</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+				<tr>
+					<td class="txt-right">
+						<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<th>#{msgs.label_endDate}</th>
+								<td>
+									<util:dateRangePicker dateFromValue="#{followUpActionRequest.searchedDateFrom}" dateToValue="#{followUpActionRequest.searchedDateTo}" listener="#{followUpActionRequest.searchByDate}" render="searchFollowUpForm:followUpListId" />
+								</td>
+								<td></td>
+								<td></td>
+
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+				<tr>
+					<td width="100%;" colspan="6">
+						<h:panelGroup>
+							<table width="100%">
+								<tr>
+									<td colspan="2">
+										<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+											<tr>
+												<td>
+													<h:outputText value="#{msgs.title_searchResults}" />
+												</td>
+											</tr>
+											<tr>
+												<td colspan="2"></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td width="100%">
+						<h:panelGroup id="followUpListId">
+							<p:dataTable var="curFollowUp" value="#{followUpActionRequest.followUpDataList}" tableStyle="table-layout: auto" paginator="true" rowHover="true" widgetVar="followUp" emptyMessage="#{msgs.title_emptyFollowUps}" filteredValue="#{followUpActionRequest.filteredFollowUpDataList}">
+								<p:column style="text-align: center;">
+									<f:facet name="header"> # </f:facet>
+	                                #{index + 1}
+	                            </p:column>
+
+								<p:column filterBy="#{curFollowUp.contactNumber}" headerText="#{msgs.label_contactNumber}" filterMatchMode="contains">
+									<h:outputText value="#{curFollowUp.contactNumber}" />
+								</p:column>
+
+								<p:column filterBy="#{curFollowUp.code}" headerText="#{msgs.label_ghostCode}" filterMatchMode="contains">
+									<h:outputText value="#{curFollowUp.code}" />
+								</p:column>
+
+								<p:column filterBy="#{curFollowUp.aliasName}" headerText="#{msgs.label_ghostAliasName}" filterMatchMode="contains">
+									<h:outputText value="#{curFollowUp.aliasName}" />
+								</p:column>
+
+								<p:column filterBy="#{curFollowUp.regionName}" headerText="#{msgs.label_region}" filterMatchMode="exact">
+									<f:facet name="filter">
+										<p:selectOneMenu onchange="PF('followUp').filter()" style="width:100%">
+											<f:selectItem itemLabel="#{msgs.label_all}" itemValue="#{null}" noSelectionOption="true" />
+											<f:selectItems var="resultType" itemLabel="#{resultType.label}" itemValue="#{resultType.description}" value="#{followUpActionRequest.followUpResultRegionList}" />
+										</p:selectOneMenu>
+									</f:facet>
+									<h:outputText value="#{curFollowUp.regionName}" style="width:100%" />
+								</p:column>
+								<p:column filterBy="#{curFollowUp.followUpStartDateString}" headerText="#{msgs.label_startingDate}" filterMatchMode="contains">
+									<h:outputText value="#{curFollowUp.followUpStartDateString}" />
+								</p:column>
+
+								<p:column filterBy="#{curFollowUp.followUpEndDateString}" headerText="#{msgs.label_endingDate}" filterMatchMode="contains">
+									<h:outputText value="#{curFollowUp.followUpEndDateString}" />
+								</p:column>
+
+								<p:column filterBy="#{curFollowUp.activeFlag}" headerText="#{msgs.label_followUpDirect}" filterMatchMode="exact">
+									<f:facet name="filter">
+										<p:selectOneMenu onchange="PF('followUp').filter()" style="width:100%">
+											<f:selectItem itemLabel="#{msgs.label_all}" itemValue="#{null}" noSelectionOption="true" />
+											<f:selectItem itemLabel="#{msgs.label_yes}" itemValue="true" noSelectionOption="true" />
+											<f:selectItem itemLabel="#{msgs.label_no}" itemValue="false" noSelectionOption="true" />
+										</p:selectOneMenu>
+									</f:facet>
+									<h:outputText rendered="#{curFollowUp.activeFlag}" value="#{msgs.label_yes}" style="width:100%" />
+									<h:outputText rendered="#{!curFollowUp.activeFlag}" value="#{msgs.label_no}" style="width:100%" />
+								</p:column>
+
+								<p:column filterBy="#{curFollowUp.status}" headerText="#{msgs.label_followUpStatus}" filterMatchMode="exact">
+									<f:facet name="filter">
+										<p:selectOneMenu onchange="PF('followUp').filter()" style="width:100%">
+											<f:selectItem itemLabel="#{msgs.label_all}" itemValue="#{null}" noSelectionOption="true" />
+											<f:selectItems var="resultType" itemLabel="#{resultType.label}" itemValue="#{resultType.value}" value="#{followUpActionRequest.statusTypesList}" />
+										</p:selectOneMenu>
+									</f:facet>
+									<h:outputText rendered="#{curFollowUp.status == 0}" value="#{msgs.status_active}" style="width:100%" />
+									<h:outputText rendered="#{curFollowUp.status == 1}" value="#{msgs.status_suspended}" style="width:100%" />
+									<h:outputText rendered="#{curFollowUp.status == 3}" value="#{msgs.label_finished}" style="width:100%" />
+								</p:column>
+
+								<p:column headerText="#{msgs.label_details}">
+									<h:commandButton value="&#xf06e;" styleClass="btn btn-trans-icon" onclick="this.form.target='_blank'" action="#{followUpActionRequest.viewDirectFollowUp(curFollowUp.id)}" />
+								</p:column>
+								<p:column styleClass='centerText'>
+									<f:facet name="header"> #{msgs.label_takeDecision} </f:facet>
+									<h:commandButton value="&#xf013;" styleClass="btn btn-trans-icon" onclick="this.form.target='_blank'" action="#{followUpActionRequest.viewFollowUpTakeAction(curFollowUp)}" />
+								</p:column>
+
+							</p:dataTable>
+						</h:panelGroup>
+					</td>
+				</tr>
+			</table>
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>

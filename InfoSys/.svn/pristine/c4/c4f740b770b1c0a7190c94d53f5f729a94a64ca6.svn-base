@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:util="http://java.sun.com/jsf/composite/util">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+	<script type="text/javascript">
+		var m;
+		function getEmployee(contextPath, mode) {
+			m = 1;
+			openEmpsMiniSearch(contextPath, 1, null, null);
+			return false;
+		}
+
+		function openFollowUpMiniSearchScreen(contextPath) {
+			m = 2;
+			openFollowUpMiniSearch(contextPath);
+			return false;
+		}
+
+		function HandlePopupResult(ret) {
+			unMaskScreen();
+			if (ret != null) {
+				if (m == 1) {
+					document.getElementById('formId:selectedEmployeeIdId').value = ret[0];
+					document.getElementById('formId:empNameId').value = ret[1];
+				} else if (m == 2) {
+					document.getElementById('formId:selectedFollowUpId').value = ret[0];
+					document.getElementById('formId:followUpCodeId').value = ret[1];
+				}
+				return true;
+			}
+			return false;
+		}
+
+		function releaseMask() {
+			unMaskScreen();
+		}
+	</script>
+</h:head>
+<h:body styleClass="screenBg">
+	<h:form id="formId" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/Template.xhtml">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tr>
+					<td class="screenTitle">#{msgs.title_conversationReferrals}</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.label_searchData}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="followUpsReportContainer">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<th width="15%">#{msgs.label_followUpCode}</th>
+									<td width="20%">
+										<h:inputText style="width:90%" disabled="true" id="followUpCodeId" value="#{referralConversationReport.followUpCode}" />
+										<h:inputHidden id="selectedFollowUpId" value="#{referralConversationReport.followUpId}" />
+										<h:commandButton value="&#xf002;" styleClass="btn btn-trans-icon" onclick="return openFollowUpMiniSearchScreen('#{request.contextPath}');" />
+									</td>
+									<th width="15%">
+										#{msgs.label_region}
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<p:selectCheckboxMenu id="regionMenuId" label="#{msgs.label_region}" value="#{referralConversationReport.selectedRegionList}">
+											<f:selectItems value="#{referralConversationReport.regionsList}" var="var" itemLabel="#{var.regionName}" itemValue="#{var.id}" />
+										</p:selectCheckboxMenu>
+									</td>
+								</tr>
+
+								<tr>
+									<th width="15%">#{msgs.label_referralSpecialistEmp}</th>
+									<td width="20%">
+										<h:inputText style="width:90%" disabled="true" id="empNameId" value="#{referralConversationReport.employeeName}" />
+										<h:inputHidden id="selectedEmployeeIdId" value="#{referralConversationReport.employeeId}" />
+										<h:commandButton value="&#xf002;" styleClass="btn btn-trans-icon" onclick="return getEmployee('#{request.contextPath}',1);" />
+									</td>
+									<th width="15%">#{msgs.label_referralType}</th>
+									<td width="20%">
+										<h:selectOneMenu value="#{referralConversationReport.referralType}">
+											<f:selectItem itemValue="-1" itemLabel="#{msgs.label_all}" />
+											<f:selectItems value="#{referralConversationReport.referralDomainList}" var="var" itemLabel="#{var.description}" itemValue="#{var.id}" />
+										</h:selectOneMenu>
+									</td>
+								</tr>
+
+								<tr>
+									<th width="15%">
+										#{msgs.label_fromDate}
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<util:advancedHijriDate value="#{referralConversationReport.fromDate}" />
+									</td>
+
+									<th width="15%">
+										#{msgs.label_toDate}
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<util:advancedHijriDate value="#{referralConversationReport.toDate}" />
+									</td>
+
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+				<tr>
+					<td width="100%">
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:commandButton styleClass="btn btn-default" id="resetBtn" value="&#xf021; #{msgs.label_reset}" action="#{referralConversationReport.reset()}">
+										<f:ajax render="formId:followUpsReportContainer" />
+									</h:commandButton>
+									<h:commandButton styleClass="btn btn-default" id="printBtn" value="&#xf02f; #{msgs.label_print}" action="#{referralConversationReport.printReport()}">
+									</h:commandButton>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>
