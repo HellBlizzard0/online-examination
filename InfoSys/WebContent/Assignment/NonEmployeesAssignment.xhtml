@@ -1,0 +1,704 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:code="http://java.sun.com/jsf/composite/code" xmlns:of="http://omnifaces.org/functions" xmlns:o="http://omnifaces.org/ui" xmlns:h="http://java.sun.com/jsf/html" xmlns:util="http://java.sun.com/jsf/composite/util" xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+
+	<script type="text/javascript">
+		var m;
+
+		function getDepartment(contextPath) {
+			m = 1;
+			var regionId = document.getElementById('assignmentFormId:selectedRegionId').value
+			openDepartmentsMiniSearch(contextPath, 5, regionId, null);
+			return false;
+		}
+
+		function getEmployee(contextPath, mode, depsList) {
+			m = 2;
+			openEmpsMiniSearch(contextPath, mode, depsList);
+    		return false;
+		}
+
+		function getCountry(contextPath) {
+			m = 3;
+			openCountriesMiniSearch(contextPath, 1);
+			return false;
+		}
+
+		function getRegion(contextPath, mode) {
+			m = 4;
+			openDepartmentsMiniSearch(contextPath, mode, null,
+					'#{nonEmployeeAssginment.departmentType}');
+			return false;
+		}
+
+		function getUnit(contextPath,sectorId) {
+    		m = 5;
+    		openDepartmentsMiniSearch(contextPath,6,sectorId, null);
+    		return false;
+    	}
+		
+		function employeeInfoSysDetails(contextPath, socialId) {
+			openEmployeeInfoSysDetailsBySocialId(contextPath, socialId);
+			return false;
+		}
+
+		function releaseMask() {
+			unMaskScreen();
+		}
+
+		function HandlePopupResult(ret) {
+			unMaskScreen();
+			if (ret != null) {
+				if (m == 1) {
+					document.getElementById('assignmentFormId:selectedDepartmentId').value = ret[0];
+					document.getElementById('assignmentFormId:selectedDepartmentNameId').value = ret[1];
+					document.getElementById('assignmentFormId:departmentNameId').innerHTML = ret[1];
+					document.getElementById('assignmentFormId:selectedUnitId').value = null;
+	    		  	document.getElementById('assignmentFormId:selectedUnitNameId').value = '';
+	            	document.getElementById('assignmentFormId:unitNameId').innerHTML = '';
+
+	            	document.getElementById('assignmentFormId:officerIdId').value = null;
+            		document.getElementById('assignmentFormId:officerNameHiddenId').value = '';
+                    document.getElementById('assignmentFormId:officerNameId').innerHTML = '';
+	            	document.getElementById('assignmentFormId:updateUnitButtonId').click();
+				} else if (m == 2) {
+					document.getElementById('assignmentFormId:officerNameId').innerHTML = ret[1]; 
+               		document.getElementById('assignmentFormId:officerIdId').value = ret[0];
+               		document.getElementById('assignmentFormId:officerNameHiddenId').value = ret[1];
+				} else if (m == 3) {
+					document.getElementById('assignmentFormId:selectedCountryId').value = ret[0];
+					document.getElementById('assignmentFormId:selectedCountryNameId').value = ret[1];
+					document.getElementById('assignmentFormId:countryNameId').innerHTML = ret[1];
+				} else if (m == 4) {
+					document.getElementById('assignmentFormId:selectedRegionId').value = ret[0];
+					document.getElementById('assignmentFormId:selectedRegionNameId').value = ret[1];
+					document.getElementById('assignmentFormId:regionNameId').innerHTML = ret[1];
+					document.getElementById('assignmentFormId:selectedDepartmentId').value = null;
+					document.getElementById('assignmentFormId:selectedDepartmentNameId').value = '';
+					document.getElementById('assignmentFormId:departmentNameId').innerHTML = '';
+					document.getElementById('assignmentFormId:selectedUnitId').value = null;
+            		document.getElementById('assignmentFormId:selectedUnitNameId').value = '';
+                    document.getElementById('assignmentFormId:unitNameId').innerHTML = '';
+					 
+            		document.getElementById('assignmentFormId:officerIdId').value = null;
+            		document.getElementById('assignmentFormId:officerNameHiddenId').value = '';
+                    document.getElementById('assignmentFormId:officerNameId').innerHTML = '';
+                    
+					document.getElementById('assignmentFormId:updateSectorAndDepsListButtonId').click();
+				} else if (m==5)
+    	  		{
+    	  			document.getElementById('assignmentFormId:selectedUnitId').value = ret[0];
+            		document.getElementById('assignmentFormId:selectedUnitNameId').value = ret[1];
+                    document.getElementById('assignmentFormId:unitNameId').innerHTML = ret[1];
+
+                    document.getElementById('assignmentFormId:officerIdId').value = null;
+            		document.getElementById('assignmentFormId:officerNameHiddenId').value = '';
+                    document.getElementById('assignmentFormId:officerNameId').innerHTML = '';
+                    document.getElementById('assignmentFormId:updateUnitBtnId').click();
+    	  		}
+				return true;
+			}
+			return false;
+		}
+
+		function confirmChanges(){
+			wfFlag = document.getElementById('assignmentFormId:wfFlagId').value;
+			fullName = document.getElementById('assignmentFormId:fullNameId').value;
+			fullNameTemp = document.getElementById('assignmentFormId:fullNameTempId').value;
+			if(wfFlag == 'true' || fullName != fullNameTemp){
+				return confirm('#{msgs.q_wfInit}');
+			}else{
+				return confirm('#{msgs.q_save}');
+			}	
+		}
+		
+		function handleDownloadFiles(e){
+    		openDownloadPopupFlagId = document.getElementById('assignmentFormId:openDownloadPopupFlagId').value;
+    		openDownloadDialogueFlagId = document.getElementById('assignmentFormId:openDownloadDialogueFlagId').value;
+    		
+    		if(e.status == 'success'){
+    			if(openDownloadPopupFlagId == 'true'){
+    				downloadFile();
+        		}else if (openDownloadDialogueFlagId == 'true'){
+        			PF('dlg').show();
+            	}
+    		}
+        }
+
+    	function uploadFile(){
+    		fileArchivingParam = document.getElementById('assignmentFormId:fileArchivingParamId').value;
+    		openUploadFile('#{nonEmployeeAssginment.boolServerUploadPath}', fileArchivingParam);
+    		return false;
+        }
+
+    	function downloadFile(){
+    		downloadedFileParamId = document.getElementById('assignmentFormId:downloadedFileParamId').value;
+    		openDownloadFile('#{nonEmployeeAssginment.boolServerDownloadPath}',downloadedFileParamId);
+    		return false;
+        }
+	</script>
+
+</h:head>
+<h:body styleClass="screenBg">
+	<h:form id="assignmentFormId" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/Template.xhtml">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+
+
+				<tr>
+					<td class="screenTitle">
+						<h:outputText value="#{nonEmployeeAssginment.screenTitle}" />
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.label_assginmentOrder}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="assignmentContainerId">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<th>#{msgs.label_assignmentRequestNumber}</th>
+									<td>
+										<h:outputText value="#{nonEmployeeAssginment.assignmentData.requestNumber}" />
+									</td>
+									
+									<th>#{msgs.label_assignmentRequestData}</th>
+									<td>
+										<util:advancedHijriDate disable="true" value="#{nonEmployeeAssginment.assignmentData.requestDate}" />
+									</td>
+
+								</tr>
+
+								<tr>
+									<th width="15%">
+										#{msgs.label_regionHq}
+										<h:outputText rendered="#{nonEmployeeAssginment.pageMode == 1}" value="*" style="color:red;" />
+										<h:commandButton rendered="#{not nonEmployeeAssginment.regionSelected and nonEmployeeAssginment.pageMode == 1}" value="&#xf002;" styleClass="btn btn-trans-icon" onclick="return getRegion('#{request.contextPath}',2);" title="#{msgs.label_addDepartment}" />
+										<h:commandButton id="updateSectorAndDepsListButtonId" style="display : none ;" action="#{nonEmployeeAssginment.updateDepsList(nonEmployeeAssginment.assignmentData.regionId , null , null)}">
+											<f:ajax execute="assignmentFormId:selectedRegionId assignmentFormId:selectedDepartmentId" render="assignmentFormId:assignmentOfficerButtonId assignmentFormId:sectorPaneId assignmentFormId:unitBtnPanelId"></f:ajax>
+										</h:commandButton>
+									</th>
+									<td width="20%">
+										<h:inputHidden id="selectedRegionId" value="#{nonEmployeeAssginment.assignmentData.regionId}" />
+										<h:inputHidden id="selectedRegionNameId" value="#{nonEmployeeAssginment.assignmentData.regionName}" />
+										<h:outputText id="regionNameId" value="#{nonEmployeeAssginment.assignmentData.regionName}" />
+									</td>
+									
+									<th width="15%">
+										<h:panelGroup id="sectorPaneId">
+											<h:outputText rendered="#{nonEmployeeAssginment.assignmentData.regionId != nonEmployeeAssginment.headQuarterId}" value="#{msgs.label_sector}" />
+											<h:outputText rendered="#{nonEmployeeAssginment.pageMode == 1 and nonEmployeeAssginment.assignmentData.regionId != nonEmployeeAssginment.headQuarterId}" value="*" style="color:red;" />
+											<h:commandButton id="sectorButtonId" disabled="#{empty nonEmployeeAssginment.assignmentData.regionId}" rendered="#{not nonEmployeeAssginment.sectorSelected and nonEmployeeAssginment.assignmentData.regionId != nonEmployeeAssginment.headQuarterId and nonEmployeeAssginment.pageMode == 1}" value="&#xf002;" styleClass="btn btn-trans-icon" onclick="return getDepartment('#{request.contextPath}');" title="#{msgs.label_addDepartment}" />
+											<h:commandButton id="updateUnitButtonId" style = "display : none ;"  action="#{nonEmployeeAssginment.updateDepsList(nonEmployeeAssginment.assignmentData.regionId , nonEmployeeAssginment.assignmentData.sectorId , null)}">
+												<f:ajax execute="assignmentFormId:selectedDepartmentId assignmentFormId:unitBtnId assignmentFormId:assignmentOfficerButtonId assignmentFormId:unitPanelId" render="assignmentFormId:unitBtnId assignmentFormId:assignmentOfficerButtonId assignmentFormId:unitPanelId"></f:ajax>
+											</h:commandButton>
+										</h:panelGroup>
+									</th>
+									<td width="20%">
+										<h:inputHidden id="selectedDepartmentId" value="#{nonEmployeeAssginment.assignmentData.sectorId}" />
+										<h:inputHidden id="selectedDepartmentNameId" value="#{nonEmployeeAssginment.assignmentData.sectorName}" />
+										<h:outputText id="departmentNameId" value="#{nonEmployeeAssginment.assignmentData.sectorName}" />
+									</td>
+
+								</tr>
+
+								<tr>
+									<th width="15%">
+										<h:panelGroup id="unitBtnPanelId">
+											<h:outputText value="#{msgs.label_unit}" rendered="#{nonEmployeeAssginment.assignmentData.regionId != nonEmployeeAssginment.headQuarterId}" />
+											<h:commandButton id="unitBtnId" disabled="#{empty nonEmployeeAssginment.assignmentData.sectorId}" rendered="#{not nonEmployeeAssginment.sectorSelected and nonEmployeeAssginment.assignmentData.regionId != nonEmployeeAssginment.headQuarterId and nonEmployeeAssginment.pageMode == 1}" value="&#xf002;" styleClass="btn btn-trans-icon" onclick="return getUnit('#{request.contextPath}','#{nonEmployeeAssginment.assignmentData.sectorId}');" title="#{msgs.label_addUnit}" />
+											<h:commandButton id = "updateUnitBtnId" style="display : none ;" action="#{nonEmployeeAssginment.updateDepsList(null , null , nonEmployeeAssginment.assignmentData.unitId)}" >
+											<f:ajax execute = "@form" render = "assignmentFormId:assignmentOfficerButtonId"></f:ajax>
+										</h:commandButton>
+										</h:panelGroup>
+									</th>
+									<td width="20%">
+										<h:panelGroup id="unitPanelId">
+											<h:inputHidden id="selectedUnitId" value="#{nonEmployeeAssginment.assignmentData.unitId}" />
+											<h:inputHidden id="selectedUnitNameId" value="#{nonEmployeeAssginment.assignmentData.unitName}" />
+											<h:outputText id="unitNameId" value="#{nonEmployeeAssginment.assignmentData.unitName}" />
+										</h:panelGroup>
+									</td>
+									
+									<th width="15%">
+										#{msgs.label_assignmentOfficer}
+										<h:outputText rendered="#{nonEmployeeAssginment.pageMode == 1 or nonEmployeeAssginment.pageMode == 4}" value="*" style="color:red;" />
+										<h:commandButton id="assignmentOfficerButtonId" disabled="#{nonEmployeeAssginment.depsList == null || (empty nonEmployeeAssginment.assignmentData.sectorId and nonEmployeeAssginment.assignmentData.regionId != nonEmployeeAssginment.headQuarterId)}"  onclick="return getEmployee('#{request.contextPath}', 3, '#{nonEmployeeAssginment.depsList}');" value="&#xf002;" styleClass="btn btn-trans-icon" rendered="#{nonEmployeeAssginment.pageMode == 1 or nonEmployeeAssginment.pageMode == 4}" />
+									</th>
+									<td width="20%">
+										<h:outputText id="officerNameId" value="#{nonEmployeeAssginment.assignmentData.officerName}" />
+										<h:inputHidden id="officerIdId" value="#{nonEmployeeAssginment.assignmentData.officerId}" />
+										<h:inputHidden id="officerNameHiddenId" value="#{nonEmployeeAssginment.assignmentData.officerName}" />
+									</td>
+								</tr>
+
+								<tr>
+									<th>
+										#{msgs.label_workScope}
+										<h:outputText rendered="#{nonEmployeeAssginment.pageMode == 1}" value="*" style="color:red;" />
+									</th>
+									<td colspan="1">
+										<h:inputTextarea onkeypress="return valdiateMaxLength(this, 255);" onblur="return isValdiateMaxLength(this, 255);" rows="3" cols="50" styleClass="form-control" disabled="#{nonEmployeeAssginment.pageMode != 1}" value="#{nonEmployeeAssginment.assignmentDetailData.workScope}">
+										</h:inputTextarea>
+									</td>
+
+								</tr>
+
+								<tr>
+									<th>
+										#{msgs.label_assignmentNonEmpStartDate}
+										<h:outputText rendered="#{nonEmployeeAssginment.pageMode == 1}" value="*" style="color:red;" />
+									</th>
+									<td>
+										<util:advancedHijriDate disable="#{nonEmployeeAssginment.pageMode != 1}" value="#{nonEmployeeAssginment.assignmentData.startDate}" />
+									</td>
+									
+									<th>#{msgs.label_assignmentNonEmpPeriod}</th>
+									<td>
+										<h:selectOneMenu disabled="#{nonEmployeeAssginment.pageMode != 1}" styleClass="selectMenuWithIcon" value="#{nonEmployeeAssginment.assignmentData.period}">
+											<f:selectItem itemValue="1" itemLabel="1" />
+											<f:selectItem itemValue="2" itemLabel="2" />
+											<f:selectItem itemValue="3" itemLabel="3" />
+											<f:selectItem itemValue="4" itemLabel="4" />
+											<f:selectItem itemValue="5" itemLabel="5" />
+											<f:selectItem itemValue="6" itemLabel="6" />
+											<f:selectItem itemValue="7" itemLabel="7" />
+											<f:selectItem itemValue="8" itemLabel="8" />
+											<f:selectItem itemValue="9" itemLabel="9" />
+											<f:selectItem itemValue="10" itemLabel="10" />
+											<f:selectItem itemValue="11" itemLabel="11" />
+											<f:selectItem itemValue="12" itemLabel="12" />
+										</h:selectOneMenu>
+										#{msgs.label_month}
+									</td>
+
+								</tr>
+
+								<tr>
+									<td colspan="8">
+										<p:selectCheckboxMenu label="#{msgs.label_assignmentReasons}" value="#{nonEmployeeAssginment.assignmentDetailData.reasonsList}" filter="true" styleClass="btn btn_normal" filterMatchMode="startsWith">
+											<f:selectItems itemDisabled="#{nonEmployeeAssginment.pageMode != 1}" value="#{nonEmployeeAssginment.assignmentReasonsList}" var="reason" itemLabel="#{reason}" itemValue="#{reason}" />
+										</p:selectCheckboxMenu>
+										<h:outputText rendered="#{nonEmployeeAssginment.pageMode == 1}" value="*" style="color:red;" />
+									</td>
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td width="100%">
+									<h:commandButton rendered="#{not empty nonEmployeeAssginment.assignmentData.id}" value="#{msgs.label_InfoAnalysisDetails}" styleClass="btn btn-success" onclick="return employeeInfoSysDetails('#{request.contextPath}', #{nonEmployeeAssginment.nonEmployeeIdentity});">
+										<f:ajax />
+									</h:commandButton>
+
+									<h:commandButton rendered="#{not empty nonEmployeeAssginment.assignmentData.id}" styleClass="btn btn-success" id="archiveBtnUploadId" value="&#xf187; #{msgs.label_archiveDocuments}">
+										<f:ajax listener="#{nonEmployeeAssginment.getUploadParam(nonEmployeeAssginment.assignmentData.id)}" render="assignmentFormId:fileArchivingParamId" onevent="function(e){if(e.status == 'success') return uploadFile();}" />
+									</h:commandButton>
+
+									<h:commandButton rendered="#{not empty nonEmployeeAssginment.assignmentData.id}" styleClass="btn btn-success" id="archiveBtnDownloadId" value="&#xf0c5; #{msgs.label_archiveDocumentsShow}">
+										<f:ajax render="assignmentFormId:downloadDlgPanelId assignmentFormId:openDownloadDialogueFlagId assignmentFormId:openDownloadPopupFlagId assignmentFormId:downloadedFileParamId" listener="#{nonEmployeeAssginment.getDownloadedAttachmentsIdList(nonEmployeeAssginment.assignmentData.id)}" onevent="handleDownloadFiles" />
+									</h:commandButton>
+									<h:inputHidden id="fileArchivingParamId" value="#{nonEmployeeAssginment.fileArchivingParam}" />
+									<h:inputHidden id="downloadedFileParamId" value="#{nonEmployeeAssginment.downloadFileParamId}" />
+									<h:inputHidden id="openDownloadPopupFlagId" value="#{nonEmployeeAssginment.openDownloadPopupFlag}" />
+									<h:inputHidden id="openDownloadDialogueFlagId" value="#{nonEmployeeAssginment.openDownloadDialogueFlag}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<h:panelGroup id="assignmentDetailsPaneId">
+					<tr>
+						<td>
+							<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<td>
+										<h:outputText value="#{msgs.label_agentDetails}" />
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<th>
+										#{msgs.label_identity}
+										<h:outputText rendered="#{nonEmployeeAssginment.pageMode == 1}" value="*" style="color:red;" />
+									</th>
+									<td>
+										<h:inputText maxlength="14" styleClass="form-control" disabled="#{nonEmployeeAssginment.pageMode != 1 and nonEmployeeAssginment.pageMode != 4}" value="#{nonEmployeeAssginment.assignmentDetailData.identity}" />
+									</td>
+									
+									<th>#{msgs.label_agentCode}</th>
+									<td>
+										<h:outputText value="#{nonEmployeeAssginment.assignmentDetailData.agentCode} " />
+										<h:selectBooleanCheckbox value="#{nonEmployeeAssginment.assignmentDetailData.changeAgentCode}" rendered="#{nonEmployeeAssginment.reAssigned or (nonEmployeeAssginment.pageMode == 4 and not empty nonEmployeeAssginment.assignmentDetailData.id)}" />
+										<h:outputText value="#{msgs.label_changAgentCode} " rendered="#{nonEmployeeAssginment.reAssigned or (nonEmployeeAssginment.pageMode == 4 and not empty nonEmployeeAssginment.assignmentDetailData.id)}" />
+									</td>
+
+								</tr>
+
+								<tr>
+									<th>
+										#{msgs.label_name}
+										<h:outputText rendered="#{nonEmployeeAssginment.pageMode == 1 or nonEmployeeAssginment.pageMode == 4}" value="*" style="color:red;" />
+									</th>
+									<td>
+										<h:inputText id="fullNameId" maxlength="255" styleClass="form-control" disabled="#{nonEmployeeAssginment.pageMode != 1 and nonEmployeeAssginment.pageMode != 4}" value="#{nonEmployeeAssginment.assignmentDetailData.fullName}" />
+										<h:inputHidden id="fullNameTempId" value="#{nonEmployeeAssginment.assignmentDetailData.fullNameTemp}" />
+									</td>
+									
+
+									<th>
+										#{msgs.label_birthDate}
+										<h:outputText rendered="#{nonEmployeeAssginment.pageMode == 1}" value="*" style="color:red;" />
+									</th>
+									<td>
+										<util:advancedHijriDate birthDateRange="true" disable="#{nonEmployeeAssginment.pageMode != 1 and nonEmployeeAssginment.pageMode != 4}" value="#{nonEmployeeAssginment.assignmentDetailData.birthDate}" />
+									</td>
+
+								</tr>
+
+								<tr>
+									<th width="15%">
+										#{msgs.label_nationality}
+										<h:outputText rendered="#{nonEmployeeAssginment.pageMode == 1}" value="*" style="color:red;" />
+										<h:commandButton rendered="#{nonEmployeeAssginment.pageMode == 1}" value="&#xf002;" styleClass="btn btn-trans-icon" onclick="return getCountry('#{request.contextPath}',3);" title="#{msgs.label_addDepartment}" />
+									</th>
+									<td width="20%">
+										<h:inputHidden id="selectedCountryId" value="#{nonEmployeeAssginment.assignmentDetailData.countryId}" />
+										<h:inputHidden id="selectedCountryNameId" value="#{nonEmployeeAssginment.assignmentDetailData.countryName}" />
+										<h:outputText id="countryNameId" value="#{nonEmployeeAssginment.assignmentDetailData.countryName}" />
+									</td>
+									
+									<th width="15%">#{msgs.label_workPlace}</th>
+
+									<td width="20%">
+										<h:inputText maxlength="200" styleClass="form-control" disabled="#{nonEmployeeAssginment.pageMode != 1}" value="#{nonEmployeeAssginment.assignmentDetailData.workPlace}" />
+									</td>
+
+								</tr>
+
+								<tr>
+									<th width="15%">
+										#{msgs.label_phoneNumbers}
+										<h:outputText rendered="#{nonEmployeeAssginment.pageMode == 1 or nonEmployeeAssginment.pageMode == 4}" value="*" style="color:red;" />
+									</th>
+									<td width="20%" colspan="1">
+										<h:inputText maxlength="15" onblur="return isPhoneNumber(this)" onkeypress="return checkPhoneNumber(event);" styleClass="form-control" disabled="#{nonEmployeeAssginment.pageMode != 1 and nonEmployeeAssginment.pageMode != 4}" value="#{nonEmployeeAssginment.assignmentDetailData.primaryPhone}" />
+										<h:inputText maxlength="15" onblur="return isPhoneNumber(this)" onkeypress="return checkPhoneNumber(event);" styleClass="form-control" disabled="#{nonEmployeeAssginment.pageMode != 1 and nonEmployeeAssginment.pageMode != 4}" value="#{nonEmployeeAssginment.assignmentDetailData.secondaryPhone}" />
+										<h:inputText maxlength="15" onblur="return isPhoneNumber(this)" onkeypress="return checkPhoneNumber(event);" styleClass="form-control" disabled="#{nonEmployeeAssginment.pageMode != 1 and nonEmployeeAssginment.pageMode != 4}" value="#{nonEmployeeAssginment.assignmentDetailData.ternaryPhone}" />
+									</td>
+
+								</tr>
+
+								<tr>
+									<th width="15%">
+										#{msgs.label_assignmentType}
+										<h:outputText rendered="#{nonEmployeeAssginment.pageMode == 1 or nonEmployeeAssginment.pageMode == 4}" value=" *" style="color:red;" />
+									</th>
+									<td width="20%">
+										<h:selectOneMenu disabled="#{((nonEmployeeAssginment.pageMode != 1) or (nonEmployeeAssginment.reAssignCoop )) and nonEmployeeAssginment.pageMode != 4}" value="#{nonEmployeeAssginment.assignmentDetailData.type}" styleClass="form-control">
+											<f:selectItem itemLabel="#{msgs.label_assignment}" itemValue="#{nonEmployeeAssginment.assignment}" />
+											<f:selectItem itemLabel="#{msgs.label_cooperator}" itemValue="#{nonEmployeeAssginment.cooperetor}" />
+											<f:ajax event="change" execute="@this" render="assignmentFormId:paymentPanelId assignmentFormId:wfFlagId" listener="#{nonEmployeeAssginment.changePaymentMethod()}" />
+										</h:selectOneMenu>
+										<h:inputHidden id="wfFlagId" value="#{nonEmployeeAssginment.wfInitFlag}" />
+										
+									</td>
+									
+									<td colspan="5">
+										<h:selectOneRadio disabled="#{nonEmployeeAssginment.pageMode != 1}" value="#{nonEmployeeAssginment.assignmentDetailData.agentType}">
+											<f:selectItem itemValue="0" itemLabel="#{msgs.label_military}" />
+											<f:selectItem itemValue="1" itemLabel="#{msgs.label_civil}" />
+										</h:selectOneRadio>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="5">
+										<h:selectOneRadio disabled="#{nonEmployeeAssginment.pageMode != 1}" value="#{nonEmployeeAssginment.assignmentDetailData.location}">
+											<f:selectItem itemValue="0" itemLabel="#{msgs.label_outside}" />
+											<f:selectItem itemValue="1" itemLabel="#{msgs.label_inside}" />
+										</h:selectOneRadio>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="5">
+										<h:panelGroup id="paymentPanelId">
+											<h:panelGroup rendered="#{nonEmployeeAssginment.assignmentDetailData.type == nonEmployeeAssginment.assignment}">
+												<table style="width: 100%;">
+													<tr>
+														<th width="15%">
+															#{msgs.label_agentClass}
+															<h:outputText rendered="#{nonEmployeeAssginment.pageMode == 1 or nonEmployeeAssginment.pageMode == 4}" value="*" style="color:red;" />
+														</th>
+														<td width="20%">
+															<h:selectOneMenu styleClass="form-control" disabled="#{(nonEmployeeAssginment.pageMode != 1 and nonEmployeeAssginment.pageMode != 4)}" value="#{nonEmployeeAssginment.assignmentDetailData.agentClass}">
+																<f:selectItems value="#{nonEmployeeAssginment.assignmentAgentClassesList}" var="class" itemValue="#{class.code}" itemLabel="#{class.code}" />
+																<f:ajax render="assignmentFormId:monthlyRewardId assignmentFormId:wfFlagId" execute="@this" event="change" listener="#{nonEmployeeAssginment.changeMonthlyReward}"></f:ajax>
+															</h:selectOneMenu>
+														</td>
+														<td width="15%" />
+														<th width="15%">#{msgs.label_monthlyReward}</th>
+														<td width="20%">
+															<h:outputText id="monthlyRewardId" value="#{nonEmployeeAssginment.assignmentDetailData.monthlyReward}" />
+															#{msgs.label_riyal}
+														</td>
+
+													</tr>
+
+													<tr>
+														<th width="15%">
+															#{msgs.label_paymentMethod}
+															<h:outputText rendered="#{nonEmployeeAssginment.pageMode == 1 or nonEmployeeAssginment.pageMode == 4}" value="*" style="color:red;" />
+														</th>
+														<td width="20%">
+															<h:selectOneMenu styleClass="form-control" disabled="#{nonEmployeeAssginment.pageMode != 1 and nonEmployeeAssginment.pageMode != 4}" value="#{nonEmployeeAssginment.assignmentDetailData.paymentMethod}">
+																<f:selectItem itemValue="#{nonEmployeeAssginment.bankAccountEnum}" itemLabel="#{msgs.label_bankAccount}" />
+																<f:selectItem itemValue="#{nonEmployeeAssginment.chequeAcountEnum}" itemLabel="#{msgs.label_cheque}" />
+																<f:selectItem itemValue="#{nonEmployeeAssginment.cashAccountEnum}" itemLabel="#{msgs.label_cash}" />
+																<f:ajax event="change" render="assignmentFormId:paymentMethodId" execute="@this" />
+															</h:selectOneMenu>
+														</td>
+														
+
+														<td colspan="2">
+															<h:panelGroup id="paymentMethodId">
+																<h:panelGroup rendered="#{nonEmployeeAssginment.assignmentDetailData.paymentMethod == nonEmployeeAssginment.bankAccountEnum}">
+																	<table>
+																		<tr>
+																			<th width="15%">
+																				<h:outputText value="#{msgs.label_bankAccount}" />
+																				<h:outputText rendered="#{nonEmployeeAssginment.pageMode == 1 or nonEmployeeAssginment.pageMode == 4}" value="*" style="color:red;" />
+																			</th>
+																			<td width="20%">
+																				<h:selectOneMenu disabled="#{nonEmployeeAssginment.pageMode != 1 and nonEmployeeAssginment.pageMode != 4}" styleClass="form-control" value="#{nonEmployeeAssginment.assignmentDetailData.bankBranchId}">
+																					<f:selectItems value="#{nonEmployeeAssginment.bankBranchesDataList}" var="bank" itemValue="#{bank.id}" itemLabel="#{bank.name}" />
+																				</h:selectOneMenu>
+																				<h:inputText style="width:190px" maxlength="22" styleClass="inputWithIcon" disabled="#{nonEmployeeAssginment.pageMode != 1 and nonEmployeeAssginment.pageMode != 4}" onblur="return isDigitFloat(this)" onkeypress="return checkDigit(event);" value="#{nonEmployeeAssginment.assignmentDetailData.iban}" />
+																				SA
+																			</td>
+																		</tr>
+																	</table>
+																</h:panelGroup>
+															</h:panelGroup>
+														</td>
+													</tr>
+												</table>
+											</h:panelGroup>
+										</h:panelGroup>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</h:panelGroup>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup rendered="#{nonEmployeeAssginment.pageMode != 1 and nonEmployeeAssginment.pageMode != 2 and nonEmployeeAssginment.pageMode != 4}">
+							<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<td>
+										<h:outputText value="#{msgs.label_decisions}" />
+									</td>
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup rendered="#{nonEmployeeAssginment.pageMode != 1 and nonEmployeeAssginment.pageMode != 2 and nonEmployeeAssginment.pageMode != 4 and nonEmployeeAssginment.role != 'Notification' and nonEmployeeAssginment.role != 'History'}">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<th>
+										<h:outputText rendered="#{nonEmployeeAssginment.pageMode != 1 and nonEmployeeAssginment.pageMode != 2 and nonEmployeeAssginment.role != 'Notification' and nonEmployeeAssginment.role != 'History'}" value="#{msgs.label_comment}" />
+									</th>
+									<td>
+										<h:inputTextarea onkeypress="return valdiateMaxLength(this, 255);" onblur="return isValdiateMaxLength(this, 255);" rendered="#{nonEmployeeAssginment.pageMode != 1 and nonEmployeeAssginment.pageMode != 2 and nonEmployeeAssginment.role != 'Notification' and nonEmployeeAssginment.role != 'History'}" styleClass="form-control" id="remarksId" rows="4" cols="50" value="#{nonEmployeeAssginment.remarks}">
+										</h:inputTextarea>
+									</td>
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup rendered="#{empty nonEmployeeAssginment.assignmentData.id or (nonEmployeeAssginment.currentTask.action == null and nonEmployeeAssginment.currentTask.flexField1.equals('true')) }">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<th width="15%">#{msgs.label_attachmendUploadQuestion}</th>
+									<td width="70%">
+										<h:selectOneRadio id="uploadFlagId" value="#{nonEmployeeAssginment.uploadFlag}">
+											<f:selectItem itemValue="#{msgs.label_yes}" itemLabel="#{msgs.label_yes}" />
+											<f:selectItem itemValue="#{msgs.label_no}" itemLabel="#{msgs.label_no}" />
+										</h:selectOneRadio>
+									</td>
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td width="100%">
+						<code:prevTasks rendered="#{not empty nonEmployeeAssginment.currentTask}" value="#{nonEmployeeAssginment.prevTasks}" />
+					</td>
+				</tr>
+
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td width="100%">
+									<h:commandButton styleClass="btn btn-default" id="printBtn" value="&#xf02f; #{msgs.label_print}" action="#{nonEmployeeAssginment.print()}" rendered="#{not empty nonEmployeeAssginment.assignmentData.id and not nonEmployeeAssginment.currentTask.flexField1.equals('true')}">
+									</h:commandButton>
+								</td>
+								<td width="100%">
+									<h:commandButton rendered="#{nonEmployeeAssginment.pageMode != 1 and nonEmployeeAssginment.role != 'Notification' and nonEmployeeAssginment.currentTask != null and nonEmployeeAssginment.role != 'History' and not nonEmployeeAssginment.currentTask.flexField1.equals('true')}" class="btn btn-danger" value="&#xf0c7; #{msgs.label_reject}" action="#{nonEmployeeAssginment.doReject()}" onclick="return confirm('#{msgs.q_reject}');">
+									</h:commandButton>
+								</td>
+
+								<td width="100%">
+									<h:commandButton rendered="#{nonEmployeeAssginment.pageMode == 1 or (nonEmployeeAssginment.currentTask.action == null and nonEmployeeAssginment.currentTask.flexField1.equals('true'))}" class="btn btn-success" value="&#xf1d8; #{msgs.label_saveAndSend}" action="#{nonEmployeeAssginment.saveAndSend()}" onclick="return confirm('#{msgs.q_confirm}');">
+									</h:commandButton>
+								</td>
+
+								<td width="100%">
+									<h:commandButton rendered="#{nonEmployeeAssginment.pageMode != 1 and nonEmployeeAssginment.role != 'Notification' and nonEmployeeAssginment.currentTask != null and nonEmployeeAssginment.role != 'History' and not nonEmployeeAssginment.currentTask.flexField1.equals('true')}" class="btn btn-success" value="&#xf00c; #{msgs.label_approve}" action="#{nonEmployeeAssginment.doApprove()}" onclick="return confirm('#{msgs.q_approve}');">
+									</h:commandButton>
+								</td>
+
+								<td width="100%">
+									<h:commandButton rendered="#{nonEmployeeAssginment.pageMode == 2 and nonEmployeeAssginment.role == 'Notification' and nonEmployeeAssginment.currentTask != null and nonEmployeeAssginment.role != 'History'}" class="btn btn-success" value="#{msgs.label_notified}" action="#{nonEmployeeAssginment.doNotified()}">
+									</h:commandButton>
+								</td>
+
+								<td width="100%">
+									<h:commandButton rendered="#{(nonEmployeeAssginment.pageMode == 4) and not empty nonEmployeeAssginment.assignmentData.id}" class="btn btn-success" value="&#xf0c7; #{msgs.label_save}" action="#{nonEmployeeAssginment.saveChanges()}" onclick="return confirmChanges();">
+									</h:commandButton>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+			</table>
+
+			<h:panelGroup id="downloadDlgPanelId">
+				<p:dialog dir="#{msgs.dir}" header="#{msgs.label_archiveDocumentsShow}" id="dlgId" widgetVar="dlg" modal="true" height="180px;" width="720px">
+					<h:panelGroup id="internalDlgPanelId" rendered="#{nonEmployeeAssginment.attachmentList.size() > 1}">
+						<table width="100%">
+							<tr>
+								<td>
+									<p:dataTable tableStyle="table-layout:auto" reflow="true" liveResize="true" paginatorPosition="bottom" id="fileListIds" paginator="true" style="width:100%" rowIndexVar="index" rows="10" var="row" value="#{nonEmployeeAssginment.attachmentList}" widgetVar="table" rowHover="true">
+										<p:column styleClass='centerText'>
+											<f:facet name="header">#</f:facet>
+		                                    #{index + 1}
+	                                   	</p:column>
+										<p:column styleClass='centerText'>
+											<f:facet name="header">
+													#{msgs.label_fileName}
+												</f:facet>
+											<h:outputText value="#{row.fileName}" />
+										</p:column>
+										<p:column styleClass='centerText'>
+											<f:facet name="header">
+												#{msgs.label_download}
+											</f:facet>
+											<h:commandButton styleClass="btn btn-success" value="&#xf019; #{msgs.label_download}">
+												<f:ajax render="assignmentFormId:internalDlgPanelId assignmentFormId:downloadedFileParamId" listener="#{nonEmployeeAssginment.getDownloadParam(row.attachmentId)}" onevent="function(e){if(e.status == 'success') return downloadFile();}" />
+											</h:commandButton>
+										</p:column>
+										<p:column styleClass='centerText' rendered="#{nonEmployeeAssginment.deletePrivilage}">
+											<f:facet name="header">
+												#{msgs.label_delete}
+											</f:facet>
+											<h:commandButton styleClass="btn btn-trans-icon" value="&#xf00d;">
+												<f:ajax render="assignmentFormId:internalDlgPanelId assignmentFormId:downloadedFileParamId" listener="#{nonEmployeeAssginment.deleteAttachment(row)}" />
+											</h:commandButton>
+										</p:column>
+									</p:dataTable>
+								</td>
+							</tr>
+						</table>
+					</h:panelGroup>
+				</p:dialog>
+			</h:panelGroup>
+
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:code="http://java.sun.com/jsf/composite/code" xmlns:of="http://omnifaces.org/functions" xmlns:o="http://omnifaces.org/ui" xmlns:h="http://java.sun.com/jsf/html" xmlns:util="http://java.sun.com/jsf/composite/util" xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+	
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+
+	<script type="text/javascript">
+		var m;
+
+    	function getArrester(contextPath,mode){
+			m = 1;
+    		openEmpsMiniSearch(contextPath,mode);
+    		return false;
+    	}
+
+    	function getArrested(contextPath,mode){
+			m = 2;
+    		openEmpsMiniSearch(contextPath,mode);
+    		return false;
+    	}
+
+    	function releaseMask(){
+    		unMaskScreen();
+       	}
+       	
+    	function HandlePopupResult(ret) { 
+    		unMaskScreen();
+    		if(ret!=null){
+        		if( m== 1){
+        			document.getElementById('penaltyArrestFormId:selectedArresterId').value=ret[0];
+        			document.getElementById('penaltyArrestFormId:selectedArresterNameId').value=ret[1];
+        			document.getElementById('penaltyArrestFormId:arresterNameId').value=ret[1];
+	   	        	document.getElementById('penaltyArrestFormId:updateArresterId').click();
+           		}else if (m == 2){
+           			document.getElementById('penaltyArrestFormId:selectedArrestedId').value=ret[0];
+           			document.getElementById('penaltyArrestFormId:selectedArrestedNameId').value=ret[1];
+           			document.getElementById('penaltyArrestFormId:arrestedNameId').value=ret[1];
+	   	        	document.getElementById('penaltyArrestFormId:updateArrestedId').click();
+          		}
+   	         	return true;
+	   		}
+	   		return false;
+    	}
+		
+     </script>
+
+</h:head>
+<h:body styleClass="screenBg">
+	<h:form id="penaltyArrestFormId" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/Template.xhtml">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td class="screenTitle">
+						<h:outputText value="#{penaltyArrestRegisteration.screenTitle}" />
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.label_arrestDetails}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="arresterDetailId">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+
+								<tr>
+									<th width="15%">#{msgs.label_assignmentRequestNumber}</th>
+									<td width="35%">
+										<h:outputText value="#{penaltyArrestRegisteration.penaltyArrestData.requestNumber}" />
+									</td>
+
+									<th width="15%">#{msgs.label_assignmentRequestData}</th>
+									<td width="35%">
+										<util:advancedHijriDate disable="true" value="#{penaltyArrestRegisteration.penaltyArrestData.requestDate}" />
+									</td>
+								</tr>
+
+								<tr>
+									<th width="15%">
+										#{msgs.label_name}
+										<h:commandButton rendered="#{penaltyArrestRegisteration.pageMode == 1}" image="/resources/images/search.png" onclick="return getArrester('#{request.contextPath}',2);" title="#{msgs.label_addEmployee}" />
+										<h:outputText rendered="#{penaltyArrestRegisteration.pageMode == 1}" value="*" style="color:red;" />
+									</th>
+									<td width="35%" colspan="2">
+										<h:commandButton id="updateArresterId" style="display:none;" action="#{penaltyArrestRegisteration.updateArresterDetails()}">
+											<f:ajax execute="penaltyArrestFormId:selectedArresterId" render="penaltyArrestFormId:arresterDetailId">
+											</f:ajax>
+										</h:commandButton>
+										<h:inputHidden id="selectedArresterId" value="#{penaltyArrestRegisteration.penaltyArrestData.requesterEmployeeId}" />
+										<h:inputHidden id="selectedArresterNameId" value="#{penaltyArrestRegisteration.arrester.fullName}" />
+										<h:outputText id="arresterNameId" value="#{penaltyArrestRegisteration.arrester.fullName}" />
+									</td>
+								</tr>
+
+								<tr>
+									<th width="15%">#{msgs.label_rank}</th>
+									<td width="35%">
+										<h:outputText value="#{penaltyArrestRegisteration.arrester.rank}" />
+									</td>
+									<th width="15%">#{msgs.label_department}</th>
+									<td width="35%">
+										<h:outputText value="#{penaltyArrestRegisteration.arrester.actualDepartmentName}" />
+									</td>
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.label_arrestedDetails}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+
+				<tr>
+					<td>
+						<h:panelGroup id="arrestedDetailId">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+
+								<tr>
+									<th width="15%">
+										#{msgs.label_name}
+										<h:commandButton rendered="#{penaltyArrestRegisteration.pageMode == 1}" image="/resources/images/search.png" onclick="return getArrested('#{request.contextPath}',2);" title="#{msgs.label_addEmployee}" />
+										<h:outputText rendered="#{penaltyArrestRegisteration.pageMode == 1}" value="*" style="color:red;" />
+									</th>
+									<td width="35%" colspan="2">
+										<h:commandButton id="updateArrestedId" style="display:none;" action="#{penaltyArrestRegisteration.updateArrestedDetails()}">
+											<f:ajax execute="penaltyArrestFormId:arrestedDetailId" render="penaltyArrestFormId:arrestedDetailId" />
+										</h:commandButton>
+										<h:inputHidden id="selectedArrestedId" value="#{penaltyArrestRegisteration.penaltyArrestData.arrestedEmployeeId}" />
+										<h:inputHidden id="selectedArrestedNameId" value="#{penaltyArrestRegisteration.arrested.fullName}" />
+										<h:outputText id="arrestedNameId" value="#{penaltyArrestRegisteration.arrested.fullName}" />
+									</td>
+								</tr>
+
+								<tr>
+									<th width="15%">#{msgs.label_rank}</th>
+									<td width="35%">
+										<h:outputText value="#{penaltyArrestRegisteration.arrested.rank}" />
+									</td>
+									<th width="15%">#{msgs.label_department}</th>
+									<td width="35%">
+										<h:outputText value="#{penaltyArrestRegisteration.arrested.actualDepartmentName}" />
+									</td>
+								</tr>
+
+								<tr>
+									<th width="15%">#{msgs.label_militaryNumber}</th>
+									<td width="35%" colspan="2">
+										<h:outputText value="#{penaltyArrestRegisteration.arrested.militaryNo}" />
+									</td>
+								</tr>
+
+								<tr>
+									<th width="15%">
+										#{msgs.label_arrestDuration}
+										<h:outputText rendered="#{penaltyArrestRegisteration.pageMode == 1}" value="*" style="color:red;" />
+
+									</th>
+									<td width="35%">
+										<h:inputText styleClass="form-control" style="width:25%;" disabled="#{penaltyArrestRegisteration.pageMode != 1}" onblur="return isDigitFloat(this)" onkeypress="return checkDigit(event);" maxlength="3" value="#{penaltyArrestRegisteration.penaltyArrestData.arrestPeriod}" />
+										#{msgs.label_hour}
+									</td>
+
+									<th width="15%">#{msgs.label_arrestPlace}</th>
+									<td width="35%">
+										<h:selectOneMenu styleClass="form-control" style="width:80%;" disabled="#{penaltyArrestRegisteration.pageMode != 1}" value="#{penaltyArrestRegisteration.penaltyArrestData.arrestLocation}">
+											<f:selectItems value="#{penaltyArrestRegisteration.penaltyArrestLocationEnums}" var="enum" itemValue="#{enum.code}" itemLabel="#{enum.code}" />
+										</h:selectOneMenu>
+									</td>
+								</tr>
+
+								<tr>
+									<th>#{msgs.label_remarks}</th>
+									<td colspan="4">
+										<h:inputTextarea  disabled="#{penaltyArrestRegisteration.pageMode != 1}" onkeypress="return valdiateMaxLength(this, 255);" onblur="return isValdiateMaxLength(this, 255);" rows="4" cols="50" value="#{penaltyArrestRegisteration.penaltyArrestData.remarks}">
+										</h:inputTextarea>
+									</td>
+								</tr>
+
+								<h:panelGroup rendered="#{penaltyArrestRegisteration.pageMode == 2 and penaltyArrestRegisteration.currentTask == null}">
+									<tr>
+										<th width="15%">
+											<h:outputText value="#{msgs.label_entryDate}" />
+										</th>
+										<td width="35%">
+											<h:outputText value="#{penaltyArrestRegisteration.penaltyArrestData.entryDateString}" />
+										</td>
+
+										<th width="15%">
+											<h:outputText value="#{msgs.label_entryTime}" />
+										</th>
+										<td width="35%">
+											<h:outputText value="#{penaltyArrestRegisteration.penaltyArrestData.entryTime}" />
+										</td>
+									</tr>
+
+
+									<tr>
+										<th width="15%">
+											<h:outputText value="#{msgs.label_exitDate}" />
+										</th>
+										<td width="35%">
+											<h:outputText value="#{penaltyArrestRegisteration.penaltyArrestData.exitDateString}" />
+										</td>
+
+										<th width="15%">
+											<h:outputText value="#{msgs.label_exitTime}" />
+										</th>
+										<td width="35%">
+											<h:outputText value="#{penaltyArrestRegisteration.penaltyArrestData.exitTime}" />
+										</td>
+									</tr>
+								</h:panelGroup>
+
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<h:panelGroup rendered="#{penaltyArrestRegisteration.pageMode != 1 and penaltyArrestRegisteration.currentTask != null and penaltyArrestRegisteration.role != 'Notification' and penaltyArrestRegisteration.role != 'History'}">
+					<tr>
+						<td>
+							<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<td>
+										<h:outputText value="#{msgs.label_decisions}" />
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+
+					<tr>
+						<td width="100%" height="5" />
+					</tr>
+
+					<tr>
+						<td>
+							<table>
+								<tr>
+									<th>
+										<h:outputText value="#{msgs.label_comment}" />
+									</th>
+									<td>
+										<h:inputTextarea onkeypress="return valdiateMaxLength(this, 255);" onblur="return isValdiateMaxLength(this, 255);" styleClass="form-control" id="remarksId" rows="4" cols="50" value="#{penaltyArrestRegisteration.currentTask.notes}" />
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+
+
+					<tr>
+						<td width="100%" height="5" />
+					</tr>
+				</h:panelGroup>
+
+				<tr>
+					<td width="100%">
+						<code:prevTasks rendered="#{not empty penaltyArrestRegisteration.currentTask}" value="#{penaltyArrestRegisteration.prevTasks}" />
+					</td>
+				</tr>
+
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+
+								<td width="100%">
+									<h:commandButton rendered="#{penaltyArrestRegisteration.pageMode == 1}" class="btn btn-success" value="#{msgs.label_saveAndSend}" action="#{penaltyArrestRegisteration.saveAndSend()}" onclick="return confirm('#{msgs.q_confirm}');">
+									</h:commandButton>
+								</td>
+
+								<td width="100%">
+									<h:commandButton rendered="#{penaltyArrestRegisteration.pageMode != 1 and penaltyArrestRegisteration.role != 'Notification' and penaltyArrestRegisteration.currentTask != null and penaltyArrestRegisteration.role != 'History'}" class="btn btn-success" value="#{msgs.label_approve}" action="#{penaltyArrestRegisteration.doApprove()}" onclick="return confirm('#{msgs.q_approve}');">
+									</h:commandButton>
+								</td>
+
+								<td width="100%">
+									<h:commandButton rendered="#{penaltyArrestRegisteration.pageMode != 1 and penaltyArrestRegisteration.role == 'Notification' and penaltyArrestRegisteration.currentTask != null and penaltyArrestRegisteration.role != 'History'}" class="btn btn-success" value="#{msgs.label_notified}" action="#{penaltyArrestRegisteration.doNotified()}">
+									</h:commandButton>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+			</table>
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>

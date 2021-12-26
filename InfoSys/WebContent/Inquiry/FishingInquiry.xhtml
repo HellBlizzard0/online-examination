@@ -1,0 +1,356 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:util="http://java.sun.com/jsf/composite/util">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+
+</h:head>
+<h:body styleClass="screenBg">
+	<h:form id="formId" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/Template.xhtml">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tr>
+					<td width="100%" height="0" />
+				</tr>
+
+				<tr>
+					<td class="screenTitle">#{msgs.title_fishingNotification}</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.label_searchData}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="searchContainerId">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<th width="15%">#{msgs.label_socialId}</th>
+									<td width="35%">
+										<h:inputText styleClass="form-control" value="#{fishingNotificationInquiry.searchBySocialId}" onkeypress="return checkDigit(event)" />
+									</td>
+									<th width="15%">#{msgs.label_name}</th>
+									<td width="35%">
+										<h:inputText styleClass="form-control" value="#{fishingNotificationInquiry.searchByName}" />
+									</td>
+								</tr>
+								<tr>
+									<th width="15%">#{msgs.label_searchByNotificationSender}</th>
+									<td width="35%">
+										<h:inputText styleClass="form-control" value="#{fishingNotificationInquiry.searchByTaskOwnerName}" />
+									</td>
+									<th width="15%">#{msgs.label_searchByTaskDetails}</th>
+									<td width="35%">
+										<h:inputText styleClass="form-control" value="#{fishingNotificationInquiry.searchByTaskDetails}" />
+									</td>
+								</tr>
+								<tr>
+									<th width="15%">#{msgs.label_launchCenter}</th>
+									<td width="35%">
+										<h:selectOneMenu class="form-control" value="#{fishingNotificationInquiry.searchByNavigationDock}">
+											<f:selectItem itemValue="-1" itemLabel="#{msgs.label_all}" />
+											<f:selectItems value="#{fishingNotificationInquiry.navDocksList}" var="row" itemLabel="#{row.name}" itemValue="#{row.name}" />
+										</h:selectOneMenu>
+									</td>
+									<th width="15%">#{msgs.label_taskType}</th>
+									<td width="35%">
+										<h:selectOneMenu id="searchDomainOneMenuId" class="form-control" value="#{fishingNotificationInquiry.searchByDomainDescription}">
+											<f:selectItem itemValue="-1" itemLabel="#{msgs.label_all}" />
+											<f:selectItems id="activityDomainMenuId" value="#{fishingNotificationInquiry.domainsList}" var="row" itemLabel="#{row.description}" itemValue="#{row.description}" />
+										</h:selectOneMenu>
+									</td>
+								</tr>
+								<tr>
+									<th width="15%">#{msgs.label_durationNotificationFrom}</th>
+									<td width="35%">
+										<util:advancedHijriDate value="#{fishingNotificationInquiry.fromDate}" />
+									</td>
+									<th width="15%">#{msgs.label_durationNotificationTo}</th>
+									<td width="35%">
+										<util:advancedHijriDate value="#{fishingNotificationInquiry.toDate}" />
+									</td>
+								</tr>
+
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td width="100%">
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:commandButton styleClass="btn btn-default" id="resetBtn" value=" &#xf021; #{msgs.label_reset}" action="#{fishingNotificationInquiry.init()}">
+										<f:ajax render="formId:searchContainerId formId:tasksId" />
+									</h:commandButton>
+									<h:commandButton styleClass="btn btn-default" id="searchBtn" value="&#xf002; #{msgs.label_search} " action="#{fishingNotificationInquiry.search()}">
+										<f:ajax render="formId:searchContainerId formId:tasksId notifyMessagesId" execute="formId:searchContainerId" />
+									</h:commandButton>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<table width="100%">
+							<tr>
+								<td colspan="2">
+									<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+										<tr>
+											<td>
+												<h:outputText value="#{msgs.title_searchResults}" />
+											</td>
+										</tr>
+
+									</table>
+								</td>
+							</tr>
+
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td align="center" width="100%" class="tab-body">
+						<p:dataTable tableStyle="table-layout:auto" styleClass="tab-inner-border" reflow="true" liveResize="true" paginator="true" id="tasksId" rowIndexVar="index" var="task" value="#{fishingNotificationInquiry.tasks}" rows="#{fishingNotificationInquiry.pageSize}" rowHover="true">
+							<p:column sortBy="#{task.taskId}">
+								<f:facet name="header">
+									<h:outputText value="#{msgs.label_notificationId}" />
+								</f:facet>
+								<h:outputText value="#{task.taskId}" />
+							</p:column>
+							<p:column sortBy="#{task.taskOwnerName}">
+								<f:facet name="header">
+									<h:outputText value="#{msgs.label_notificationSender}" />
+								</f:facet>
+								<h:outputText value="#{task.taskOwnerName}" />
+							</p:column>
+							<p:column sortBy="#{task.arabicDetailsSummary}" rendered="#{msgs.dir == 'rtl'}">
+								<f:facet name="header">
+									<h:outputText value="#{msgs.label_taskSummary}" />
+								</f:facet>
+								<h:outputText value="#{task.arabicDetailsSummary}" />
+							</p:column>
+							<p:column sortBy="#{task.englishDetailsSummary}" rendered="#{msgs.dir == 'ltr'}">
+								<f:facet name="header">
+									<h:outputText value="#{msgs.label_taskSummary}" />
+								</f:facet>
+								<h:outputText value="#{task.englishDetailsSummary}" />
+							</p:column>
+							<p:column sortBy="#{task.assignDate}">
+								<f:facet name="header">
+									<h:outputText value="#{msgs.label_notificationTime}" />
+								</f:facet>
+								<h:outputText value="#{task.hijriAssignDateString}" />
+							</p:column>
+							<p:column sortBy="#{task.delegatingName}">
+								<f:facet name="header">
+									<h:outputText value="#{msgs.label_delegatingName}" />
+								</f:facet>
+								<h:outputText value="#{task.delegatingName}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#{msgs.label_description}" />
+								</f:facet>
+								<h:commandButton styleClass="btn btn-trans-icon" value="&#xf05a;" action="#{fishingNotificationInquiry.fishingNotificationDetails(task.instanceId)}">
+									<f:ajax render="formId:dlgPanelId" onevent="function(e){if(e.status == 'success') PF('dlg').show();}" />
+								</h:commandButton>
+							</p:column>
+						</p:dataTable>
+
+					</td>
+				</tr>
+
+			</table>
+			<h:panelGroup id="dlgPanelId">
+				<p:dialog dir="#{msgs.dir}" header="#{msgs.label_extraInformation}" id="dlgId" widgetVar="dlg" modal="true" height="180px;" width="720px">
+					<h:panelGroup id="internalDlgPanelId">
+						<table border="0" cellpadding="0" cellspacing="3" width="100%">
+							<tr valign="top" class="centerBody">
+								<td width="100%">
+									<table border="0" cellpadding="0" cellspacing="0" width="100%">
+										<tr>
+											<td width="100%" height="5" />
+										</tr>
+
+										<tr>
+											<td class="screenTitle">
+												<h:outputText value="#{msgs.title_extraInformation}" />
+											</td>
+										</tr>
+
+										<tr>
+											<td width="100%" height="5" />
+										</tr>
+
+										<tr>
+											<td colspan="2">
+												<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+													<tr>
+														<td>
+															<h:outputText value="#{msgs.title_orderSurveillanceRegion}" />
+														</td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+
+										<tr>
+											<td width="100%" height="5" />
+										</tr>
+
+										<tr>
+											<td>
+												<p:dataTable tableStyle="table-layout:auto" reflow="true" liveResize="true" paginatorPosition="bottom" paginator="true" style="width:100%" rowIndexVar="index" rows="10" var="resendTasksRow" value="#{fishingNotificationInquiry.withResendTasks}" rowHover="true">
+													<p:column styleClass='centerText'>
+														<f:facet name="header">
+											#
+										</f:facet>
+                                    	#{index + 1}
+                                  		</p:column>
+
+													<p:column styleClass='centerText'>
+														<f:facet name="header">
+											#{msgs.label_socialId}
+										</f:facet>
+														<h:outputText value="#{resendTasksRow.originalId}" />
+													</p:column>
+
+													<p:column styleClass='centerText'>
+														<f:facet name="header">
+											#{msgs.label_name}
+										</f:facet>
+														<h:outputText value="#{resendTasksRow.originalName}" />
+													</p:column>
+
+													<p:column styleClass='centerText'>
+														<f:facet name="header"> 
+											#{msgs.label_rank}
+										</f:facet>
+														<h:outputText value="#{resendTasksRow.originalRankDesc}" />
+													</p:column>
+
+													<p:column styleClass='centerText'>
+														<f:facet name="header"> 
+											#{msgs.label_taskDate}
+										</f:facet>
+														<h:outputText value="#{resendTasksRow.hijriAssignDateString}" />
+													</p:column>
+													
+													<p:column styleClass='centerText'>
+														<f:facet name="header"> 
+											#{msgs.label_passingNotificationTime}
+										</f:facet>
+														<h:outputText rendered="#{passingEmpOriginalId == resendTasksRow.originalId}" value="#{fishingNotificationInquiry.hijriPassingDate}" />
+													</p:column>
+												</p:dataTable>
+											</td>
+										</tr>
+
+										<tr>
+											<td>
+												<h:panelGroup>
+													<table width="100%">
+														<tr>
+															<td>
+																<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+																	<tr>
+																		<td>
+																			<h:outputText value="#{msgs.title_movementRegion}" />
+																		</td>
+																	</tr>
+																</table>
+															</td>
+														</tr>
+
+														<tr>
+															<td width="100%" height="5" />
+														</tr>
+
+														<tr>
+															<td>
+																<p:dataTable tableStyle="table-layout:auto" reflow="true" liveResize="true" paginatorPosition="bottom" paginator="true" style="width:100%" rowIndexVar="index" rows="10" var="withoutResendTasks" value="#{fishingNotificationInquiry.withoutResendTasks}" rowHover="true">
+																	<p:column styleClass='centerText'>
+																		<f:facet name="header">#</f:facet>
+				                                    	#{index + 1}
+				                                  		</p:column>
+
+																	<p:column styleClass='centerText'>
+																		<f:facet name="header">
+															#{msgs.label_socialId}
+														</f:facet>
+																		<h:outputText value="#{withoutResendTasks.originalId}" />
+																	</p:column>
+
+																	<p:column styleClass='centerText'>
+																		<f:facet name="header">
+															#{msgs.label_name}
+														</f:facet>
+																		<h:outputText value="#{withoutResendTasks.originalName}" />
+																	</p:column>
+
+																	<p:column styleClass='centerText'>
+																		<f:facet name="header"> 
+															#{msgs.label_rank}
+														</f:facet>
+																		<h:outputText value="#{withoutResendTasks.originalRankDesc}" />
+																	</p:column>
+
+																	<p:column styleClass='centerText'>
+																		<f:facet name="header"> 
+															#{msgs.label_taskDate}
+														</f:facet>
+																		<h:outputText value="#{withoutResendTasks.hijriAssignDateString}" />
+																	</p:column>
+																</p:dataTable>
+															</td>
+														</tr>
+													</table>
+												</h:panelGroup>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</h:panelGroup>
+				</p:dialog>
+			</h:panelGroup>
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>

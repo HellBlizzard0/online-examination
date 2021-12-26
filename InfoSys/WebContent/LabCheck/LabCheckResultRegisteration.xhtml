@@ -1,0 +1,451 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:util="http://java.sun.com/jsf/composite/util" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+	<script type="text/javascript">
+		var mode;
+		function getEmployee(contextPath) {
+			mode = 1;
+			openEmpsMiniSearch(contextPath, 2);
+			return false;
+		}
+
+		function releaseMask() {
+			unMaskScreen();
+		}
+
+		function HandlePopupResult(ret) {
+			unMaskScreen();
+			if (ret != null) {
+				if (mode == 1) {
+					document.getElementById('formId:employeeSearchIdId').value = ret[0];
+					document.getElementById('formId:employeeSearchNameId').innerHTML = ret[1];
+					return true;
+				}
+			}
+			return false;
+		}
+
+		function handleDownloadFiles(e) {
+			openDownloadPopupFlagId = document.getElementById('formId:openDownloadPopupFlagId').value;
+			openDownloadDialogueFlagId = document.getElementById('formId:openDownloadDialogueFlagId').value;
+
+			if (e.status == 'success') {
+				if (openDownloadPopupFlagId == 'true') {
+					downloadFile();
+				} else if (openDownloadDialogueFlagId == 'true') {
+					PF('dlg').show();
+				}
+			}
+		}
+
+		function uploadFile() {
+			fileArchivingParam = document.getElementById('formId:fileArchivingParamId').value;
+			openUploadFile('#{labCheckResultReg.boolServerUploadPath}', fileArchivingParam);
+			return false;
+		}
+
+		function downloadFile() {
+			downloadedFileParamId = document.getElementById('formId:downloadedFileParamId').value;
+			openDownloadFile('#{labCheckResultReg.boolServerDownloadPath}', downloadedFileParamId);
+			return false;
+		}
+
+		window.onkeypress = function(e) {
+			var keyCode = window.event.keyCode || e.keyCode || e.which;
+			if (keyCode == '13') {
+				document.getElementById('formId:searchBtnId').click();
+				return false;
+			}
+		};
+	</script>
+</h:head>
+<h:body styleClass="screenBg">
+	<h:form id="formId" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/Template.xhtml">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tr>
+					<td class="screenTitle">
+						<h:outputText value="#{msgs.title_labCheckResultReg}" />
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.label_searchData}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="searchContainerId">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<th width="15%">#{msgs.label_sampleNumber}</th>
+									<td width="20%">
+										<h:inputText maxlength="15" styleClass="form-control inputnumber" onkeypress="return checkDigitSlash(event)" value="#{labCheckResultReg.sampleNumber}" />
+									</td>
+									
+
+									<th width="15%">#{msgs.label_employee}</th>
+									<td width="20%">
+										<h:commandButton value="&#xf002;" styleClass="btn btn-trans-icon" id="searchEmployeeBtnId" onclick="return getEmployee('#{request.contextPath}');" />
+										<h:inputHidden id="employeeSearchIdId" value="#{labCheckResultReg.employeeId}" />
+										<h:outputText id="employeeSearchNameId" value="#{labCheckResultReg.employeeName}" />
+									</td>
+
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td width="100%">
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:commandButton styleClass="btn btn-default" id="resetBtnId" value="&#xf021; #{msgs.label_reset}" action="#{labCheckResultReg.resetSearch()}">
+										<f:ajax render="formId:searchContainerId formId:labCheckSearchResultPaneId formId:resultPanelId formId:labCheckEmployeesDetailsPaneId" />
+									</h:commandButton>
+
+									<h:commandButton styleClass="btn btn-default" id="searchBtnId" value="&#xf002; #{msgs.label_search}" action="#{labCheckResultReg.search()}">
+										<f:ajax render="formId:searchContainerId formId:labCheckSearchResultPaneId formId:resultPanelId formId:labCheckEmployeesDetailsPaneId" execute="formId:searchContainerId" />
+									</h:commandButton>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.title_searchResults}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td align="center" width="100%">
+						<h:panelGroup id="labCheckSearchResultPaneId">
+							<p:dataTable reflow="true" tableStyle="table-layout: auto" paginator="true" id="labCheckListDataTableId" rows="10" rowIndexVar="index" var="row" value="#{labCheckResultReg.labCheckEmployeeDataList}" rowHover="true">
+								<p:column styleClass='centerText'>
+									<f:facet name="header">#</f:facet>
+	                                #{index + 1}
+	                            </p:column>
+								<p:column styleClass='centerText'>
+									<f:facet name="header"> #{msgs.label_socialNumber} </f:facet>
+									<h:outputText value="#{row.employeeSocialId}" />
+								</p:column>
+								<p:column styleClass='centerText'>
+									<f:facet name="header"> #{msgs.label_name} </f:facet>
+									<h:outputText value="#{row.employeeFullName}" />
+								</p:column>
+								<p:column styleClass='centerText'>
+									<f:facet name="header"> #{msgs.label_rank} </f:facet>
+									<h:outputText value="#{row.employeeRank}" />
+								</p:column>
+								<p:column styleClass='centerText'>
+									<f:facet name="header"> #{msgs.label_unitAndDep} </f:facet>
+									<h:outputText value="#{row.employeeDepartmentName}" />
+								</p:column>
+								<p:column styleClass='centerText'>
+									<f:facet name="header"> #{msgs.label_orderNo} </f:facet>
+									<h:outputText value="#{row.orderNumber}" />
+								</p:column>
+								<p:column styleClass='centerText'>
+									<f:facet name="header"> #{msgs.label_orderDate} </f:facet>
+									<h:outputText value="#{row.orderDateString}" />
+								</p:column>
+
+								<p:column styleClass='centerText'>
+									<f:facet name="header"> #{msgs.title_perviousChecks} </f:facet>
+									<h:commandButton value="&#xf05a;" styleClass="btn btn-trans-icon" action="#{labCheckResultReg.getPrevEmployeeLabChecks(row)}">
+										<f:ajax render="formId:labCheckEmployeesDetailsPaneId" />
+									</h:commandButton>
+								</p:column>
+
+								<p:column styleClass='centerText'>
+									<f:facet name="header"> #{msgs.label_addResult} </f:facet>
+									<h:commandButton styleClass="btn btn-success" value="#{msgs.label_addResult}" action="#{labCheckResultReg.selectEmployee(row)}">
+										<f:ajax render="formId:resultPanelId formId:labCheckEmployeesDetailsPaneId" />
+									</h:commandButton>
+								</p:column>
+								<p:column styleClass='centerText'>
+									<f:facet name="header"> #{msgs.label_archiveDocuments} </f:facet>
+									<h:commandButton styleClass="btn btn-success" value="&#xf187; #{msgs.label_archiveDocuments}">
+										<f:ajax listener="#{labCheckResultReg.getUploadParam(row.labCheckId)}" render="formId:fileArchivingParamId" onevent="function(e){if(e.status == 'success') return uploadFile();}" />
+									</h:commandButton>
+								</p:column>
+								<p:column styleClass='centerText'>
+									<f:facet name="header"> #{msgs.label_archiveDocumentsShow} </f:facet>
+									<h:commandButton styleClass="btn btn-success" value="&#xf0c5; #{msgs.label_archiveDocumentsShow}">
+										<f:ajax render="formId:downloadDlgPanelId formId:openDownloadDialogueFlagId formId:openDownloadPopupFlagId formId:downloadedFileParamId" listener="#{labCheckResultReg.getDownloadedAttachmentsIdList(row.labCheckId)}" onevent="handleDownloadFiles" />
+									</h:commandButton>
+								</p:column>
+							</p:dataTable>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="resultPanelId">
+							<h:panelGroup rendered="#{not empty labCheckResultReg.selectedLabCheckEmployeeData.id}">
+								<table width="100%">
+									<tr>
+										<td>
+											<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+												<tr>
+													<td>
+														<h:outputText value="#{msgs.label_medicalDepartmentCheckResult}" />
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+												<tr>
+													<th width="15%">
+														<h:outputText value="#{msgs.label_sampleNumber}" />
+													</th>
+													<td width="25%">
+														<h:outputText value="#{labCheckResultReg.selectedLabCheckEmployeeData.sampleNumber}" />
+													</td>
+													<td width="10%" />
+
+													<th width="15%">
+														<h:outputText value="#{msgs.label_sampleDate}" />
+													</th>
+													<td width="25%">
+														<h:outputText value="#{labCheckResultReg.selectedLabCheckEmployeeData.sampleDateString}" />
+													</td>
+													<td width="10%" />
+												</tr>
+												<tr>
+													<th width="15%">
+														<h:outputText value="#{msgs.label_checkResult}" />
+														<h:outputText value="*" style="color:red;" />
+													</th>
+													<td width="25%">
+														<h:selectOneMenu value="#{labCheckResultReg.selectedLabCheckEmployeeData.checkStatus}" styleClass="form-control">
+															<f:selectItem itemLabel="#{msgs.label_negative}" itemValue="#{labCheckResultReg.negativeCheckResult}" />
+															<f:selectItem itemLabel="#{msgs.label_retest}" itemValue="#{labCheckResultReg.retestCheckResult}" />
+															<f:selectItem itemLabel="#{msgs.label_cheatingInSample}" itemValue="#{labCheckResultReg.cheatingInCheckResult}" />
+															<f:selectItem itemLabel="#{msgs.label_positiveUnderApprove}" itemValue="#{labCheckResultReg.positiveUnderApproveCheckResult}" />
+															<f:ajax execute="formId:resultPanelId" render="formId:resultPanelId" />
+														</h:selectOneMenu>
+													</td>
+													<td width="10%" />
+												</tr>
+												<tr>
+													<td colspan="6">
+														<h:panelGroup rendered="#{labCheckResultReg.selectedLabCheckEmployeeData.checkStatus==labCheckResultReg.positiveUnderApproveCheckResult}">
+															<table width="100%">
+																<tr>
+																	<th width="15%">
+																		<h:outputText value="#{msgs.label_metrialType}" />
+																		<h:outputText value="*" style="color:red;" />
+																	</th>
+																	<td width="25%">
+																		<h:selectOneMenu value="#{labCheckResultReg.selectedLabCheckEmployeeData.domainMaterialTypeId}" styleClass="form-control">
+																			<f:selectItem itemLabel="" itemValue="" />
+																			<f:selectItems value="#{labCheckResultReg.domainMetrialTypeList}" var="dom" itemLabel="#{dom.description}" itemValue="#{dom.id}" />
+																		</h:selectOneMenu>
+																	</td>
+																	<td width="60%" />
+																</tr>
+															</table>
+														</h:panelGroup>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<table class="actionsSection">
+												<tr>
+													<td height="20"></td>
+												</tr>
+												<tr>
+													<td>
+														<h:commandButton styleClass="btn btn-success" value="&#xf0c7; #{msgs.label_save}" action="#{labCheckResultReg.saveResult()}">
+															<f:ajax execute="formId:resultPanelId" render="formId:labCheckSearchResultPaneId formId:resultPanelId formId:labCheckEmployeesDetailsPaneId" />
+														</h:commandButton>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+							</h:panelGroup>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="labCheckEmployeesDetailsPaneId">
+							<h:panelGroup rendered="#{ (not empty labCheckResultReg.pervEmployeeLabCheckList)}">
+								<table width="100%">
+									<tr>
+										<td colspan="2">
+											<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+												<tr>
+													<td>
+														<h:outputText value="#{msgs.title_perviousChecks}" />
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+
+									<tr>
+										<td>
+											<table width="100%">
+												<tr>
+													<td>
+														<p:dataTable tableStyle="table-layout:auto" reflow="true" liveResize="true" paginatorPosition="bottom" id="labCheckEmployeeDetailsId" paginator="true" style="width:100%" rowIndexVar="index" rows="10" var="empRow" value="#{labCheckResultReg.pervEmployeeLabCheckList}" rowHover="true">
+															<p:column styleClass='centerText'>
+																<f:facet name="header">
+																	#
+																</f:facet>
+						                                    	#{index + 1}
+					                                   		</p:column>
+
+															<p:column styleClass='centerText'>
+																<f:facet name="header">
+																	#{msgs.label_checkDate}
+																</f:facet>
+																<h:outputText value="#{empRow.sampleDateString}" />
+															</p:column>
+
+															<p:column styleClass='centerText'>
+																<f:facet name="header">
+																	#{msgs.label_checkReason}
+																</f:facet>
+																<h:selectOneMenu disabled="true" value="#{empRow.checkReason}" styleClass="form-control">
+																	<f:selectItems value="#{labCheckResultReg.labCheckReasonsEnumList}" var="checkReason" itemLabel="#{checkReason.arabicDescription}" itemValue="#{checkReason.code}" />
+																</h:selectOneMenu>
+															</p:column>
+
+															<p:column styleClass='centerText'>
+																<f:facet name="header"> 
+																	#{msgs.label_checkResult}
+																</f:facet>
+																<h:outputText value="#{msgs.label_noSample}" rendered="#{empRow.checkStatus==labCheckResultReg.noSampleCheckResult}" />
+																<h:outputText value="#{msgs.label_checkPrivation}" rendered="#{empRow.checkStatus==labCheckResultReg.checkPrivationCheckResult}" />
+																<h:outputText value="#{msgs.label_negative}" rendered="#{empRow.checkStatus==labCheckResultReg.negativeCheckResult}" />
+																<h:outputText value="#{msgs.label_positiveUnderApprove}" rendered="#{empRow.checkStatus==labCheckResultReg.positiveUnderApproveCheckResult}" />
+																<h:outputText value="#{msgs.label_positive}" rendered="#{empRow.checkStatus==labCheckResultReg.positiveCheckResult}" />
+																<h:outputText value="#{msgs.label_sendingToForce}" rendered="#{empRow.checkStatus==labCheckResultReg.sendingToForceCheckResult}" />
+															    <h:outputText value="#{msgs.label_cheatingInSample}" rendered="#{empRow.checkStatus==labCheckResultReg.cheatingInCheckResult}" />
+															</p:column>
+
+															<p:column styleClass='centerText'>
+																<f:facet name="header"> 
+																#{msgs.label_metrial}
+															</f:facet>
+																<h:outputText value="#{empRow.domainMaterialTypeDescripttion}" />
+															</p:column>
+														</p:dataTable>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+							</h:panelGroup>
+						</h:panelGroup>
+					</td>
+				</tr>
+			</table>
+			<h:panelGroup id="downloadDlgPanelId">
+				<p:dialog dir="#{msgs.dir}" header="#{msgs.label_archiveDocumentsShow}" id="dlgId" widgetVar="dlg" modal="true" height="180px;" width="720px">
+					<h:panelGroup id="internalDlgPanelId">
+						<table width="100%">
+							<tr>
+								<td>
+									<p:dataTable tableStyle="table-layout:auto" reflow="true" liveResize="true" paginatorPosition="bottom" id="fileListIds" paginator="true" style="width:100%" rowIndexVar="index" rows="10" var="row" value="#{labCheckResultReg.attachmentList}" rowHover="true">
+										<p:column styleClass='centerText'>
+											<f:facet name="header">#</f:facet>
+		                                    #{index + 1}
+	                                   	</p:column>
+										<p:column styleClass='centerText'>
+											<f:facet name="header">
+													#{msgs.label_fileName}
+												</f:facet>
+											<h:outputText value="#{row.fileName}" />
+										</p:column>
+										<p:column styleClass='centerText'>
+											<f:facet name="header">
+												#{msgs.label_download}
+											</f:facet>
+											<h:commandButton styleClass="btn btn-success" value="&#xf019; #{msgs.label_download}">
+												<f:ajax render="formId:internalDlgPanelId formId:downloadedFileParamId" listener="#{labCheckResultReg.getDownloadParam(row.attachmentId)}" onevent="function(e){if(e.status == 'success') return downloadFile();}" />
+											</h:commandButton>
+										</p:column>
+										<p:column styleClass='centerText'>
+											<f:facet name="header">
+												#{msgs.label_delete}
+											</f:facet>
+											<h:commandButton styleClass="btn btn-trans-icon" value="&#xf00d;">
+												<f:ajax render="formId:internalDlgPanelId formId:downloadedFileParamId" listener="#{labCheckResultReg.getDeleteParam(row)}" />
+											</h:commandButton>
+										</p:column>
+									</p:dataTable>
+								</td>
+							</tr>
+						</table>
+					</h:panelGroup>
+				</p:dialog>
+				<h:inputHidden id="fileArchivingParamId" value="#{labCheckResultReg.fileArchivingParam}" />
+				<h:inputHidden id="downloadedFileParamId" value="#{labCheckResultReg.downloadFileParamId}" />
+				<h:inputHidden id="openDownloadPopupFlagId" value="#{labCheckResultReg.openDownloadPopupFlag}" />
+				<h:inputHidden id="openDownloadDialogueFlagId" value="#{labCheckResultReg.openDownloadDialogueFlag}" />
+			</h:panelGroup>
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>

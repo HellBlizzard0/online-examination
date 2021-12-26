@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+	<script type="text/javascript">
+		var m;
+
+		function getEmployee(contextPath, mode) {
+			m = mode;
+			openEmpsMiniSearch(contextPath, 1, null, null);
+			return false;
+		}
+		function HandlePopupResult(ret) {
+			unMaskScreen();
+			if (ret != null) {
+				if (m == 1) {
+					document.getElementById('searchReferralForm:searchEmployeeIdId').value = ret[0];
+					document.getElementById('searchReferralForm:searchEmployeeHiddenNameId').value = ret[1];
+					document.getElementById('searchReferralForm:searchEmployeeNameId').innerHTML = ret[1];
+					return true;
+				}
+				return false;
+			}
+		}
+
+		function selectReferral() {
+			var searchEmployeeIdId = null;
+			var searchEmployeeHiddenNameId = null;
+			var referralProcessId = document.getElementById('searchReferralForm:referralProcessId').value;
+			var referralProcessDesc = document.getElementById('searchReferralForm:referralProcessDescId').value;
+			if (document.getElementById('searchReferralForm:viewReferralSpecialistHiddenId').value == 'true') {
+				searchEmployeeIdId = document.getElementById('searchReferralForm:searchEmployeeIdId').value;
+				searchEmployeeHiddenNameId = document.getElementById('searchReferralForm:searchEmployeeHiddenNameId').value;
+			}
+			var referralDetailsId = document.getElementById('searchReferralForm:referralDetailsId').value;
+
+			/* <![CDATA[ */
+			if (referralDetailsId == null || referralDetailsId == "" || (document.getElementById('searchReferralForm:viewReferralSpecialistHiddenId').value == 'true' && (searchEmployeeIdId == null || searchEmployeeIdId == ""))) {
+				showErrorMessage('#{msgs.error_mandatory}');
+				return false;
+			} else {
+				returnVal = new Array();
+				returnVal[0] = referralProcessId;
+				returnVal[1] = referralProcessDesc;
+				returnVal[2] = searchEmployeeIdId;
+				returnVal[3] = searchEmployeeHiddenNameId;
+				returnVal[4] = referralDetailsId;
+				window.returnValue = returnVal;
+
+				window.opener.HandlePopupResult(returnVal);
+				window.close();
+				return true;
+			}
+			/* ]]> */
+		}
+
+		function releaseMask() {
+			unMaskScreen();
+		}
+		window.onunload = unloadPage;
+		function unloadPage() {
+			window.opener.releaseMask();
+
+		}
+	</script>
+</h:head>
+<h:body styleClass="screenBg" onunload="unloadPage();">
+	<h:form id="searchReferralForm" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/TemplateMiniSearch.xhtml">
+			<table border="0" cellpadding="0" cellspacing="3" width="100%" class="bgcolor-pup">
+				<tr valign="top" class="">
+					<td width="100%">
+						<table border="0" cellpadding="0" cellspacing="0" width="100%">
+							<tr>
+								<td width="100%" height="5" />
+							</tr>
+
+							<tr>
+								<td class="screenTitle">
+									<h:outputText value="#{msgs.label_insertRefeeral}" />
+								</td>
+							</tr>
+
+							<tr>
+								<td width="100%" height="5" />
+							</tr>
+
+							<tr>
+								<td width="100%">
+									<h:panelGroup id="specialistSectionPanelId">
+										<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+											<tr>
+												<th width="15%">
+													<h:outputText value="#{msgs.label_referralType}" />
+												</th>
+												<td colspan="1">
+													<h:selectOneMenu id="referralTypeId" style="width:25%;" value="#{insertReferralMiniSearch.referralProcessId}">
+														<f:selectItems value="#{insertReferralMiniSearch.processTypeList}" var="process" itemLabel="#{process.description}" itemValue="#{process.id}" />
+														<f:ajax event="change" render="searchReferralForm:specialistSectionPanelId" execute="searchReferralForm:referralTypeId searchReferralForm:referralDetailsId" listener="#{insertReferralMiniSearch.viewSpecialistEmployee()}" />
+													</h:selectOneMenu>
+													<h:inputHidden id="referralProcessDescId" value="#{insertReferralMiniSearch.referralProcessDesc}" />
+													<h:inputHidden id="referralProcessId" value="#{insertReferralMiniSearch.referralProcessId}" />
+												</td>
+											</tr>
+											<tr>
+												<h:panelGroup id="referralSpecialistEmpId" rendered="#{insertReferralMiniSearch.viewReferralSpecialist}">
+													<th width="15%">
+														<h:outputText value="#{msgs.label_referralSpecialistEmp}" />
+														<h:outputText value="*" style="color:red;" />
+													</th>
+													<td width="35%">
+														<h:commandButton value="&#xf002;" styleClass="btn btn-trans-icon" onclick="return getEmployee('#{request.contextPath}',1);" />
+														<h:inputHidden id="searchEmployeeIdId" value="#{insertReferralMiniSearch.employeeId}" />
+														<h:outputText id="searchEmployeeNameId" value="#{insertReferralMiniSearch.employeeName}" />
+														<h:inputHidden id="searchEmployeeHiddenNameId" value="#{insertReferralMiniSearch.employeeName}" />
+													</td>
+												</h:panelGroup>
+												<h:inputHidden id="viewReferralSpecialistHiddenId" value="#{insertReferralMiniSearch.viewReferralSpecialist}" />
+											</tr>
+											<tr>
+												<th width="15%">
+													<h:outputText value="#{msgs.label_description}" />
+													<h:outputText value="*" style="color:red;" />
+												</th>
+												<td colspan="3">
+													<h:inputTextarea id="referralDetailsId" styleClass="form-control" style="width: 100%;" value="#{insertReferralMiniSearch.referralDetails}" onkeypress="return valdiateMaxLength(this, 500);" onblur="return isValdiateMaxLength(this, 500);" />
+												</td>
+											</tr>
+										</table>
+									</h:panelGroup>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td width="100%">
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:commandButton styleClass="btn btn-default btn-reset" id="returnBtn" value="#{msgs.label_goBack}" onclick="window.close();">
+									</h:commandButton>
+									<h:commandButton styleClass="btn btn-default" id="saveBtn" onclick="return selectReferral();" value="#{msgs.label_save}">
+									</h:commandButton>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+			</table>
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>

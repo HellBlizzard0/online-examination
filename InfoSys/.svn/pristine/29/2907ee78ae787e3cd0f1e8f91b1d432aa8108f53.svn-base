@@ -1,0 +1,300 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:util="http://java.sun.com/jsf/composite/util">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+	<script type="text/javascript">
+	var m;
+	
+	function getDepartment(contextPath,mode){
+    	m = 1;
+		openDepartmentsMiniSearch(contextPath,mode, null, null);
+		return false;
+	}
+	function getRegionDepartment(contextPath,mode){
+    	m = 2;
+		openDepartmentsMiniSearch(contextPath,mode, null, '#{nightAttendanceReport.departmentType}');
+		return false;
+	}
+
+	function releaseMask(){
+		unMaskScreen();
+   	}
+   	
+	function HandlePopupResult(ret) { 
+		unMaskScreen();
+		if(ret!=null){
+    		if( m == 1){
+    			document.getElementById('formId:selectedDepartmentId').value = ret[0];
+   	         	document.getElementById('formId:selectedDepartmentNameId').value = ret[1];
+   	         	document.getElementById('formId:departmentNameId').innerHTML = ret[1];
+       		}
+    		else if (m == 2){
+				document.getElementById('formId:selectedDepartId').value = ret[0];
+   	         	document.getElementById('formId:selectedDepartNameId').value = ret[1];
+   	         	document.getElementById('formId:departNameId').innerHTML = ret[1];
+			}
+         	return true;
+   		}
+   		return false;
+	}
+	
+	function validateTime(time){
+		var min = time.value.substring(0, 2);
+		var sec = time.value.substring(3, 5);
+		/* <![CDATA[ */
+		if(min != parseInt(min) || sec != parseInt(sec) || parseInt(min) > 23 || parseInt(sec) > 59){
+			time.value = "";
+			return false;
+		}
+		 /* ]]> */
+		return true;
+	}
+	</script>
+</h:head>
+<h:body styleClass="screenBg">
+	<h:form id="formId" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/Template.xhtml">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tr>
+					<td class="screenTitle">#{msgs.title_nightAttendanceReport}</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.label_reportData}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="reportParametersPanelId">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<th width="15%">
+										#{msgs.label_durationFrom}
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<util:advancedHijriDate value="#{nightAttendanceReport.startDate}" />
+									</td>
+									
+
+									<th width="15%">
+										#{msgs.label_durationTo}
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<util:advancedHijriDate value="#{nightAttendanceReport.endDate}" />
+									</td>
+
+								</tr>
+
+								<tr>
+									<th width="15%">#{msgs.label_timeFrom}</th>
+									<td width="20%">
+										<p:inputMask style=" direction: ltr; text-align: right; width: 60%" value="#{nightAttendanceReport.startTime}" mask="99:99" onblur="return validateTime(this)" />
+									</td>
+									
+									<th width="15%">#{msgs.label_timeTo}</th>
+									<td width="20%">
+										<p:inputMask style=" direction: ltr; text-align: right; width: 60%" value="#{nightAttendanceReport.endTime}" mask="99:99" onblur="return validateTime(this)" />
+									</td>
+
+								</tr>
+
+								<tr>
+									<th width="15%">
+										#{msgs.label_department}
+										<h:commandButton rendered="#{empty employeeAssignmentSearch.assignmentDetailDataSearch.regionId}" value="&#xf002;" styleClass="btn btn-trans-icon" onclick="return getDepartment('#{request.contextPath}',1);" title="#{msgs.label_addDepartment}" />
+									</th>
+									<td width="20%">
+										<h:inputHidden id="selectedDepartmentId" value="#{nightAttendanceReport.departmentId}" />
+										<h:inputHidden id="selectedDepartmentNameId" value="#{nightAttendanceReport.departmentName}" />
+										<h:outputText id="departmentNameId" value="#{nightAttendanceReport.departmentName}" />
+									</td>
+									
+									<th width="20%">#{msgs.label_socialId}</th>
+									<td>
+										<h:inputText value="#{nightAttendanceReport.socialId}" />
+									</td>
+								</tr>
+								<tr>
+									<th width="15%">#{msgs.label_type}</th>
+									<td width="20%" colspan="1">
+										<h:selectOneMenu value="#{nightAttendanceReport.type}">
+											<f:selectItem itemValue="-1" itemLabel="#{msgs.label_all}" />
+											<f:selectItem itemValue="0" itemLabel="#{msgs.label_entry}" />
+											<f:selectItem itemValue="1" itemLabel="#{msgs.label_exit}" />
+										</h:selectOneMenu>
+									</td>
+									<th width="15%">
+										#{msgs.label_region}
+										<h:commandButton rendered="#{nightAttendanceReport.regionId == null}" value="&#xf002;" styleClass="btn btn-trans-icon" onclick="return getRegionDepartment('#{request.contextPath}',2);" title="#{msgs.label_addDepartment}" />
+									</th>
+									<td width="20%">
+										<h:inputHidden id="selectedDepartId" value="#{nightAttendanceReport.regionId}" />
+										<h:inputHidden id="selectedDepartNameId" value="#{nightAttendanceReport.regionName}" />
+										<h:outputText id="departNameId" value="#{nightAttendanceReport.regionName}" />
+									</td>
+								</tr>
+								
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td width="100%">
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:commandButton styleClass="btn btn-default" value="&#xf021; #{msgs.label_reset}" action="#{nightAttendanceReport.reset()}">
+										<f:ajax render="formId:reportParametersPanelId" />
+									</h:commandButton>
+
+									<h:commandButton styleClass="btn btn-success" value="&#xf02f; #{msgs.label_print}" action="#{nightAttendanceReport.printReport()}" />
+
+									<h:commandButton styleClass="btn btn-default" value="&#xf002; #{msgs.label_search}" action="#{nightAttendanceReport.search()}">
+										<f:ajax render="formId:attendanceDetailsListId" execute="formId:reportParametersPanelId" />
+									</h:commandButton>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="5" width="75%">
+						<p:dataTable id="attendanceDetailsListId" paginator="true" style="width:100%" tableStyle="table-layout:auto" reflow="true" rows="10" liveResize="true" paginatorPosition="bottom" rowIndexVar="attendanceDtlsindex" var="attendanceDtl" value="#{nightAttendanceReport.employeeNonEmployeeAttendanceDetailsList}" widgetVar="attendanceDetailsTable" rowHover="true">
+							<p:ajax event="sort" listener="#{nightAttendanceReport.updateOrderParam}" />
+							<p:columnGroup type="header">
+								<p:row>
+									<p:column colspan="5" headerText="#{msgs.label_personsDetails}" />
+									<p:column colspan="3" headerText="#{msgs.label_carsDetails}" />
+								</p:row>
+								<p:row>
+									<p:column headerText="#" />
+									<p:column headerText="#{msgs.label_name}" sortBy="#{attendanceDtl.fullName}" />
+									<p:column headerText="#{msgs.label_identity}" sortBy="#{attendanceDtl.socialId}" />
+									<p:column headerText="#{msgs.label_entryTime}" sortBy="#{attendanceDtl.entryDate} #{attendanceDtl.entryTime}" />
+									<p:column headerText="#{msgs.label_exitTime}" sortBy="#{attendanceDtl.exitDate} #{attendanceDtl.exitTime}" />
+									<p:column headerText="#{msgs.label_carModelDescription}" sortBy="#{attendanceDtl.carModel}" />
+									<p:column headerText="#{msgs.label_plateNumber}" sortBy="#{attendanceDtl.plateNumber}" />
+									<p:column headerText="#{msgs.label_permitNo}" sortBy="#{attendanceDtl.permitNo}" />
+								</p:row>
+							</p:columnGroup>
+							<p:column styleClass='centerText'>
+                                   	#{attendanceDtlsindex + 1}
+                       		</p:column>
+							<p:column styleClass='centerText'>
+								<h:commandLink action="#{nightAttendanceReport.selectCar(attendanceDtl)}" value="#{attendanceDtl.fullName}">
+									<f:ajax render="formId:employeeDetailPanelId" onevent="function(e){if(e.status == 'success') PF('dlg').show();}" />
+								</h:commandLink>
+							</p:column>
+							<p:column styleClass='centerText'>
+								<h:outputText value="#{attendanceDtl.socialId}" />
+							</p:column>
+							<p:column styleClass='centerText'>
+								<h:outputText value="#{attendanceDtl.entryTime} #{attendanceDtl.entryDateString}" />
+							</p:column>
+							<p:column styleClass='centerText'>
+								<h:outputText value="#{attendanceDtl.exitTime} #{attendanceDtl.exitDateString}" />
+							</p:column>
+							<p:column styleClass='centerText'>
+								<h:outputText id="carModelId" value="#{attendanceDtl.carModel}" />
+								<h:inputHidden id="carModelHiddenId" value="#{attendanceDtl.carModel}" />
+								<h:inputHidden id="domainCarModelHiddenId" value="#{attendanceDtl.domainCarModelId}" />
+								<h:inputHidden id="empNonEmpCarHiddenId" value="#{attendanceDtl.empNonEmpCarsId}" />
+							</p:column>
+							<p:column styleClass='centerText'>
+								<h:outputText id="plateNumberId" value="#{attendanceDtl.plateNumber}" />
+								<h:inputHidden id="plateNumberHiddenId" value="#{attendanceDtl.plateNumber}" />
+							</p:column>
+							<p:column styleClass='centerText'>
+								<h:outputText id="permitNoId" value="#{attendanceDtl.permitNo}" />
+								<h:inputHidden id="permitNoHiddenId" value="#{attendanceDtl.permitNo}" />
+							</p:column>
+						</p:dataTable>
+					</td>
+				</tr>
+			</table>
+
+			<h:panelGroup id="employeeDetailPanelId">
+				<p:dialog dir="#{msgs.dir}" header="#{msgs.label_employees}" id="dlgId" widgetVar="dlg" modal="true" height="180px;" width="720px">
+					<h:panelGroup id="internalDlgPanelId">
+						<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<th width="15%">#{msgs.label_name}</th>
+								<td>
+									<h:outputText value="#{nightAttendanceReport.selectedAttendanceCar.fullName}" />
+								</td>
+								<th width="15%">#{msgs.label_identity}</th>
+								<td>
+									<h:outputText value="#{nightAttendanceReport.selectedAttendanceCar.socialId}" />
+								</td>
+							</tr>
+							<tr>
+								<th width="15%">#{msgs.label_unitDep}</th>
+								<td>
+									<h:outputText value="#{nightAttendanceReport.selectedAttendanceCar.departmentName}" />
+								</td>
+								<th width="15%">#{msgs.label_nationality}</th>
+								<td>
+									<h:outputText value="#{nightAttendanceReport.selectedAttendanceCar.nationality}" />
+								</td>
+							</tr>
+							<tr>
+								<th width="15%">#{msgs.label_rank}</th>
+								<td>
+									<h:outputText value="#{nightAttendanceReport.selectedAttendanceCar.rank}" />
+								</td>
+								<th width="15%">#{msgs.label_mobileNo}</th>
+								<td>
+									<h:outputText value="#{nightAttendanceReport.selectedAttendanceCar.mobileNo}" />
+								</td>
+							</tr>
+							<tr>
+								<th width="15%">#{msgs.label_telExt}</th>
+								<td>
+									<h:outputText value="#{nightAttendanceReport.selectedAttendanceCar.telephoneExt}" />
+								</td>
+								
+								
+							</tr>
+						</table>
+					</h:panelGroup>
+				</p:dialog>
+			</h:panelGroup>
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>

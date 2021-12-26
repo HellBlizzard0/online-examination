@@ -1,0 +1,382 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:util="http://java.sun.com/jsf/composite/util" xmlns:code="http://java.sun.com/jsf/composite/code">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+	<script type="text/javascript">
+	var m;
+	function getFollowUp(contextPath){
+		openFollowUpMiniSearch(contextPath, null);
+		m=1;
+		return false;
+	}
+	function getLetter(contextPath){
+	
+		followUpId = document.getElementById('mainFormId:followUpIdId').value;
+		if(followUpId == null || followUpId=='' || followUpId == -1){
+	     showErrorMessage('#{msgs.error_mandatoryFollowUpId}');
+		return false;
+	   }
+		openLetterMiniSearch(contextPath, followUpId);
+		m=2;
+		return false;
+	}
+	function HandlePopupResult(ret) {
+	   	unMaskScreen();
+		if(ret!=null){ 
+			if(m == 1){
+	         	document.getElementById('mainFormId:followUpIdId').value=ret[0];
+	         	document.getElementById('mainFormId:letterFollowUpId').value=ret[0];
+	         	document.getElementById('mainFormId:followUpCodeId').value=ret[1];
+	         	 document.getElementById('mainFormId:updateFollowUpDataId').click();
+	         	
+	         	 return true;
+			}
+			return false;
+			}}
+			
+			function uploadFile() {
+			fileArchivingParam = document.getElementById('mainFormId:fileArchivingParamId').value;
+			openUploadFile('#{letterRegisteration.boolServerUploadPath}', fileArchivingParam);
+			return false;
+		}
+		function validateData(){
+		var letterNumberId = document.getElementById("mainFormId:letterNumberId").value;
+			var letterDateId = document.getElementById("mainFormId:letterDateId:dateValueIdDay").value;
+			var letterTypeId = document.getElementById("mainFormId:letterTypeId").value;
+			var unitId = document.getElementById("mainFormId:unitId").value;
+			if((letterNumberId == null || letterNumberId=="") &amp;&amp; (letterDateId == null || letterDateId=="") &amp;&amp; (letterTypeId == null || letterTypeId=="") &amp;&amp; (unitId == null || unitId=="")){
+				showErrorMessage('#{msgs.label_mandatory}');
+	            return false;
+			}
+		}
+		function releaseMask(){
+    		unMaskScreen();
+       	}
+       	
+			</script>
+</h:head>
+<h:body styleClass="screenBg">
+	<h:form id="mainFormId" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/Template.xhtml">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+
+				<tr>
+					<td class="screenTitle">#{msgs.title_letterRegisteration}</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="followUpContainerId">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0" style="width: 50%;">
+								<tr>
+									<th>
+										<h:outputText value="#{msgs.label_followUp}" />
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td>
+										<h:panelGroup id="codePanelId">
+											<h:inputText disabled="true" id="followUpCodeViewId" value="#{letterRegisteration.followUpData.code}" style="width:88%;" />
+
+											<h:inputHidden id="letterFollowUpId" value="#{letterRegisteration.letterData.followUpId}" />
+											<h:inputHidden id="followUpIdId" value="#{letterRegisteration.followUpData.id}" />
+											<h:inputHidden id="followUpCodeId" value="#{letterRegisteration.followUpData.code}" />
+										</h:panelGroup>
+
+										<h:commandButton value="&#xf03a;" styleClass="btn btn-trans-icon" onclick="return getFollowUp('#{request.contextPath}');" rendered="#{letterRegisteration.pageMode == 1 and followUpResultRequest.canEditFollow}">
+										</h:commandButton>
+										<h:commandButton id="updateFollowUpDataId" style="display:none;" actionListener="#{letterRegisteration.selectFollowUp()}">
+											<f:ajax execute="mainFormId:followUpIdId" render="mainFormId:codePanelId mainFormId:followUpInformationPanelId mainFormId:letterInformationTitleId mainFormId:letterInformationPanelId mainFormId:actionSectionId">
+											</f:ajax>
+										</h:commandButton>
+									</td>
+
+
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+				<tr>
+					<td>
+						<h:panelGroup id="followUpInformationPanelId">
+							<p:accordionPanel activeIndex="-1" rendered="#{letterRegisteration.renderInformation}">
+								<p:tab title="#{msgs.label_currentFollowUpData}">
+
+									<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+										<tr>
+											<td>
+												<h:panelGroup id="currentFollowUpId">
+													<table width="100%">
+														<tr>
+															<th width="15%">#{msgs.label_followUpCode}</th>
+															<td width="20%">
+																<h:inputText id="followUpCodeId_" styleClass="form-control" value="#{letterRegisteration.followUpData.code}" disabled="true" />
+															</td>
+
+															<th width="15%;">#{msgs.label_followUpDataSource}</th>
+															<td width="20%">
+																<h:inputText id="sourceDataId" styleClass="form-control" value="#{letterRegisteration.followUpData.dataSourceDesc}" disabled="true" />
+															</td>
+
+														</tr>
+														<tr>
+															<th width="15%">#{msgs.label_followUpStartDate}</th>
+															<td width="20%">
+																<util:advancedHijriDate id="followUpStartDateId" disable="true" value="#{letterRegisteration.followUpData.followUpStartDate}" />
+
+															</td>
+
+															<th width="15%;">#{msgs.label_followUpCoordinates}</th>
+															<td width="20%">
+																<h:inputText disabled="true" id="latId" styleClass="form-control" value="#{letterRegisteration.followUpData.coordinateLatitude}" disable="true" />
+															</td>
+
+														</tr>
+														<tr>
+															<th width="15%">#{msgs.label_followUpEndDate}</th>
+															<td width="20%">
+																<util:advancedHijriDate id="followUpEndDateId" disable="true" value="#{letterRegisteration.followUpData.followUpEndDate}" />
+
+															</td>
+
+															<th width="15%;"></th>
+															<td width="20%">
+																<h:inputText id="longId" disabled="true" styleClass="form-control" value="#{letterRegisteration.followUpData.coordinateLongitude}" disable="true" />
+															</td>
+
+														</tr>
+														<tr>
+															<th width="15%">#{msgs.label_caseType}</th>
+															<td width="20%">
+																<h:inputText id="caseTypeId" disabled="true" styleClass="form-control" value="#{letterRegisteration.followUpData.casesTypeDesc}" disable="true" />
+
+															</td>
+
+															<th width="15%">#{msgs.label_direct}</th>
+															<td width="20%">
+																<h:selectBooleanCheckbox disabled="true" value="#{letterRegisteration.followUpData.directFlag}" />
+															</td>
+
+														</tr>
+														<tr>
+															<th width="15%">#{msgs.label_ghostType}</th>
+															<td width="20%">
+																<h:inputText id="ghostTypeId" styleClass="form-control" value="#{letterRegisteration.followUpData.ghostType == 1 ? msgs.label_employeeTitle : msgs.label_nonEmpTitle}" disabled="true" />
+															</td>
+
+															<th width="15%;">#{msgs.label_equipmentTypeId}"</th>
+															<td width="20%">
+																<h:inputText id="equipmentId" styleClass="form-control" value="#{letterRegisteration.followUpData.equipmentTypeDesc}" disabled="true" />
+															</td>
+
+														</tr>
+														<tr>
+															<th width="15%">#{msgs.label_identity}</th>
+															<td width="20%">
+																<h:inputText id="employeeSocialIdId" styleClass="form-control" rendered="#{letterRegisteration.followUpData.ghostType == letterRegisteration.employeeType}" value="#{letterRegisteration.followUpData.employeeSocialId}" disabled="true" />
+																<h:inputText id="nonEmployeeSocialIdId" styleClass="form-control" rendered="#{letterRegisteration.followUpData.ghostType == letterRegisteration.nonEmployeeType}" value="#{letterRegisteration.followUpData.nonEmployeeSocialId}" disabled="true" />
+
+															</td>
+
+															<th width="15%;"></th>
+															<td width="20%"></td>
+
+														</tr>
+
+														<tr>
+															<th width="15%">#{msgs.label_ghostAliasName_}</th>
+															<td width="20%">
+																<h:inputText id="aliasNameId" styleClass="form-control" value="#{ letterRegisteration.followUpData.aliasName }" disabled="true" />
+															</td>
+
+															<th width="15%;">#{msgs.label_name}</th>
+															<td width="20%">
+																<h:inputText id="employeeNameId" styleClass="form-control" rendered="#{letterRegisteration.followUpData.ghostType == letterRegisteration.employeeType}" value="#{letterRegisteration.followUpData.employeeName}" disabled="true" />
+																<h:inputText id="nonEmployeeNameId" styleClass="form-control" rendered="#{letterRegisteration.followUpData.ghostType == letterRegisteration.nonEmployeeType}" value="#{letterRegisteration.followUpData.nonEmployeeName}" disabled="true" />
+															</td>
+
+														</tr>
+														<tr>
+															<th width="15%">#{msgs.label_region}</th>
+															<td width="20%">
+																<h:inputText id="regionId" styleClass="form-control" value="#{ letterRegisteration.followUpData.regionName}" disabled="true" />
+															</td>
+
+															<th width="15%;">
+																<h:outputText value="#{msgs.label_sector}" rendered="#{letterRegisteration.followUpData.sectorId != null}" />
+															</th>
+															<td width="20%">
+																<h:inputText id="sectorId" styleClass="form-control" value="#{letterRegisteration.followUpData.sectorName}" rendered="#{letterRegisteration.followUpData.sectorId != null}" disabled="true" />
+															</td>
+
+														</tr>
+													</table>
+												</h:panelGroup>
+											</td>
+										</tr>
+									</table>
+								</p:tab>
+							</p:accordionPanel>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<h:panelGroup id="letterInformationTitleId">
+							<h:panelGroup rendered="#{letterRegisteration.renderInformation}">
+								<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+									<tr>
+										<td>
+											<h:outputText value="#{msgs.label_letterInformation}" />
+										</td>
+									</tr>
+								</table>
+							</h:panelGroup>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="letterInformationPanelId">
+							<h:panelGroup rendered="#{letterRegisteration.renderInformation}">
+								<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+									<tr>
+										<td>
+
+											<table width="100%">
+												<tr>
+													<th>
+														#{msgs.label_letterNumber}
+														<h:outputText value="*" style="color:red;" />
+													</th>
+													<td>
+														<h:inputText id="letterNumberId" value="#{letterRegisteration.letterData.letterNumber}" disabled="#{letterRegisteration.pageMode != null and letterRegisteration.pageMode == 2}" />
+													</td>
+												</tr>
+												<tr>
+													<th>
+														#{msgs.label_letterType}
+														<h:outputText value="*" style="color:red;" />
+													</th>
+													<td>
+														<h:selectOneRadio id="letterTypeId" value="#{letterRegisteration.letterData.type}" disabled="#{letterRegisteration.pageMode != null and letterRegisteration.pageMode == 2}">
+															<f:selectItem itemLabel="#{msgs.label_issued}" itemValue="1" />
+															<f:selectItem itemLabel="#{msgs.label_incoming}" itemValue="0" />
+														</h:selectOneRadio>
+													</td>
+												</tr>
+												<tr>
+													<th>
+														#{msgs.label_unitSource}
+														<h:outputText value="*" style="color:red;" />
+													</th>
+													<td>
+														<h:inputText id="unitId" value="#{letterRegisteration.letterData.organization}" disabled="#{letterRegisteration.pageMode != null and letterRegisteration.pageMode == 2}" />
+													</td>
+												</tr>
+												<tr>
+													<th>
+														#{msgs.label_fileNumber}
+														<h:outputText />
+													</th>
+													<td>
+														<h:inputText  value="#{letterRegisteration.letterData.fileNumber}" disabled="#{letterRegisteration.pageMode != null and letterRegisteration.pageMode == 2}" />
+													</td>
+												</tr>
+											</table>
+
+										</td>
+
+										<td>
+											<table>
+												<tr>
+													<th>
+														#{msgs.label_itsDate}
+														<h:outputText value="*" style="color:red;" />
+													</th>
+													<td>
+														<util:advancedHijriDate id="letterDateId" value="#{letterRegisteration.letterData.letterDate}" disable="#{letterRegisteration.pageMode != null and letterRegisteration.pageMode == 2}" />
+													</td>
+
+												</tr>
+												<tr>
+
+													<th>#{msgs.label_comment}</th>
+													<td>
+														<h:inputTextarea value="#{letterRegisteration.letterData.notes}" rows="5" disabled="#{letterRegisteration.pageMode != null and letterRegisteration.pageMode == 2}" />
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+
+
+								</table>
+							</h:panelGroup>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+				<tr>
+					<td>
+						<h:panelGroup id="actionSectionId">
+							<h:panelGroup rendered="#{letterRegisteration.renderInformation}">
+								<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+									<tr>
+										<td style="float: right; width: 10%;">
+											<h:commandButton id="oldLettersBtnId" class="btn btn-success" value="#{msgs.label_oldLetters}" onclick="return getLetter('#{request.contextPath}');">
+											</h:commandButton>
+
+										</td>
+										<td width="50%">
+											<h:commandButton styleClass="btn btn-success" id="archiveBtnUploadId" value="&#xf187; #{msgs.label_archiveDocuments}" rendered="#{letterRegisteration.pageMode == null or letterRegisteration.pageMode == 1}">
+												<f:ajax listener="#{letterRegisteration.getUploadParam(letterRegisteration.letterData.id)}" render="mainFormId:fileArchivingParamId" onevent="function(e){if(e.status == 'success') return uploadFile();}" />
+											</h:commandButton>
+											<h:commandButton id="saveBtnId" class="btn btn-success" value="#{msgs.label_save}" action="#{letterRegisteration.saveLetter}" onclick="return validateData('#{msgs.q_confirm}');" rendered="#{letterRegisteration.pageMode == null or letterRegisteration.pageMode == 1}">
+											</h:commandButton>
+											<h:inputHidden id="fileArchivingParamId" value="#{letterRegisteration.fileArchivingParam}" />
+
+										</td>
+
+									</tr>
+								</table>
+							</h:panelGroup>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+			</table>
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>

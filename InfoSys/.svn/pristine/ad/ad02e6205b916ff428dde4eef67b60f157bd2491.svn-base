@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:util="http://java.sun.com/jsf/composite/util" xmlns:rich="http://richfaces.org/rich">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+	<script type="text/javascript">
+		var m;
+		function getDepartmentSrc(contextPath,mode){
+			m=1;
+			openDepartmentsMiniSearch(contextPath, mode);
+			return false;
+		}
+
+		function getEmployee(contextPath){
+			m=2;
+			openEmpsMiniSearch(contextPath,1);
+			return false;
+		}
+
+		function releaseMask(){
+			unMaskScreen();
+	   	}
+	   	
+		function HandlePopupResult(ret) { 
+    		unMaskScreen();
+    		if(ret!=null){
+        		if(m==1){
+					document.getElementById('formId:selectedSourceDepartmentId').value=ret[0];
+		    		document.getElementById('formId:selectedSourceDepartmentNameId').value=ret[1];
+		    		document.getElementById('formId:departmentOrderSourceNameId').innerHTML=ret[1];
+	    	   		return true;
+            	}
+
+        		if(m==2){
+					document.getElementById('formId:selectedEmployeeId').value=ret[0];
+		    		document.getElementById('formId:selectedEmployeeNameId').value=ret[1];
+		    		document.getElementById('formId:employeeNameId').innerHTML=ret[1];
+	    	   		return true;
+            	}
+	   		}
+	   		return false;
+    	}
+    </script>
+</h:head>
+<h:body styleClass="screenBg">
+	<h:form id="formId" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/Template.xhtml">
+
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+				<tr>
+					<td class="screenTitle">#{msgs.title_securityGuardMissionReport}</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.label_searchData}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="searchContainerId">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+
+								<tr>
+									<th width="15%">#{msgs.label_missionType}</th>
+									<td width="20%">
+										<h:selectOneMenu value="#{securityGuardMissionReport.missionType}">
+											<f:selectItem itemValue="" />
+											<f:selectItems value="#{securityGuardMissionReport.missionTypesList}" var="type" itemLabel="#{type.description}" itemValue="#{type.description}" />
+										</h:selectOneMenu>
+									</td>
+	                             
+									<th width="15%">
+										#{msgs.label_employee}
+										<h:commandButton value="&#xf002;" styleClass="btn btn-trans-icon" onclick="return getEmployee('#{request.contextPath}');" title="#{msgs.label_employee}" />
+									</th>
+									<td width="20%">
+										<h:inputHidden id="selectedEmployeeId" value="#{securityGuardMissionReport.employeeId}" />
+										<h:inputHidden id="selectedEmployeeNameId" value="#{securityGuardMissionReport.employeeName}" />
+										<h:outputText id="employeeNameId" value="#{securityGuardMissionReport.employeeName}" />
+									</td>
+									 
+
+								</tr>
+
+								<tr>
+									<th width="15%">
+										#{msgs.label_orderSource}
+									</th>
+									<td width="20%">
+										<h:selectOneMenu id="selectedSourceDepartmentId" styleClass="form-control" value="#{securityGuardMissionReport.missionSrcId}">
+											<f:selectItem itemValue="#{null}" itemLabel=""/>
+											<f:selectItems value="#{securityGuardMissionReport.orderSourcesList}" var="source" itemValue="#{source.id}" itemLabel="#{source.description}" />
+										</h:selectOneMenu>
+									</td>
+								</tr>
+
+								<tr>
+									<th width="15%">
+										<h:outputText value="*" style="color:red;" />
+										#{msgs.label_fromDate}
+									</th>
+									<td width="20%">
+										<util:advancedHijriDate value="#{securityGuardMissionReport.fromDate}" />
+									</td>
+									   
+									<th width="15%">
+										<h:outputText value="*" style="color:red;" />
+										#{msgs.label_toDate}
+									</th>
+									<td width="20%">
+										<util:advancedHijriDate value="#{securityGuardMissionReport.toDate}" />
+									</td>
+									 
+								</tr>
+
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td width="100%">
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td width="100%">
+									<h:commandButton class="btn btn-success" value="&#xf021; #{msgs.label_reset}" title="#{msgs.label_reset}" action="#{securityGuardMissionReport.reset()}" />
+									<h:commandButton class="btn btn-success" value="&#xf02f; #{msgs.label_print}" title="#{msgs.label_print}" action="#{securityGuardMissionReport.print()}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+			</table>
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>

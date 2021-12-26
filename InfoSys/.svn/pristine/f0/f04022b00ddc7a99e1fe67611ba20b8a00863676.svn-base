@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PostiveCheckStatsBasedOnMaterialType_subreport1" pageWidth="900" pageHeight="802" columnWidth="900" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="5dd2b31b-d021-4003-a4a5-0cff0cf6b610">
+	<property name="ireport.zoom" value="0.8264462809917358"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<subDataset name="pieChart" uuid="f2abe81f-dc22-4959-932c-2fc04d1e5927">
+		<parameter name="P_DATE_FROM" class="java.lang.String">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<parameter name="P_DATE_TO" class="java.lang.String">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<parameter name="P_DATE_FROM_FLAG" class="java.lang.String">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<parameter name="P_DATE_TO_FLAG" class="java.lang.String">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<parameter name="P_REGION_NAME" class="java.lang.String"/>
+		<parameter name="P_SCHEMA_NAME" class="java.lang.String">
+			<defaultValueExpression><![CDATA["INFOSYS"]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT
+    DEP.ARABIC_NAME AS REGION_NAME,DOMAIN.DESCRIPTION AS DESCRIPTION,COUNT(LCE.ID) AS COUNT
+FROM
+    $P!{P_SCHEMA_NAME}.STP_VW_DEPARTMENTS DEP, $P!{P_SCHEMA_NAME}.FIS_VW_LAB_CHECK_EMPLOYEES LCE LEFT OUTER JOIN $P!{P_SCHEMA_NAME}.FIS_DOMAINS DOMAIN ON LCE.DOMNS_ID_NATNL_FORC_MTRL_TYP = DOMAIN.ID
+WHERE DEP.DEPARTMENT_TYPEID IN (
+        100,75
+    )
+    AND   LCE.LAB_CHECK_STATUS = 2
+    AND   LCE.CHECK_STATUS = 5
+    AND   LCE.EMPLOYEE_REGION_ID = DEP.ID
+    AND   DOMAIN.CLASSES_ID = (
+        SELECT
+            ID
+        FROM
+            $P!{P_SCHEMA_NAME}.FIS_CLASSES
+        WHERE
+            FIS_CLASSES.CODE = 'MATERIAL_TYPES'
+    )
+    AND   DOMAIN.ACTIVE = 1
+    AND ($P{P_DATE_FROM_FLAG} = - 1 OR LCE.ORDER_DATE >= $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_DATE ($P{P_DATE_FROM} , 'MI/mm/YYYY'))
+    AND ($P{P_DATE_TO_FLAG} = - 1 OR LCE.ORDER_DATE <= $P!{P_SCHEMA_NAME}.PKG_CHAR_TO_DATE ($P{P_DATE_TO} , 'MI/mm/YYYY'))
+    AND DEP.ARABIC_NAME = $P{P_REGION_NAME}
+GROUP BY
+    DEP.ARABIC_NAME,DOMAIN.DESCRIPTION
+ORDER BY DESCRIPTION DESC]]>
+		</queryString>
+		<field name="REGION_NAME" class="java.lang.String"/>
+		<field name="DESCRIPTION" class="java.lang.String"/>
+		<field name="COUNT" class="java.lang.Integer"/>
+	</subDataset>
+	<parameter name="P_REPORTS_ROOT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["C://u01//WorkFiles//FISReports//"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_DATE_FROM" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_DATE_TO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_DATE_FROM_FLAG" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_DATE_TO_FLAG" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_SCHEMA_NAME" class="java.lang.String">
+		<defaultValueExpression><![CDATA["INFOSYS"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+    DISTINCT DEP.ARABIC_NAME AS REGION_NAME, DEP.ID
+FROM
+    $P!{P_SCHEMA_NAME}.STP_VW_DEPARTMENTS DEP,$P!{P_SCHEMA_NAME}.FIS_VW_LAB_CHECK_EMPLOYEES LCE
+WHERE
+    DEP.DEPARTMENT_TYPEID IN (
+        100,75
+    )
+    AND   LCE.LAB_CHECK_STATUS = 2
+    AND   LCE.CHECK_STATUS = 5
+    AND   LCE.EMPLOYEE_REGION_ID = DEP.ID
+    AND ($P{P_DATE_FROM_FLAG} = - 1 OR LCE.ORDER_DATE >= INFOSYS.PKG_CHAR_TO_DATE ($P{P_DATE_FROM} , 'MI/mm/YYYY'))
+    AND ($P{P_DATE_TO_FLAG} = - 1 OR LCE.ORDER_DATE <= INFOSYS.PKG_CHAR_TO_DATE ($P{P_DATE_TO} , 'MI/mm/YYYY'))
+ORDER BY DEP.ID]]>
+	</queryString>
+	<field name="REGION_NAME" class="java.lang.String"/>
+	<field name="ID" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="367" splitType="Stretch">
+			<ellipse>
+				<reportElement x="327" y="35" width="247" height="242" uuid="5953a212-099e-4df9-a9dd-420695e351a8"/>
+			</ellipse>
+			<textField>
+				<reportElement x="400" y="347" width="100" height="20" uuid="7364b514-992b-4cdb-8e76-0af68d642f72"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="16" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REGION_NAME}]]></textFieldExpression>
+			</textField>
+			<pieChart>
+				<chart renderType="image">
+					<reportElement x="0" y="0" width="900" height="342" uuid="b5165ed0-472b-41b2-b06a-da1f0a935aec">
+						<property name="net.sf.jasperreports.chart.range.axis.integer.unit" value="true"/>
+					</reportElement>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend>
+						<font fontName="Arial" size="16"/>
+					</chartLegend>
+				</chart>
+				<pieDataset>
+					<dataset>
+						<datasetRun subDataset="pieChart" uuid="7352b6e9-0972-4c02-b883-44df01c79695">
+							<datasetParameter name="P_DATE_FROM">
+								<datasetParameterExpression><![CDATA[$P{P_DATE_FROM}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="P_DATE_TO">
+								<datasetParameterExpression><![CDATA[$P{P_DATE_TO}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="P_DATE_FROM_FLAG">
+								<datasetParameterExpression><![CDATA[$P{P_DATE_FROM_FLAG}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="P_DATE_TO_FLAG">
+								<datasetParameterExpression><![CDATA[$P{P_DATE_TO_FLAG}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="P_REGION_NAME">
+								<datasetParameterExpression><![CDATA[$F{REGION_NAME}]]></datasetParameterExpression>
+							</datasetParameter>
+						</datasetRun>
+					</dataset>
+					<keyExpression><![CDATA[$F{DESCRIPTION}]]></keyExpression>
+					<valueExpression><![CDATA[$F{COUNT}]]></valueExpression>
+					<labelExpression><![CDATA[$F{COUNT}.toString()]]></labelExpression>
+				</pieDataset>
+				<piePlot>
+					<plot/>
+					<itemLabel>
+						<font fontName="Arial" size="16" pdfEncoding="Identity-V"/>
+					</itemLabel>
+				</piePlot>
+			</pieChart>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,581 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:util="http://java.sun.com/jsf/composite/util" xmlns:code="http://java.sun.com/jsf/composite/code">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+	<script type="text/javascript">
+		function getSurveillanceEmployee(contextPath, mode, empId, nonEmpId) {
+			openSurveillanceEmployeeDetails(contextPath, mode, empId, nonEmpId);
+			return false;
+		}
+
+		function releaseMask() {
+			unMaskScreen();
+		}
+
+		function handleDownloadFiles(e) {
+			openDownloadPopupFlagId = document
+					.getElementById('empSurReportFormId:surReportAccordionPanelId:openDownloadPopupFlagId').value;
+			openDownloadDialogueFlagId = document
+					.getElementById('empSurReportFormId:surReportAccordionPanelId:openDownloadDialogueFlagId').value;
+
+			if (e.status == 'success') {
+				if (openDownloadPopupFlagId == 'true') {
+					downloadFile();
+				} else if (openDownloadDialogueFlagId == 'true') {
+					PF('dlg').show();
+				}
+			}
+		}
+
+		function uploadFile() {
+			fileArchivingParam = document
+					.getElementById('empSurReportFormId:surReportAccordionPanelId:fileArchivingParamId').value;
+			openUploadFile(
+					'#{employeeSurveillanceReport.boolServerUploadPath}',
+					fileArchivingParam);
+			return false;
+		}
+
+		function downloadFile() {
+			downloadedFileParamId = document
+					.getElementById('empSurReportFormId:surReportAccordionPanelId:downloadedFileParamId').value;
+			openDownloadFile(
+					'#{employeeSurveillanceReport.boolServerDownloadPath}',
+					downloadedFileParamId);
+			return false;
+		}
+	</script>
+</h:head>
+<h:body styleClass="screenBg">
+	<h:form id="empSurReportFormId" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/Template.xhtml">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td class="screenTitle">#{msgs.title_employeeSurveillanceReport}</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<p:accordionPanel id="surReportAccordionPanelId">
+							<p:tab title="#{msgs.label_surveillanceReportInfo}" id="surveillanceReportInfoTabId">
+								<table width="100%">
+									<tr>
+										<td>
+											<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+												<tr>
+													<td>
+														<h:outputText value="#{msgs.label_surveillanceReportInfo}" />
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+
+									<tr>
+										<td width="100%" height="5" />
+									</tr>
+
+									<tr>
+										<td>
+											<table class="sectionContent" width="100%" border="0" cellpadding="0" cellspacing="0">
+												<tr>
+													<th width="15%">#{msgs.label_orderNumber}</th>
+													<td width="35%">
+														<h:outputText id="orderNumberId" value="#{employeeSurveillanceReport.surveillanceEmployeeData.orderNumber}" />
+													</td>
+
+													<th width="15%">#{msgs.label_orderDate}</th>
+													<td width="35%">
+														<h:outputText id="orderDateId" value="#{employeeSurveillanceReport.surveillanceEmployeeData.orderDateString}" />
+													</td>
+												</tr>
+
+												<tr>
+													<th width="15%">#{msgs.label_departmentFinalApproval}</th>
+													<td width="35%" colspan="2">
+														<h:outputText id="orderIssueSiteId" value="#{employeeSurveillanceReport.surveillanceEmployeeData.finalApprovalEntity}" />
+													</td>
+												</tr>
+
+												<tr>
+													<th width="15%">#{msgs.label_reportDurationFrom}</th>
+													<td width="35%">
+														<h:outputText id="reportStartDateId" value="#{employeeSurveillanceReport.surveillanceReport.startDateString}" />
+													</td>
+
+													<th width="15%">#{msgs.label_to}</th>
+													<td width="35%">
+														<h:outputText id="reportEndDateId" value="#{employeeSurveillanceReport.surveillanceReport.endDateString}" />
+													</td>
+												</tr>
+
+												<tr>
+													<th width="15%">#{msgs.label_comment}</th>
+													<td width="35%">
+														<h:outputText id="commentViewId" value="#{employeeSurveillanceReport.surveillanceReport.remarks}" rendered="#{employeeSurveillanceReport.pageMode != 2}" />
+														<h:inputTextarea id="commentEditId" styleClass="form-control" style="width:90%" value="#{employeeSurveillanceReport.surveillanceReport.remarks}" rendered="#{employeeSurveillanceReport.pageMode == 2}" />
+													</td>
+
+													<td width="15%">
+														<h:commandButton styleClass="btn btn-success" value="#{msgs.label_surveillanceEmployeeInfo}" id="surveillanceEmpDetailsId" onclick="return getSurveillanceEmployee('#{request.contextPath}', 1, '#{employeeSurveillanceReport.surveillanceEmployeeData.employeeId}', '#{employeeSurveillanceReport.surveillanceEmployeeData.nonEmployeeId}');" />
+														<p:tooltip for="surveillanceEmpDetailsId" value="#{msgs.label_surveillanceEmployeeInfo}" />
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+
+									<tr>
+										<td width="100%" height="5" />
+									</tr>
+
+									<tr>
+										<td colspan="2">
+											<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+												<tr>
+													<td>
+														<h:outputText value="#{msgs.label_survReasons}" />
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+
+									<tr>
+										<td width="100%" height="5" />
+									</tr>
+
+									<tr>
+										<td>
+											<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+												<tr>
+													<td>
+														<h:outputText value="#{employeeSurveillanceReport.surveillanceEmployeeData.surveillanceReasons}" />
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+
+									<tr>
+										<td width="100%" height="5" />
+									</tr>
+
+									<tr>
+										<td colspan="2">
+											<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+												<tr>
+													<td width="100%">
+														<h:commandButton rendered="#{not empty employeeSurveillanceReport.surveillanceReport.id}" styleClass="btn btn-success" id="archiveBtnUploadId" value="&#xf187; #{msgs.label_archiveDocuments}">
+															<f:ajax listener="#{employeeSurveillanceReport.getUploadParam(employeeSurveillanceReport.surveillanceReport.id)}" render="empSurReportFormId:surReportAccordionPanelId:fileArchivingParamId" onevent="function(e){if(e.status == 'success') return uploadFile();}" />
+														</h:commandButton>
+
+														<h:commandButton rendered="#{not empty employeeSurveillanceReport.surveillanceReport.id}" styleClass="btn btn-success" id="archiveBtnDownloadId" value="&#xf0c5; #{msgs.label_archiveDocumentsShow}">
+															<f:ajax render="empSurReportFormId:downloadDlgPanelId empSurReportFormId:surReportAccordionPanelId:openDownloadDialogueFlagId empSurReportFormId:surReportAccordionPanelId:openDownloadPopupFlagId empSurReportFormId:surReportAccordionPanelId:downloadedFileParamId" listener="#{employeeSurveillanceReport.getDownloadedAttachmentsIdList(employeeSurveillanceReport.surveillanceReport.id)}" onevent="handleDownloadFiles" />
+														</h:commandButton>
+														<h:inputHidden id="fileArchivingParamId" value="#{employeeSurveillanceReport.fileArchivingParam}" />
+														<h:inputHidden id="downloadedFileParamId" value="#{employeeSurveillanceReport.downloadFileParamId}" />
+														<h:inputHidden id="openDownloadPopupFlagId" value="#{employeeSurveillanceReport.openDownloadPopupFlag}" />
+														<h:inputHidden id="openDownloadDialogueFlagId" value="#{employeeSurveillanceReport.openDownloadDialogueFlag}" />
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+
+									<tr>
+										<td width="100%" height="5" />
+									</tr>
+
+									<tr>
+										<td>
+											<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+												<tr>
+													<td>
+														<h:outputText value="#{msgs.label_surveillanceActions}" />
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+
+									<tr>
+										<td width="100%" height="5" />
+									</tr>
+
+									<tr>
+										<td align="center" width="100%">
+											<h:panelGroup id="actionsPaneId">
+												<p:dataTable reflow="true" tableStyle="table-layout: auto" paginator="true" id="actionsListDataTableId" rows="#{employeeSurveillanceReport.rowsCount}" rowIndexVar="index" var="row" value="#{employeeSurveillanceReport.surveillanceActionDataList}" rowHover="true">
+													<p:column styleClass='centerText'>
+														<f:facet name="header">#</f:facet>
+									                    #{index + 1}
+									                </p:column>
+													<p:column styleClass='centerText'>
+														<f:facet name="header"> #{msgs.label_eventDate} </f:facet>
+														<h:outputText id="actionDateViewId" value="#{row.eventDateString}" />
+													</p:column>
+													<p:column styleClass='centerText'>
+														<f:facet name="header"> #{msgs.label_eventDetails} </f:facet>
+														<h:outputText id="eventDetailsViewId" value="#{row.eventDetails}" />
+													</p:column>
+													<p:column styleClass='centerText'>
+														<f:facet name="header"> #{msgs.label_questionClass} </f:facet>
+														<h:outputText id="questionClassViewId" value="#{row.classDescription}" />
+													</p:column>
+													<p:column styleClass='centerText'>
+														<f:facet name="header"> #{msgs.label_question} </f:facet>
+														<h:outputText id="questionViewId" value="#{row.domainDescription}" />
+													</p:column>
+												</p:dataTable>
+											</h:panelGroup>
+										</td>
+									</tr>
+
+									<tr>
+										<td width="100%" height="5" />
+									</tr>
+								</table>
+							</p:tab>
+
+							<p:tab title="#{msgs.label_previousSurveillanceReports}" id="previousSurveillanceReportsTabId">
+								<table width="100%">
+									<tr>
+										<td colspan="2">
+											<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+												<tr>
+													<td>
+														<h:outputText value="#{msgs.label_previousSurveillanceReports}" />
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+
+									<tr>
+										<td>
+											<p:dataTable reflow="true" tableStyle="table-layout: auto" paginator="true" id="prevReportsListDataTableId" rows="#{employeeSurveillanceReport.rowsCount}" rowIndexVar="index" var="row" value="#{employeeSurveillanceReport.previousSurveillanceReportList}" rowHover="true">
+												<p:column styleClass='centerText'>
+													<f:facet name="header">#</f:facet>
+								                     #{index + 1}
+								                 </p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header"> #{msgs.label_reportStartDate} </f:facet>
+													<h:outputText id="reportStartDateViewId" value="#{row.startDateString}" />
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header"> #{msgs.label_reportEndDate} </f:facet>
+													<h:outputText id="reportEndDateViewId" value="#{row.endDateString}" />
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header"> #{msgs.label_recommendation} </f:facet>
+													<h:outputText id="continueSurveillanceViewId" value="#{msgs.label_continueSurveillance}" rendered="#{row.recommendationDecisionType == 0}" />
+													<h:outputFormat id="extendSurveillanceViewId" value="#{msgs.label_extendSurveillance}" rendered="#{row.recommendationDecisionType == 1}">
+														<f:param value="#{row.recommendationPeriod}" />
+													</h:outputFormat>
+													<h:outputText id="endSurveillanceViewId" value="#{msgs.label_endSurveillance}" rendered="#{row.recommendationDecisionType == 2}" />
+												</p:column>
+											</p:dataTable>
+										</td>
+									</tr>
+
+									<tr>
+										<td width="100%" height="5" />
+									</tr>
+								</table>
+							</p:tab>
+
+							<p:tab title="#{msgs.label_evaluation}" id="evaluationTabId">
+								<table width="100%">
+									<tr>
+										<td>
+											<p:dataTable reflow="true" tableStyle="table-layout: auto" paginator="true" id="reportDetailsListDataTableId" rows="#{employeeSurveillanceReport.rowsCount}" rowIndexVar="index" var="row" value="#{employeeSurveillanceReport.surveillanceReportDetailDataList}" rendered="#{employeeSurveillanceReport.showEvaluation}" rowHover="true">
+												<p:column styleClass='centerText'>
+													<f:facet name="header">#</f:facet>
+								                     #{index + 1}
+								                 </p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header"> #{msgs.label_questionClass} </f:facet>
+													<h:outputText id="questionClassViewId" value="#{row.classDescription}" />
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header"> #{msgs.label_question} </f:facet>
+													<h:outputText id="questionViewId" value="#{row.domainDescription}" />
+													<f:facet name="footer"> #{msgs.label_overallPercentage} </f:facet>
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header"> #{msgs.label_grade} </f:facet>
+													<h:outputText id="gradeViewId" value="#{row.grade}" rendered="#{employeeSurveillanceReport.pageMode != 2}" />
+													<h:selectOneMenu id="gradeEditId" value="#{row.grade}" rendered="#{employeeSurveillanceReport.pageMode == 2}">
+														<f:selectItem itemValue="1" itemLabel="1" />
+														<f:selectItem itemValue="2" itemLabel="2" />
+														<f:selectItem itemValue="3" itemLabel="3" />
+														<f:selectItem itemValue="4" itemLabel="4" />
+														<f:selectItem itemValue="5" itemLabel="5" />
+														<f:selectItem itemValue="6" itemLabel="6" />
+														<f:selectItem itemValue="7" itemLabel="7" />
+														<f:selectItem itemValue="8" itemLabel="8" />
+														<f:selectItem itemValue="9" itemLabel="9" />
+														<f:selectItem itemValue="10" itemLabel="10" />
+														<f:ajax execute="empSurReportFormId:surReportAccordionPanelId:reportDetailsListDataTableId" render="empSurReportFormId:surReportAccordionPanelId:reportDetailsListDataTableId" listener="#{employeeSurveillanceReport.calculateTotal()}" />
+													</h:selectOneMenu>
+													<f:facet name="footer"> 
+														#{employeeSurveillanceReport.surveillanceReport.total} % 
+													 </f:facet>
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header">#{msgs.label_comment}</f:facet>
+													<h:outputText id="detailCommentViewId" value="#{row.remarks}" rendered="#{employeeSurveillanceReport.pageMode != 2}" />
+													<h:inputTextarea id="detailCommentEditId" styleClass="form-control" style="width: 90%" value="#{row.remarks}" rendered="#{employeeSurveillanceReport.pageMode == 2}" />
+												</p:column>
+											</p:dataTable>
+
+											<h:outputText value="#{msgs.error_noEvaluationYet}" rendered="#{not employeeSurveillanceReport.showEvaluation}" />
+										</td>
+									</tr>
+
+									<tr>
+										<td width="100%" height="5" />
+									</tr>
+								</table>
+							</p:tab>
+
+							<p:tab title="#{msgs.label_decisions}" id="decisionsTabId" rendered="#{employeeSurveillanceReport.surveillanceReport.recommendationDecisionType != null or employeeSurveillanceReport.pageMode == 3}">
+								<table width="100%">
+									<tr>
+										<td>
+											<table width="100%">
+												<tr>
+													<td style="width: 49%">
+														<table width="100%">
+															<tr>
+																<td>
+																	<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+																		<tr>
+																			<td>
+																				<h:outputText value="#{msgs.label_recommendation}" />
+																			</td>
+																		</tr>
+																	</table>
+																</td>
+															</tr>
+
+															<tr>
+																<td width="100%" height="5" />
+															</tr>
+
+															<tr>
+																<td>
+																	<h:panelGroup id="recommendationPanelId" rendered="#{employeeSurveillanceReport.pageMode == 3}">
+																		<table width="100%">
+																			<tr>
+																				<td style="width: 49.5%">
+																					<h:selectOneRadio layout="pageDirection" value="#{employeeSurveillanceReport.surveillanceReport.recommendationDecisionType}">
+																						<f:selectItem itemLabel="#{msgs.label_continueSurveillance}" itemValue="0" />
+																						<f:selectItem itemLabel="#{msgs.label_extendSurv}" itemValue="1" />
+																						<f:selectItem itemLabel="#{msgs.label_endSurveillance}" itemValue="2" />
+																						<f:ajax execute="empSurReportFormId:surReportAccordionPanelId:recommendationPanelId  empSurReportFormId:surReportAccordionPanelId:remarksPanelId" render="empSurReportFormId:surReportAccordionPanelId:recommendationPanelId  empSurReportFormId:surReportAccordionPanelId:remarksPanelId" />
+																					</h:selectOneRadio>
+																				</td>
+																				<td style="width: 50%">
+																					<h:panelGroup rendered="#{employeeSurveillanceReport.surveillanceReport.recommendationDecisionType == 1}">
+																						<table width="100%">
+																							<tr>
+
+																							</tr>
+																							<tr>
+																								<td style="width: 15%">#{msgs.label_for}</td>
+																								<td style="width: 50%">
+																									<h:inputText styleClass="form-control" value="#{employeeSurveillanceReport.surveillanceReport.recommendationPeriod}" style="width:90%" onkeypress="return checkDigit(event)" />
+																								</td>
+																								<td style="width: 35%">#{msgs.label_month}</td>
+																							</tr>
+																							<tr>
+
+																							</tr>
+																						</table>
+																					</h:panelGroup>
+																				</td>
+																			</tr>
+																		</table>
+																	</h:panelGroup>
+																	<h:panelGroup rendered="#{employeeSurveillanceReport.pageMode != 3}">
+																		<table>
+																			<tr>
+																				<td>
+																					<h:outputText id="continueSurveillanceViewId" value="#{msgs.label_continueSurveillance}" rendered="#{employeeSurveillanceReport.surveillanceReport.recommendationDecisionType == 0}" />
+																					<h:outputFormat id="extendSurveillanceViewId" value="#{msgs.label_extendSurveillance}" rendered="#{employeeSurveillanceReport.surveillanceReport.recommendationDecisionType == 1}">
+																						<f:param value="#{employeeSurveillanceReport.surveillanceReport.recommendationPeriod}" />
+																					</h:outputFormat>
+																					<h:outputText id="endSurveillanceViewId" value="#{msgs.label_endSurveillance}" rendered="#{employeeSurveillanceReport.surveillanceReport.recommendationDecisionType == 2}" />
+																				</td>
+																			</tr>
+																		</table>
+																	</h:panelGroup>
+																</td>
+															</tr>
+														</table>
+													</td>
+
+													<td width="1%" height="5" />
+
+													<td style="vertical-align: top; width: 49.5%">
+														<table width="100%">
+															<tr>
+																<td>
+																	<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+																		<tr>
+																			<td>
+																				<h:outputText value="#{msgs.label_reasonsRemarks}" />
+																				<h:outputText value="*" style="color:red;" rendered="#{employeeSurveillanceReport.pageMode == 3}" />
+																			</td>
+																		</tr>
+																	</table>
+																</td>
+															</tr>
+
+															<tr>
+																<td width="100%" height="5" />
+															</tr>
+															<tr>
+																<td colspan="1">      
+																	<h:panelGroup id="remarksPanelId"  >                                         
+																		<p:selectCheckboxMenu styleClass="btn_normal" rendered="#{employeeSurveillanceReport.surveillanceReport.recommendationDecisionType == 0 or employeeSurveillanceReport.surveillanceReport.recommendationDecisionType == 1}"  value="#{employeeSurveillanceReport.surveillanceOrderSelectedReasonsList}" label="#{msgs.label_survellinceContinueReasons}" filter="true" filterMatchMode="startsWith">
+																			<f:selectItems  itemDisabled="#{employeeSurveillanceReport.role == 'Notification' or employeeSurveillanceReport.role == 'History'}" value ="#{employeeSurveillanceReport.surveillanceOrderReasonsList}" var="reason" itemLabel="#{reason}" itemValue="#{reason}" />
+																		</p:selectCheckboxMenu>
+																	</h:panelGroup>
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<h:outputText id="recommendationRemarksViewId" value="#{employeeSurveillanceReport.surveillanceReport.recommendationRemarks}" rendered="#{employeeSurveillanceReport.pageMode != 3}" />
+																	<h:inputTextarea id="recommendationRemarksEditId" styleClass="form-control" style="width:90%" value="#{employeeSurveillanceReport.surveillanceReport.recommendationRemarks}" rendered="#{employeeSurveillanceReport.pageMode == 3}" />
+																</td>
+															</tr>
+														</table>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+							</p:tab>
+						</p:accordionPanel>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td width="100%">
+						<code:prevTasks rendered="#{not empty employeeSurveillanceReport.currentTask}" value="#{employeeSurveillanceReport.prevTasks}" />
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:commandButton id="printBtnId" styleClass="btn btn-success" action="#{employeeSurveillanceReport.print()}" value="&#xf02f; #{msgs.label_print}" rendered="#{employeeSurveillanceReport.showEvaluation and employeeSurveillanceReport.pageMode != 2}" />
+
+									<h:commandButton id="saveReportBtnId" styleClass="btn btn-success" action="#{employeeSurveillanceReport.saveReport()}" value="#{msgs.label_save}" onclick="return confirm('#{msgs.q_save}');" rendered="#{employeeSurveillanceReport.pageMode == 2}">
+										<f:ajax execute="empSurReportFormId:surReportAccordionPanelId:surveillanceReportInfoTabId empSurReportFormId:surReportAccordionPanelId:evaluationTabId" render="empSurReportFormId:notifyMessagesId" />
+									</h:commandButton>
+
+									<h:commandButton id="saveAndSendReportBtnId" styleClass="btn btn-success" action="#{employeeSurveillanceReport.saveAndSendReport()}" value="#{msgs.label_saveAndSend}" onclick="return confirm('#{msgs.q_confirm}');" rendered="#{employeeSurveillanceReport.pageMode == 2}">
+										<f:ajax execute="empSurReportFormId:surReportAccordionPanelId:surveillanceReportInfoTabId empSurReportFormId:surReportAccordionPanelId:evaluationTabId" render="empSurReportFormId:notifyMessagesId" />
+									</h:commandButton>
+
+									<h:commandButton id="saveReportRecommendationBtnId" styleClass="btn btn-success" action="#{employeeSurveillanceReport.saveAndSendReportRecommendation()}" value="#{msgs.label_saveAndSend}" onclick="return confirm('#{msgs.q_confirm}');"
+										rendered="#{employeeSurveillanceReport.pageMode == 3 and employeeSurveillanceReport.role != employeeSurveillanceReport.regionSecurityManager and employeeSurveillanceReport.role != employeeSurveillanceReport.regionDirector and employeeSurveillanceReport.role != employeeSurveillanceReport.generalDirector}">
+										<f:ajax execute="empSurReportFormId:surReportAccordionPanelId:decisionsTabId" render="empSurReportFormId:notifyMessagesId" />
+									</h:commandButton>
+
+									<h:commandButton id="approveSecurityId" styleClass="btn btn-success" action="#{employeeSurveillanceReport.approveReportSecurityManager()}" value="#{msgs.label_approve}" onclick="return confirm('#{msgs.q_approve}');" rendered="#{employeeSurveillanceReport.pageMode == 3 and (employeeSurveillanceReport.role == employeeSurveillanceReport.regionSecurityManager)}">
+										<f:ajax execute="empSurReportFormId:surReportAccordionPanelId:decisionsTabId" render="empSurReportFormId:notifyMessagesId" />
+									</h:commandButton>
+
+									<h:commandButton id="doNotifyBtnId" styleClass="btn btn-success" action="#{employeeSurveillanceReport.doNotify()}" value="#{msgs.label_notified}" rendered="#{employeeSurveillanceReport.pageMode == 1 and employeeSurveillanceReport.role == 'Notification'}">
+										<f:ajax render="empSurReportFormId:notifyMessagesId" />
+									</h:commandButton>
+
+									<h:commandButton id="approveBtnId" styleClass="btn btn-success" action="#{employeeSurveillanceReport.approveReportRecommendation()}" value="#{msgs.label_approve}" onclick="return confirm('#{msgs.q_approve}');" rendered="#{employeeSurveillanceReport.pageMode == 3 and (employeeSurveillanceReport.role == employeeSurveillanceReport.regionDirector or employeeSurveillanceReport.role == employeeSurveillanceReport.generalDirector)}">
+										<f:ajax execute="empSurReportFormId:surReportAccordionPanelId:decisionsTabId" render="empSurReportFormId:notifyMessagesId" />
+									</h:commandButton>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+			</table>
+
+			<h:panelGroup id="downloadDlgPanelId">
+				<p:dialog dir="#{msgs.dir}" header="#{msgs.label_archiveDocumentsShow}" id="dlgId" widgetVar="dlg" modal="true" height="180px;" width="720px">
+					<h:panelGroup id="internalDlgPanelId" rendered="#{employeeSurveillanceReport.attachmentList.size() > 1}">
+						<table width="100%">
+							<tr>
+								<td>
+									<p:dataTable tableStyle="table-layout:auto" reflow="true" liveResize="true" paginatorPosition="bottom" id="fileListIds" paginator="true" style="width:100%" rowIndexVar="index" rows="10" var="row" value="#{employeeSurveillanceReport.attachmentList}" widgetVar="table" rowHover="true">
+										<p:column styleClass='centerText'>
+											<f:facet name="header">#</f:facet>
+		                                    #{index + 1}
+	                                   	</p:column>
+										<p:column styleClass='centerText'>
+											<f:facet name="header">
+													#{msgs.label_fileName}
+												</f:facet>
+											<h:outputText value="#{row.fileName}" />
+										</p:column>
+										<p:column styleClass='centerText'>
+											<f:facet name="header">
+												#{msgs.label_download}
+											</f:facet>
+											<h:commandButton styleClass="btn btn-success" value="&#xf019; #{msgs.label_download}">
+												<f:ajax render="empSurReportFormId:internalDlgPanelId empSurReportFormId:surReportAccordionPanelId:downloadedFileParamId" listener="#{employeeSurveillanceReport.getDownloadParam(row.attachmentId)}" onevent="function(e){if(e.status == 'success') return downloadFile();}" />
+											</h:commandButton>
+										</p:column>
+										<p:column styleClass='centerText' rendered="#{employeeSurveillanceReport.deletePrivilage}">
+											<f:facet name="header">
+												#{msgs.label_delete}
+											</f:facet>
+											<h:commandButton styleClass="btn btn-trans-icon" value="&#xf00d;">
+												<f:ajax render="empSurReportFormId:internalDlgPanelId empSurReportFormId:downloadedFileParamId" listener="#{employeeSurveillanceReport.deleteAttachment(row)}" />
+											</h:commandButton>
+										</p:column>
+									</p:dataTable>
+								</td>
+							</tr>
+						</table>
+					</h:panelGroup>
+				</p:dialog>
+			</h:panelGroup>
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>

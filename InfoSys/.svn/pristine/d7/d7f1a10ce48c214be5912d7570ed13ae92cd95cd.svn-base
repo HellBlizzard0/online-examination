@@ -1,0 +1,303 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:util="http://java.sun.com/jsf/composite/util">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+	<script type="text/javascript">
+	function calculateInitialBalance(errorMsg1, errorMsg2){
+		currentYearBalance =  document.getElementById('approvedFinanceYearFormId:currentYearBalanceId').value;
+		currentYearBalance = currentYearBalance.replace(/,/g, '');
+		if(currentYearBalance == "" || currentYearBalance == null || !validateFloat(currentYearBalance, errorMsg1, errorMsg2)){
+			currentYearBalance = 0;
+ 		}
+		lastYearBalance = document.getElementById('approvedFinanceYearFormId:lastYearBalanceId').value;
+		lastYearBalance = lastYearBalance.replace(/,/g, '');
+	    document.getElementById('approvedFinanceYearFormId:initialBalanceId').value = parseFloat(lastYearBalance) + parseFloat(currentYearBalance);
+	    document.getElementById('approvedFinanceYearFormId:initialHiddenBalanceId').value = parseFloat(lastYearBalance) + parseFloat(currentYearBalance);
+     	return true;
+    }
+    
+	function calculateTotal(mode, errorMsg1, errorMsg2){
+     	if(mode == 1){
+     		total = document.getElementById('approvedFinanceYearFormId:monthlyRewardInitialBalanceId').value;
+     		total = total.replace(/,/g, '');
+     		if(total == "" || total == null || !validateFloat(total, errorMsg1, errorMsg2)){
+     			total = 0;
+     		}
+    	    spent = document.getElementById('approvedFinanceYearFormId:monthlyRewardTotalSpentId').value;
+    	    spent = spent.replace(/,/g, '');
+     		document.getElementById('approvedFinanceYearFormId:monthlyRewardTotalId').value = parseFloat(total) - parseFloat(spent);
+     		document.getElementById('approvedFinanceYearFormId:monthlyHiddenRewardTotalId').value = parseFloat(total) - parseFloat(spent);
+     	}else if(mode == 2){
+     		total = document.getElementById('approvedFinanceYearFormId:regionsSupportInitialBalanceId').value;
+     		total = total.replace(/,/g, '');
+     		if(total == "" || total == null || !validateFloat(total, errorMsg1, errorMsg2)){
+     			total = 0;
+         	}
+    	    spent = document.getElementById('approvedFinanceYearFormId:regionSupportTotalSpentId').value;
+    	    spent = spent.replace(/,/g, '');
+     		document.getElementById('approvedFinanceYearFormId:regionsSupportTotalId').value = parseFloat(total) - parseFloat(spent);
+     		document.getElementById('approvedFinanceYearFormId:regionsHiddenSupportTotalId').value = parseFloat(total) - parseFloat(spent);
+        }
+     	return true;
+	}
+	
+	function validateFloat(value, errorMsg1, errorMsg2){
+		/* <![CDATA[ */
+		if(parseFloat(value) != value){
+			showErrorMessage(errorMsg1);
+ 			return false;
+     	}else if(parseFloat(value) < 0){
+     		showErrorMessage(errorMsg2);
+     		return false;
+	    }
+		/* ]]> */
+	    return true;
+	}
+	
+	function confirmAndValidate(q_confirm, errorMsg1, errorMsg2, errorMsg3){
+		if(confirm(q_confirm)){
+			currentYearBalance = document.getElementById('approvedFinanceYearFormId:currentYearBalanceId').value;
+			currentYearBalance = currentYearBalance.replace(/,/g, '');
+			if(!validateFloat(currentYearBalance, errorMsg1, errorMsg2)){return false;}
+			monthlyRewardInitial = document.getElementById('approvedFinanceYearFormId:monthlyRewardInitialBalanceId').value;
+			monthlyRewardInitial = monthlyRewardInitial.replace(/,/g, '');
+			if(!validateFloat(monthlyRewardInitial, errorMsg1, errorMsg2)){return false;}
+			regionSupportInitial = document.getElementById('approvedFinanceYearFormId:regionsSupportInitialBalanceId').value;
+			regionSupportInitial = regionSupportInitial.replace(/,/g, '');
+			if(!validateFloat(regionSupportInitial, errorMsg1, errorMsg2)){return false;}
+			total = document.getElementById('approvedFinanceYearFormId:initialBalanceId').value;
+			total = total.replace(/,/g, '');
+			if(parseFloat(total) != parseFloat(regionSupportInitial) + parseFloat(monthlyRewardInitial)){
+				showErrorMessage(errorMsg3);
+	     		return false;
+			}
+			return true;
+		}
+		return false;
+	}
+	</script>
+</h:head>
+<h:body styleClass="screenBg">
+	<h:form id="approvedFinanceYearFormId" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/Template.xhtml">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+
+
+				<tr>
+					<td class="screenTitle">#{msgs.title_approvedFinanceYear}</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.label_financialYear}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<th width="15%">#{msgs.label_financialYear}</th>
+								<td width="25%">
+									<h:inputText disabled="true" style="width:90%" styleClass="form-control" id="financialYearId" value="#{approvedFinanceYear.yearApproval.finYear}" />
+								</td>
+								
+								<td width="50%"></td>
+							</tr>
+
+							<tr>
+								<th width="15%">#{msgs.label_lastYearBalance}</th>
+								<td width="25%">
+									<h:inputText disabled="true" style="width:90%" styleClass="form-control" id="lastYearBalanceId" value="#{approvedFinanceYear.lastYearBalance}">
+										<f:converter converterId="com.code.ui.converters.CSNumberConverter" />
+									</h:inputText>
+								</td>
+								<td width="10%">#{msgs.label_riyal}</td>
+							</tr>
+
+							<tr>
+								<th width="15%">#{msgs.label_currentYearBalance}</th>
+								<td width="25%">
+									<h:inputText rendered="#{approvedFinanceYear.pageMode == 2}" style="width:90%" styleClass="form-control" id="currentYearBalanceId" value="#{approvedFinanceYear.yearApproval.currentYearBalance}" onkeyup="calculateInitialBalance('#{msgs.error_supportNumbersOnly}', '#{msgs.error_supportMoreThanZero}');" onkeypress="return checkFloat(event)" onblur="return isDigitFloat(this)" maxlength="32" >
+										<f:converter converterId="com.code.ui.converters.CSNumberConverter" />
+										<f:ajax event="blur" render="@this approvedFinanceYearFormId:initialBalanceId" execute="@this approvedFinanceYearFormId:initialHiddenBalanceId" />
+									</h:inputText>
+									<h:inputText rendered="#{approvedFinanceYear.pageMode != 2}" disabled="true" style="width:90%" styleClass="form-control" id="currentYearBalanceViewId" value="#{approvedFinanceYear.yearApproval.currentYearBalance}">
+										<f:converter converterId="com.code.ui.converters.CSNumberConverter" />
+									</h:inputText>
+								</td>
+								<td width="10%">#{msgs.label_riyal}</td>
+							</tr>
+
+							<tr>
+								<th width="15%">#{msgs.label_initialBalance}</th>
+								<td width="25%">
+									<h:inputText style="width:90%" disabled="true" styleClass="form-control" id="initialBalanceId" value="#{approvedFinanceYear.initialBalance}">
+										<f:converter converterId="com.code.ui.converters.CSNumberConverter" />
+									</h:inputText>
+									<h:inputHidden id="initialHiddenBalanceId" value="#{approvedFinanceYear.initialBalance}" />
+								</td>
+								<td width="10%">#{msgs.label_riyal}</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.label_directorateAccounts}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<p:fieldset toggleable="true" id="monthlyRewardPanelId" legend="#{msgs.label_monthlyRewardAccount}" collapsed="true">
+
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<th width="15%">#{msgs.label_totalSpent}</th>
+									<td width="25%">
+										<h:inputText style="width:90%" disabled="true" styleClass="form-control" id="monthlyRewardTotalSpentId" value="#{approvedFinanceYear.monthlyRewardTotalSpent}">
+											<f:converter converterId="com.code.ui.converters.CSNumberConverter" />
+										</h:inputText>
+									</td>
+									<td width="10%">#{msgs.label_riyal}</td>
+									<td width="50%"></td>
+								</tr>
+
+								<tr>
+									<th width="15%">#{msgs.label_amount}</th>
+									<td width="25%">
+										<h:inputText style="width:90%" rendered="#{approvedFinanceYear.pageMode == 2}" styleClass="form-control" id="monthlyRewardInitialBalanceId" value="#{approvedFinanceYear.yearApproval.rewardInitialBalance}" onkeyup="calculateTotal(1, '#{msgs.error_supportNumbersOnly}', '#{msgs.error_supportNotLessThanZero}');" onkeypress="return checkFloat(event)" onblur="return isDigitFloat(this)" maxlength="32" >
+											<f:converter converterId="com.code.ui.converters.CSNumberConverter" />
+											<f:ajax event="blur" render="@this approvedFinanceYearFormId:monthlyRewardTotalId" execute="@this approvedFinanceYearFormId:monthlyHiddenRewardTotalId" />
+										</h:inputText>
+										<h:inputText style="width:90%" disabled="true" rendered="#{approvedFinanceYear.pageMode != 2}" styleClass="form-control" id="monthlyRewardInitialBalanceViewId" value="#{approvedFinanceYear.yearApproval.rewardInitialBalance}">
+											<f:converter converterId="com.code.ui.converters.CSNumberConverter" />
+										</h:inputText>
+									</td>
+									<td width="10%">#{msgs.label_riyal}</td>
+								</tr>
+
+								<tr>
+									<th width="15%">#{msgs.label_balance}</th>
+									<td width="25%">
+										<h:inputText style="width:90%" disabled="true" styleClass="form-control" id="monthlyRewardTotalId" value="#{approvedFinanceYear.monthlyRewardTotal}">
+											<f:converter converterId="com.code.ui.converters.CSNumberConverter" />
+										</h:inputText>
+										<h:inputHidden id="monthlyHiddenRewardTotalId" value="#{approvedFinanceYear.monthlyRewardTotal}" />
+									</td>
+									<td width="10%">#{msgs.label_riyal}</td>
+								</tr>
+							</table>
+						</p:fieldset>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<p:fieldset toggleable="true" id="regionsSupportPanelId" legend="#{msgs.label_regionsSupportAccount}" collapsed="true">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<th width="15%">#{msgs.label_totalSpent}</th>
+									<td width="25%">
+										<h:inputText style="width:90%" disabled="true" styleClass="form-control" id="regionSupportTotalSpentId" value="#{approvedFinanceYear.regionsSupportAmount}">
+											<f:converter converterId="com.code.ui.converters.CSNumberConverter" />
+										</h:inputText>
+									</td>
+									<td width="10%">#{msgs.label_riyal}</td>
+									<td width="50%"></td>
+								</tr>
+
+								<tr>
+									<th width="15%">#{msgs.label_amount}</th>
+									<td width="25%">
+										<h:inputText style="width:90%" rendered="#{approvedFinanceYear.pageMode == 2}" styleClass="form-control" id="regionsSupportInitialBalanceId" value="#{approvedFinanceYear.yearApproval.regionsInitialBalance}" onkeyup="calculateTotal(2, '#{msgs.error_supportNumbersOnly}', '#{msgs.error_supportNotLessThanZero}');" onkeypress="return checkFloat(event)" onblur="return isDigitFloat(this)" maxlength="32">
+											<f:converter converterId="com.code.ui.converters.CSNumberConverter" />
+											<f:ajax event="blur" render="@this approvedFinanceYearFormId:regionsSupportTotalId" execute="@this approvedFinanceYearFormId:regionsHiddenSupportTotalId" />
+										</h:inputText>
+										<h:inputText style="width:90%" disabled="true" rendered="#{approvedFinanceYear.pageMode != 2}" styleClass="form-control" id="regionsSupportInitialBalanceViewId" value="#{approvedFinanceYear.yearApproval.regionsInitialBalance}">
+											<f:converter converterId="com.code.ui.converters.CSNumberConverter" />
+										</h:inputText>
+									</td>
+									<td width="10%">#{msgs.label_riyal}</td>
+								</tr>
+
+								<tr>
+									<th width="15%">#{msgs.label_balance}</th>
+									<td width="25%">
+										<h:inputText style="width:90%" disabled="true" styleClass="form-control" id="regionsSupportTotalId" value="#{approvedFinanceYear.regionsSupportTotal}">
+											<f:converter converterId="com.code.ui.converters.CSNumberConverter" />
+										</h:inputText>
+										<h:inputHidden id="regionsHiddenSupportTotalId" value="#{approvedFinanceYear.regionsSupportTotal}" />
+									</td>
+									<td width="10%">#{msgs.label_riyal}</td>
+								</tr>
+							</table>
+						</p:fieldset>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:commandButton rendered="#{approvedFinanceYear.pageMode == 2}" id="saveBtnId" styleClass="btn btn-success" action="#{approvedFinanceYear.save()}" value="&#xf0c7; #{msgs.label_save}" onclick="return confirmAndValidate('#{msgs.q_save}', '#{msgs.error_supportNumbersOnly}', '#{msgs.error_supportMoreThanZero}','#{msgs.error_balanceNotDivided}');" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+			</table>
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>

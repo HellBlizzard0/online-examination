@@ -1,0 +1,375 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:util="http://java.sun.com/jsf/composite/util" xmlns:code="http://java.sun.com/jsf/composite/code">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+	<script type="text/javascript">
+	var m;
+	function getFollowUp(contextPath){
+		openFollowUpMiniSearch(contextPath, null);
+		m=1;
+		return false;
+	}
+	
+	function showResultsHistory(contextPath , followUpId){
+		followUpId = document.getElementById('mainFormId:followUpIdId').value;
+		if(followUpId == null || followUpId=='' || followUpId == -1){
+	     	showErrorMessage('#{msgs.error_mandatoryFollowUpId}');
+			return false;
+		}
+		  openFollowUpResultsMiniSearch(contextPath,followUpId);
+		  return false;
+	}
+	
+	function HandlePopupResult(ret) {
+	   	unMaskScreen();
+		if(ret!=null){ 
+			if(m == 1){
+	         	document.getElementById('mainFormId:followUpIdId').value=ret[0];
+	         	document.getElementById('mainFormId:followUpResultUpId').value=ret[0];
+	         	document.getElementById('mainFormId:followUpCodeId').value=ret[1];
+	         	document.getElementById('mainFormId:updateFollowUpDataId').click();
+	         	
+	         	return true;
+			}
+			return false;
+			}}
+			
+			function uploadFile() {
+			fileArchivingParam = document.getElementById('mainFormId:fileArchivingParamId').value;
+			openUploadFile('#{followUpResultRequest.boolServerUploadPath}', fileArchivingParam);
+			return false;
+		}
+
+		function releaseMask(){
+    		unMaskScreen();
+       	}
+		
+		function validateTime(t){
+		    var time = document.getElementById("mainFormId:resultTimeId");
+			var min = time.value.substring(0, 2);
+			var sec = time.value.substring(3, 5);
+			/* <![CDATA[ */
+			if(min != parseInt(min) || sec != parseInt(sec) || parseInt(min) > 23 || parseInt(sec) > 59){
+				time.value = "";
+				return false;
+			}
+			 /* ]]> */
+			return true;
+		}
+		
+		function validateData(msg){
+			var details = document.getElementById("mainFormId:resultDetailsId");
+			if($(details).val().length>500){
+				showErrorMessage('#{msgs.error_detailsExeeded}');
+	            return false;
+	        }
+			if($(details).val().trim()==0){
+				showErrorMessage('#{msgs.error_detailsEmpty}');
+	            return false;
+	        }
+			var result = document.getElementById("mainFormId:resultTypeId");
+			if($(details).val()==""){
+				showErrorMessage('#{msgs.error_transTypeMandatory}');
+	            return false;
+	        }
+		
+	        return confirm(msg);
+		}
+       	
+			</script>
+</h:head>
+<h:body styleClass="screenBg">
+	<h:form id="mainFormId" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/Template.xhtml">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+
+				<tr>
+					<td class="screenTitle">#{msgs.title_followUpResultRequest}</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="followUpContainerId">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0" style="width: 50%;">
+								<tr>
+									<th>
+										<h:outputText value="#{msgs.label_followUp}" />
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td>
+										<h:panelGroup id="codePanelId">
+											<h:inputText disabled="true" id="followUpCodeViewId" value="#{followUpResultRequest.followUpData.code}" style="width:88%;" />
+
+											<h:inputHidden id="followUpResultUpId" value="#{followUpResultRequest.followUpResultData.followUpId}" />
+											<h:inputHidden id="followUpIdId" value="#{followUpResultRequest.followUpData.id}" />
+											<h:inputHidden id="followUpCodeId" value="#{followUpResultRequest.followUpData.code}" />
+										</h:panelGroup>
+										<h:commandButton value="&#xf03a;" styleClass="btn btn-trans-icon" onclick="return getFollowUp('#{request.contextPath}');" rendered="#{followUpResultRequest.pageMode == 1 and followUpResultRequest.canEditFollow}">
+										</h:commandButton>
+										<h:commandButton id="updateFollowUpDataId" style="display:none;" actionListener="#{followUpResultRequest.selectFollowUp()}">
+											<f:ajax execute="mainFormId:followUpIdId" render="mainFormId:codePanelId mainFormId:followUpInformationPanelId mainFormId:followUpResultInformationTitleId mainFormId:resultInformationPanelId mainFormId:actionSectionId">
+											</f:ajax>
+										</h:commandButton>
+									</td>
+
+
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+				<tr>
+					<td>
+						<h:panelGroup id="followUpInformationPanelId">
+							<p:accordionPanel activeIndex="-1" rendered="#{followUpResultRequest.renderInformation}">
+								<p:tab title="#{msgs.label_currentFollowUpData}">
+
+									<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+										<tr>
+											<td>
+												<h:panelGroup id="currentFollowUpId">
+													<table width="100%">
+														<tr>
+															<th width="15%">#{msgs.label_followUpCode}</th>
+															<td width="20%">
+																<h:inputText id="followUpCodeId_" styleClass="form-control" value="#{followUpResultRequest.followUpData.code}" disabled="true" />
+															</td>
+
+															<th width="15%;">#{msgs.label_followUpDataSource}</th>
+															<td width="20%">
+																<h:inputText id="sourceDataId" styleClass="form-control" value="#{followUpResultRequest.followUpData.dataSourceDesc}" disabled="true" />
+															</td>
+
+														</tr>
+														<tr>
+															<th width="15%">#{msgs.label_followUpStartDate}</th>
+															<td width="20%">
+																<util:advancedHijriDate id="followUpStartDateId" disable="true" value="#{followUpResultRequest.followUpData.followUpStartDate}" />
+															</td>
+
+															<th width="15%" rowspan="2">#{msgs.label_followUpCoordinates}</th>
+															<td width="20%" rowspan="2">
+																<code:coordinates disabled="true" latitude="#{followUpResultRequest.followUpData.coordinateLatitude}" longitude="#{followUpResultRequest.followUpData.coordinateLongitude}" />
+															</td>
+
+														</tr>
+														<tr>
+															<th width="15%">#{msgs.label_followUpEndDate}</th>
+															<td width="20%">
+																<util:advancedHijriDate id="followUpEndDateId" disable="true" value="#{followUpResultRequest.followUpData.followUpEndDate}" />
+															</td>
+														</tr>
+														<tr>
+															<th width="15%">#{msgs.label_caseType}</th>
+															<td width="20%">
+																<h:inputText id="caseTypeId" disabled="true" styleClass="form-control" value="#{followUpResultRequest.followUpData.casesTypeDesc}" disable="true" />
+															</td>
+
+															<th width="15%">#{msgs.label_direct}</th>
+															<td width="20%">
+																<h:selectBooleanCheckbox value="#{followUpResultRequest.followUpData.directFlag}" disabled="true" />
+															</td>
+
+														</tr>
+														<tr>
+															<th width="15%">#{msgs.label_ghostType}</th>
+															<td width="20%">
+																<h:inputText id="ghostTypeId" styleClass="form-control" value="#{followUpResultRequest.followUpData.ghostType == 1 ? msgs.label_employeeTitle : msgs.label_nonEmpTitle}" disabled="true" />
+															</td>
+
+															<th width="15%">#{msgs.label_equipmentTypeId}</th>
+															<td width="20%">
+																<h:inputText id="equipmentId" styleClass="form-control" value="#{followUpResultRequest.followUpData.equipmentTypeDesc}" disabled="true" />
+															</td>
+
+														</tr>
+														<tr>
+															<th width="15%">#{msgs.label_identity}</th>
+															<td width="20%">
+																<h:inputText id="employeeSocialIdId" styleClass="form-control" rendered="#{followUpResultRequest.followUpData.ghostType == followUpResultRequest.employeeType}" value="#{followUpResultRequest.followUpData.employeeSocialId}" disabled="true" />
+																<h:inputText id="nonEmployeeSocialIdId" styleClass="form-control" rendered="#{followUpResultRequest.followUpData.ghostType == followUpResultRequest.nonEmployeeType}" value="#{followUpResultRequest.followUpData.nonEmployeeSocialId}" disabled="true" />
+															</td>
+
+															<th width="15%;"></th>
+															<td width="20%"></td>
+
+														</tr>
+
+														<tr>
+															<th width="15%">#{msgs.label_ghostAliasName_}</th>
+															<td width="20%">
+																<h:inputText id="aliasNameId" styleClass="form-control" value="#{ followUpResultRequest.followUpData.aliasName }" disabled="true" />
+															</td>
+
+															<th width="15%;">#{msgs.label_name}</th>
+															<td width="20%">
+																<h:inputText id="employeeNameId" styleClass="form-control" rendered="#{followUpResultRequest.followUpData.ghostType == followUpResultRequest.employeeType}" value="#{followUpResultRequest.followUpData.employeeName}" disabled="true" />
+																<h:inputText id="nonEmployeeNameId" styleClass="form-control" rendered="#{followUpResultRequest.followUpData.ghostType == followUpResultRequest.nonEmployeeType}" value="#{followUpResultRequest.followUpData.nonEmployeeName}" disabled="true" />
+															</td>
+
+														</tr>
+														<tr>
+															<th width="15%">#{msgs.label_region}</th>
+															<td width="20%">
+																<h:inputText id="regionId" styleClass="form-control" value="#{ followUpResultRequest.followUpData.regionName}" disabled="true" />
+															</td>
+
+															<th width="15%;">
+																<h:outputText value="#{msgs.label_sector}" rendered="#{followUpResultRequest.followUpData.sectorId != null}" />
+															</th>
+															<td width="20%">
+																<h:inputText id="sectorId" styleClass="form-control" value="#{followUpResultRequest.followUpData.sectorName}" rendered="#{followUpResultRequest.followUpData.sectorId != null}" disabled="true" />
+															</td>
+
+														</tr>
+													</table>
+												</h:panelGroup>
+											</td>
+										</tr>
+									</table>
+								</p:tab>
+							</p:accordionPanel>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<h:panelGroup id="followUpResultInformationTitleId">
+							<h:panelGroup rendered="#{followUpResultRequest.renderInformation}">
+								<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+									<tr>
+										<td>
+											<h:outputText value="#{msgs.label_followUpResultData}" />
+										</td>
+									</tr>
+								</table>
+							</h:panelGroup>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="resultInformationPanelId">
+							<h:panelGroup rendered="#{followUpResultRequest.renderInformation}">
+								<table class="sectionContent" width="100%" border="0" cellpadding="0" cellspacing="0">
+									<tr>
+										<th width="10%">
+											<h:outputText value="#{msgs.label_followUpResultType}" />
+											<h:outputText value="*" style="color:red;" />
+										</th>
+										<td width="40%">
+											<h:selectOneMenu id="resultTypeId" styleClass="form-control" value="#{followUpResultRequest.followUpResultData.domainIdFollowResults}" disabled="#{followUpResultRequest.pageMode != null and followUpResultRequest.followUpResultData.id != null}">
+												<f:selectItem itemValue="" />
+												<f:selectItems value="#{followUpResultRequest.followUpResultTypesList}" var="resultType" itemLabel="#{resultType.description}" itemValue="#{resultType.id}" />
+											</h:selectOneMenu>
+										</td>
+										<th width="10%">
+											<h:outputText value="#{msgs.label_followUpResultDate}" />
+										</th>
+										<td width="40%">
+											<util:advancedHijriDate value="#{followUpResultRequest.followUpResultData.resultDate}" disable="#{followUpResultRequest.pageMode != null and followUpResultRequest.pageMode == 2}" />
+										</td>
+									</tr>
+									<tr>
+										<th width="10%">
+											<h:outputText value="#{msgs.label_followUpResultRegion}" />
+										</th>
+										<td width="40%">
+											<h:selectOneMenu styleClass="form-control" value="#{followUpResultRequest.followUpResultData.domainIdResultRegion}" disabled="#{followUpResultRequest.pageMode != null and followUpResultRequest.pageMode == 2}">
+												<f:selectItem itemValue="" />
+												<f:selectItems value="#{followUpResultRequest.followUpResultRegionList}" var="resultRegion" itemLabel="#{resultRegion.regionName}" itemValue="#{resultRegion.id}" />
+											</h:selectOneMenu>
+										</td>
+										<th width="10%">
+											<h:outputText value="#{msgs.label_followUpResultTime}" />
+										</th>
+										<td width="40%">
+											<p:inputMask id="resultTimeId" style=" direction: ltr; text-align: right; " value="#{followUpResultRequest.followUpResultData.resultTime}" mask="99:99" onblur="return validateTime();" disabled="#{followUpResultRequest.pageMode != null and followUpResultRequest.pageMode == 2}" />
+										</td>
+									</tr>
+									<tr>
+										<th width="10%">
+											<h:outputText value="#{msgs.label_followUpResultTrans}" />
+										</th>
+										<td width="40%">
+											<h:selectOneMenu styleClass="form-control" value="#{followUpResultRequest.followUpResultData.domainIdTransType}" disabled="#{followUpResultRequest.pageMode != null and followUpResultRequest.pageMode == 2}">
+												<f:selectItem itemValue="" />
+												<f:selectItems value="#{followUpResultRequest.followUpTransTypesList}" var="transType" itemLabel="#{transType.description}" itemValue="#{transType.id}" />
+											</h:selectOneMenu>
+										</td>
+										<td width="50%" colspan="2" />
+									</tr>
+									<tr>
+										<th width="10%">
+											<h:outputText value="#{msgs.label_followUpResultDetails}" />
+											<h:outputText value="*" style="color:red;" />
+										</th>
+										<td width="90%" colspan="3">
+											<h:inputTextarea id="resultDetailsId" rows="10" cols="80" value="#{followUpResultRequest.followUpResultData.resultDetails}" disabled="#{followUpResultRequest.pageMode != null and followUpResultRequest.pageMode == 2}" />
+										</td>
+									</tr>
+								</table>
+							</h:panelGroup>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+				<tr>
+					<td>
+						<h:panelGroup id="actionSectionId">
+							<h:panelGroup rendered="#{followUpResultRequest.renderInformation}">
+								<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+									<tr>
+										<td style="float: right; width: 10%;">
+											<h:commandButton styleClass="btn btn-warning" value="#{msgs.label_followUpResultHistory}" onclick="return showResultsHistory('#{request.contextPath}' , #{followUpResultRequest.followUpResultData.followUpId});" />
+										</td>
+										<td width="50%">
+											<h:commandButton styleClass="btn btn-success" id="archiveBtnUploadId" value="&#xf0c6; #{msgs.label_uploadAttachments}" rendered="#{followUpResultRequest.pageMode == null or followUpResultRequest.pageMode == 1}">
+												<f:ajax listener="#{followUpResultRequest.getUploadParam(followUpResultRequest.followUpResultData.id)}" render="mainFormId:fileArchivingParamId" onevent="function(e){if(e.status == 'success') return uploadFile();}" />
+											</h:commandButton>
+											<h:commandButton id="saveBtnId" class="btn btn-success" value="#{msgs.label_save}" action="#{followUpResultRequest.saveResult}" onclick="return validateData('#{msgs.q_confirm}');" rendered="#{followUpResultRequest.pageMode == null or followUpResultRequest.pageMode == 1}">
+											</h:commandButton>
+											<h:inputHidden id="fileArchivingParamId" value="#{followUpResultRequest.fileArchivingParam}" />
+										</td>
+									</tr>
+								</table>
+							</h:panelGroup>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+			</table>
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>

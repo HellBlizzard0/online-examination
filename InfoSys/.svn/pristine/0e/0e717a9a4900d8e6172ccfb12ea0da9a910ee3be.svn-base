@@ -1,0 +1,341 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:util="http://java.sun.com/jsf/composite/util" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+	<script>
+		function getEmployee(contextPath, mode){
+			openEmpsMiniSearch(contextPath, mode);
+			return false;
+		}
+
+		function releaseMask(){
+			unMaskScreen();
+	   	}
+
+		function handleDownloadFiles(e){
+    		openDownloadPopupFlagId = document.getElementById('labCheckSearchFormId:openDownloadPopupFlagId').value;
+    		openDownloadDialogueFlagId = document.getElementById('labCheckSearchFormId:openDownloadDialogueFlagId').value;
+    		
+    		if(e.status == 'success'){
+    			if(openDownloadPopupFlagId == 'true'){
+    				downloadFile();
+        		}else if (openDownloadDialogueFlagId == 'true'){
+        			PF('dlg').show();
+            	}
+    		}
+        }
+
+    	function uploadFile(){
+    		fileArchivingParam = document.getElementById('labCheckSearchFormId:fileArchivingParamId').value;
+    		openUploadFile('#{randomLabCheckSearch.boolServerUploadPath}', fileArchivingParam);
+    		return false;
+        }
+
+    	function downloadFile(){
+    		downloadedFileParamId = document.getElementById('labCheckSearchFormId:downloadedFileParamId').value;
+    		openDownloadFile('#{randomLabCheckSearch.boolServerDownloadPath}',downloadedFileParamId);
+    		return false;
+        }
+	   	
+		
+		function HandlePopupResult(ret) { 
+    		unMaskScreen();
+    		if(ret!=null){
+
+				document.getElementById('labCheckSearchFormId:selectedEmployeeId').value=ret[0];
+				document.getElementById('labCheckSearchFormId:selectedEmployeeNameId').value=ret[1];
+				document.getElementById('labCheckSearchFormId:selectedEmployeesSocialNumberId').value=ret[2];
+				document.getElementById('labCheckSearchFormId:selectedEmployeeRankId').value=ret[4];
+	   	        document.getElementById('labCheckSearchFormId:insertNewEmployeeRecord').click();
+		   	    return true;
+	   		}
+	   		return false;
+    	}
+    	
+		window.onkeypress = function(e) {
+			  var keyCode = window.event.keyCode || e.keyCode || e.which;
+		      if (keyCode == '13') {
+		    	  document.getElementById('labCheckSearchFormId:searchBtnId').click();
+		    	  return false;
+		      }
+		  };
+    	
+	</script>
+</h:head>
+<h:body styleClass="screenBg">
+	<h:form id="labCheckSearchFormId" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/Template.xhtml">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td class="screenTitle">
+						<h:outputText value="#{msgs.title_randomLabChecksSearch}" />
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.label_searchData}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="searchContainerId">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<th width="15%">#{msgs.label_orderNo}</th>
+									<td width="20%">
+										<h:inputText id="orderNoSearchId" styleClass="form-control inputnumber" value="#{randomLabCheckSearch.orderNumber}" maxlength="20" />
+									</td>
+									<td width="65%" colspan="6"></td>
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td width="100%">
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:commandButton styleClass="btn btn-default" id="resetBtnId" value="&#xf021; #{msgs.label_reset}" action="#{randomLabCheckSearch.resetSearch()}">
+										<f:ajax render="labCheckSearchFormId:searchContainerId" />
+									</h:commandButton>
+
+									<h:commandButton styleClass="btn btn-default" id="searchBtnId" value="&#xf002; #{msgs.label_search}" action="#{randomLabCheckSearch.search()}">
+										<f:ajax render="labCheckSearchFormId:labCheckSearchResultPaneId labCheckSearchFormId:labCheckEmployeesSearchResultPaneId" execute="labCheckSearchFormId:searchContainerId" />
+									</h:commandButton>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.title_searchResults}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td align="center" width="100%">
+						<h:panelGroup id="labCheckSearchResultPaneId">
+							<p:dataTable reflow="true" tableStyle="table-layout: auto" paginator="true" id="labCheckListDataTableId" rows="10" rowIndexVar="index" var="row" value="#{randomLabCheckSearch.randomLabChecksList}" rowHover="true">
+								<p:column styleClass='centerText'>
+									<f:facet name="header">#</f:facet>
+	                                #{index + 1}
+	                            </p:column>
+								<p:column styleClass='centerText'>
+									<f:facet name="header"> #{msgs.label_labCheckOrderNumber} </f:facet>
+									<h:outputText value="#{row.orderNumber}" />
+								</p:column>
+								<p:column styleClass='centerText'>
+									<f:facet name="header"> #{msgs.label_orderDate} </f:facet>
+									<h:outputText value="#{row.orderDateString}" />
+								</p:column>
+								<p:column styleClass='centerText'>
+									<f:facet name="header"> #{msgs.label_orderSource} </f:facet>
+									<h:outputText value="#{row.orderSourceDomainDescription}" />
+								</p:column>
+								<p:column styleClass='centerText'>
+									<f:facet name="header"> #{msgs.label_details} </f:facet>
+									<h:commandButton id="detailsId" value="&#xf05a;" styleClass="btn btn-trans-icon" action="#{randomLabCheckSearch.showRandomLabCheckDetails(row)}">
+										<f:ajax render="labCheckSearchFormId:labCheckEmployeesSearchResultPaneId">
+										</f:ajax>
+									</h:commandButton>
+								</p:column>
+								<p:column styleClass='centerText'>
+									<f:facet name="header"> #{msgs.label_print} </f:facet>
+									<h:commandButton styleClass="btn btn-success" action="#{randomLabCheckSearch.print(row.id)}" value="&#xf02f;" />
+								</p:column>
+								<p:column styleClass='centerText'>
+									<f:facet name="header"> #{msgs.label_archiveDocuments} </f:facet>
+									<h:commandButton styleClass="btn btn-success" value="&#xf187; #{msgs.label_archiveDocuments}">
+										<f:ajax listener="#{randomLabCheckSearch.getUploadParam(row.id)}" render="labCheckSearchFormId:fileArchivingParamId" onevent="function(e){if(e.status == 'success') return uploadFile();}" />
+									</h:commandButton>
+								</p:column>
+								<p:column styleClass='centerText'>
+									<f:facet name="header"> #{msgs.label_archiveDocumentsShow} </f:facet>
+									<h:commandButton styleClass="btn btn-success" value="&#xf0c5; #{msgs.label_archiveDocumentsShow}">
+										<f:ajax render="labCheckSearchFormId:downloadDlgPanelId labCheckSearchFormId:openDownloadDialogueFlagId labCheckSearchFormId:openDownloadPopupFlagId labCheckSearchFormId:downloadedFileParamId" listener="#{randomLabCheckSearch.getDownloadedAttachmentsIdList(row.id)}" onevent="handleDownloadFiles" />
+									</h:commandButton>
+								</p:column>
+							</p:dataTable>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+
+
+				<tr>
+					<td align="center" width="100%">
+						<h:panelGroup id="labCheckEmployeesSearchResultPaneId">
+							<h:panelGroup id="labCheckEmployeesSearchResultInternalPaneId" rendered="#{not empty randomLabCheckSearch.selectedLabCheck}">
+								<h:inputHidden id="selectedEmployeeId" value="#{randomLabCheckSearch.selectedLabCheckEmployeeData.employeeId}" />
+								<h:inputHidden id="selectedEmployeeNameId" value="#{randomLabCheckSearch.selectedLabCheckEmployeeData.employeeFullName}" />
+								<h:inputHidden id="selectedEmployeesSocialNumberId" value="#{randomLabCheckSearch.selectedLabCheckEmployeeData.employeeSocialId}" />
+								<h:inputHidden id="selectedEmployeeRankId" value="#{randomLabCheckSearch.selectedLabCheckEmployeeData.employeeRank}" />
+								<h:commandButton id="insertNewEmployeeRecord" style="display:none;" action="#{randomLabCheckSearch.addEmployee()}">
+									<f:ajax execute="labCheckSearchFormId:selectedEmployeeId labCheckSearchFormId:selectedEmployeeNameId labCheckSearchFormId:selectedEmployeesSocialNumberId labCheckSearchFormId:selectedEmployeeRankId" render="labCheckSearchFormId:labCheckEmployeesListDataTableId" />
+								</h:commandButton>
+
+								<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+									<tr>
+										<td>
+											<h:outputText value="#{msgs.title_employee}" />
+										</td>
+									</tr>
+								</table>
+
+
+								<table width="100%" border="0" cellpadding="0" cellspacing="0">
+									<tr>
+										<td width="100%" height="10" />
+									</tr>
+									<tr>
+										<td width="100%">
+											<h:commandButton class="btn btn-warning" onclick="return getEmployee('#{request.contextPath}',2);" value="#{msgs.label_addEmployee}" style="width:20%" rendered="#{randomLabCheckSearch.inCompleteCheck}" />
+										</td>
+									</tr>
+									<tr>
+										<td width="100%" height="5" />
+									</tr>
+									<tr>
+										<td>
+											<p:dataTable reflow="true" tableStyle="table-layout: auto" paginator="true" id="labCheckEmployeesListDataTableId" rows="10" rowIndexVar="index" var="row" value="#{randomLabCheckSearch.labCheckEmployeeDataList}" rowHover="true">
+												<p:column styleClass='centerText'>
+													<f:facet name="header">#</f:facet>
+				                                #{index + 1}
+				                            </p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header"> #{msgs.label_socialNumber} </f:facet>
+													<h:outputText value="#{row.employeeSocialId}" />
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header"> #{msgs.label_name} </f:facet>
+													<h:outputText value="#{row.employeeFullName}" />
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header"> #{msgs.label_rank} </f:facet>
+													<h:outputText value="#{row.employeeRank}" />
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header"> #{msgs.label_labCheckReport} </f:facet>
+													<h:commandButton value="#{msgs.label_labCheckReport}" action="#{randomLabCheckSearch.printLabCheckReport(row)}" styleClass="btn btn-success" />
+												</p:column>
+
+												<p:column styleClass='centerText' rendered="#{randomLabCheckSearch.inCompleteCheck}">
+													<f:facet name="header">
+														<h:outputText value="#{msgs.label_delete}" />
+													</f:facet>
+													<h:commandButton value="&#xf00d;" styleClass="btn btn-trans-icon" action="#{randomLabCheckSearch.deleteEmployee(row)}" onclick="return confirm('#{msgs.q_delete}');">
+														<f:ajax render="labCheckSearchFormId:labCheckEmployeesListDataTableId">
+														</f:ajax>
+													</h:commandButton>
+												</p:column>
+											</p:dataTable>
+										</td>
+									</tr>
+
+								</table>
+							</h:panelGroup>
+						</h:panelGroup>
+					</td>
+				</tr>
+			</table>
+			<h:panelGroup id="downloadDlgPanelId">
+				<p:dialog dir="#{msgs.dir}" header="#{msgs.label_archiveDocumentsShow}" id="dlgId" widgetVar="dlg" modal="true" height="180px;" width="720px">
+					<h:panelGroup id="internalDlgPanelId">
+						<table width="100%">
+							<tr>
+								<td>
+									<p:dataTable tableStyle="table-layout:auto" reflow="true" liveResize="true" paginatorPosition="bottom" id="fileListIds" paginator="true" style="width:100%" rowIndexVar="index" rows="10" var="row" value="#{randomLabCheckSearch.attachmentList}" widgetVar="table" rowHover="true">
+										<p:column styleClass='centerText'>
+											<f:facet name="header">#</f:facet>
+		                                    #{index + 1}
+	                                   	</p:column>
+										<p:column styleClass='centerText'>
+											<f:facet name="header">
+													#{msgs.label_fileName}
+												</f:facet>
+											<h:outputText value="#{row.fileName}" />
+										</p:column>
+										<p:column styleClass='centerText'>
+											<f:facet name="header">
+												#{msgs.label_download}
+											</f:facet>
+											<h:commandButton styleClass="btn btn-success" value="&#xf019; #{msgs.label_download}">
+												<f:ajax render="labCheckSearchFormId:internalDlgPanelId labCheckSearchFormId:downloadedFileParamId" listener="#{randomLabCheckSearch.getDownloadParam(row.attachmentId)}" onevent="function(e){if(e.status == 'success') return downloadFile();}" />
+											</h:commandButton>
+										</p:column>
+										<p:column styleClass='centerText'>
+											<f:facet name="header">
+												#{msgs.label_delete}
+											</f:facet>
+											<h:commandButton styleClass="btn btn-trans-icon" value="&#xf00d;">
+												<f:ajax render="labCheckSearchFormId:internalDlgPanelId labCheckSearchFormId:downloadedFileParamId" listener="#{randomLabCheckSearch.getDeleteParam(row)}" />
+											</h:commandButton>
+										</p:column>
+									</p:dataTable>
+								</td>
+							</tr>
+						</table>
+					</h:panelGroup>
+				</p:dialog>
+				<h:inputHidden id="fileArchivingParamId" value="#{randomLabCheckSearch.fileArchivingParam}" />
+				<h:inputHidden id="downloadedFileParamId" value="#{randomLabCheckSearch.downloadFileParamId}" />
+				<h:inputHidden id="openDownloadPopupFlagId" value="#{randomLabCheckSearch.openDownloadPopupFlag}" />
+				<h:inputHidden id="openDownloadDialogueFlagId" value="#{randomLabCheckSearch.openDownloadDialogueFlag}" />
+			</h:panelGroup>
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>

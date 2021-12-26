@@ -1,0 +1,410 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:util="http://java.sun.com/jsf/composite/util" xmlns:code="http://java.sun.com/jsf/composite/code">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+	<script type="text/javascript">
+		function handleDownloadFiles(e) {
+			openDownloadPopupFlagId = document.getElementById('formId:openDownloadPopupFlagId').value;
+			openDownloadDialogueFlagId = document.getElementById('formId:openDownloadDialogueFlagId').value;
+
+			if (e.status == 'success') {
+				if (openDownloadPopupFlagId == 'true') {
+					downloadFile();
+				} else if (openDownloadDialogueFlagId == 'true') {
+					PF('dlg').show();
+				}
+			}
+		}
+
+		function downloadFile() {
+			downloadedFileParamId = document.getElementById('formId:downloadedFileParamId').value;
+			openDownloadFile('#{followUpDetails.boolServerDownloadPath}', downloadedFileParamId);
+			return false;
+		}
+	</script>
+</h:head>
+
+<h:body styleClass="screenBg">
+	<h:form id="formId" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/Template.xhtml">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tr>
+					<td width="100%" height="0" />
+				</tr>
+
+				<tr>
+					<td class="screenTitle">#{msgs.title_followUpDetails}</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="searchContainerId">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<th width="15%">#{msgs.label_contactNumber}</th>
+									<td width="20%">
+										<h:inputText styleClass="form-control" style="width: 85%;margin-left: 5px;" disabled="true" value="#{followUpDetails.followUp.contactNumber}" />
+									</td>
+									<th width="15%"></th>
+									<td width="20%"></td>
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="followUpTitleId">
+							<h:panelGroup rendered="#{followUpDetails.followUp.contactNumber != null}">
+								<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+									<tr>
+										<td>
+											<h:outputText value="#{msgs.label_currentFollowUpData}" />
+										</td>
+									</tr>
+								</table>
+							</h:panelGroup>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+				<tr>
+					<td>
+						<h:panelGroup id="followUpContainerId">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<th width="15%">#{msgs.label_theCode}</th>
+									<td width="20%">
+										<h:inputText disabled="true" styleClass="form-control" id="codeId" value="#{followUpDetails.followUp.code}" />
+									</td>
+
+									<th width="15%">#{msgs.label_followUpDataSource}</th>
+									<td width="20%">
+											<h:inputTextarea disabled="true" styleClass="form-control" value="#{followUpDetails.followUp.informationSource}" />
+									</td>
+
+								</tr>
+
+								<tr>
+									<th width="15%">#{msgs.label_followUpStartDate}</th>
+									<td width="20%">
+										<h:inputText id="startDateId" disabled="true" value="#{followUpDetails.followUp.followUpStartDateString}" />
+									</td>
+
+									<th width="15%" rowspan="2">#{msgs.label_followUpCoordinates}</th>
+									<td width="20%" rowspan="2">
+										<code:coordinates disabled="true" latitude="#{followUpDetails.followUp.coordinateLatitude}" longitude="#{followUpDetails.followUp.coordinateLongitude}" />
+									</td>
+								</tr>
+
+								<tr>
+									<th width="15%">#{msgs.label_followUpEndDate}</th>
+									<td width="20%">
+										<h:inputText disabled="true" styleClass="form-control" id="endDateStrId" value="#{followUpDetails.followUp.followUpEndDateString}" />
+									</td>
+								</tr>
+
+								<tr>
+									<th width="15%">#{msgs.label_followUpCaseType}</th>
+									<td width="20%">
+										<h:selectOneMenu disabled="true" styleClass="form-control" value="#{followUpDetails.followUp.domainIdCasesType}">
+											<f:selectItem itemValue="#{null}" itemLabel=" " />
+											<f:selectItems value="#{followUpDetails.casesTypeDomainList}" var="casesType" itemLabel="#{casesType.description}" itemValue="#{casesType.id}" />
+										</h:selectOneMenu>
+									</td>
+
+									<th width="15%">#{msgs.label_followUpDirect}</th>
+									<td width="20%">
+										<h:selectBooleanCheckbox disabled="true" value="#{followUpDetails.followUp.directFlag}" />
+									</td>
+								</tr>
+
+								<tr>
+									<th width="15%">#{msgs.label_ghostType}</th>
+									<td width="20%">
+										<h:inputText id="empId" disabled="true" value="#{msgs.label_employeeTitle}" rendered="#{followUpDetails.followUp.ghostType == followUpDetails.employeeType}" />
+										<h:inputText id="nonEmpId" disabled="true" value="#{msgs.label_nonEmployee}" rendered="#{followUpDetails.followUp.ghostType == followUpDetails.nonEmployeeType}" />
+									</td>
+
+									<th width="15%">#{msgs.label_followUpEquipmentType}</th>
+									<td width="20%">
+										<h:selectOneMenu disabled="true" styleClass="form-control" value="#{followUpDetails.followUp.domainIdEquipmentType}">
+											<f:selectItem itemValue="#{null}" itemLabel=" " />
+											<f:selectItems value="#{followUpDetails.equipmentDomainList}" var="equipmentType" itemLabel="#{equipmentType.description}" itemValue="#{equipmentType.id}" />
+										</h:selectOneMenu>
+									</td>
+								</tr>
+
+								<tr>
+									<th width="15%">#{msgs.label_socialId}</th>
+									<td width="20%">
+										<h:inputText id="employeeIdentityId" disabled="true" value="#{followUpDetails.followUp.employeeSocialId}" rendered="#{followUpDetails.followUp.ghostType == followUpDetails.employeeType}" />
+										<h:inputText styleClass="form-control" disabled="true" id="nonEmployeeIdentityId" value="#{followUpDetails.followUp.nonEmployeeSocialId}" rendered="#{followUpDetails.followUp.ghostType == followUpDetails.nonEmployeeType}" />
+									</td>
+								</tr>
+
+								<tr>
+									<th width="15%">#{msgs.label_aliasName}</th>
+									<td width="20%">
+										<h:inputText disabled="true" styleClass="form-control" id="aliasNameId" value="#{followUpDetails.followUp.aliasName}" />
+									</td>
+
+
+									<th width="15%">
+										<h:outputText value="#{msgs.label_employeeTitle}" rendered="#{followUpDetails.followUp.ghostType == followUpDetails.employeeType}" />
+										<h:outputText value="#{msgs.label_nonEmployeeName}" rendered="#{followUpDetails.followUp.ghostType == followUpDetails.nonEmployeeType}" />
+									</th>
+									<td width="20%">
+										<h:inputText id="employeeNameId" disabled="true" styleClass="form-control" value="#{followUpDetails.followUp.employeeName}" rendered="#{followUpDetails.followUp.ghostType == followUpDetails.employeeType}" />
+										<h:inputText styleClass="form-control" disabled="true" id="nonEmployeeNameId" value="#{followUpDetails.followUp.nonEmployeeName}" rendered="#{followUpDetails.followUp.ghostType == followUpDetails.nonEmployeeType}" />
+									</td>
+
+								</tr>
+
+								<tr>
+									<th width="15%">#{msgs.label_region}</th>
+									<td width="20%">
+										<h:selectOneMenu disabled="true" styleClass="form-control" value="#{followUpDetails.followUp.regionId}">
+											<f:selectItem itemValue="" itemLabel=" " />
+											<f:selectItems value="#{followUpDetails.regionsList}" var="region" itemLabel="#{region.regionName}" itemValue="#{region.id}" />
+										</h:selectOneMenu>
+									</td>
+
+									<th width="15%">
+										<h:outputText value="#{msgs.label_sector}" rendered="#{followUpDetails.followUp.sectorId != null}" />
+									</th>
+									<td width="20%">
+										<h:inputText id="sectorId" styleClass="form-control" value="#{followUpDetails.followUp.sectorName}" rendered="#{followUpDetails.followUp.sectorId != null}" disabled="true" />
+									</td>
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<p:accordionPanel id="followUpInformationPanelId" multiple="true" activeIndex="-1">
+							<p:tab title="#{msgs.title_conversations}">
+								<h:panelGroup id="conversationPanelId">
+									<p:dataTable reflow="true" tableStyle="table-layout: auto" paginator="true" var="conversation" value="#{followUpDetails.conversationList}" widgetVar="followUpConversation" emptyMessage="#{msgs.label_emptyFollowUpConversation}">
+										<p:column style="text-align: center;">
+											<f:facet name="header"> # </f:facet>
+	                                	#{index + 1}
+	                            	</p:column>
+
+										<p:column styleClass='centerText' filterBy="#{conversation.conversationDateString} #{conversation.conversationTime}" headerText="#{msgs.label_dateAndTime}" filterMatchMode="contains">
+											<h:outputText value="#{conversation.conversationDateString} #{conversation.conversationTime}" />
+										</p:column>
+
+										<p:column styleClass='centerText' filterBy="#{conversation.conversationLocation}" headerText="#{msgs.label_conversationLocation}" filterMatchMode="contains">
+											<h:outputText value="#{conversation.conversationLocation}" />
+										</p:column>
+
+										<p:column styleClass='centerText' filterBy="#{conversation.conversationType}" headerText="#{msgs.label_directOrInjection}" filterMatchMode="exact">
+											<f:facet name="filter">
+												<p:selectOneMenu onchange="PF('followUpConversation').filter()" style="width:100%">
+													<f:selectItem itemLabel="#{msgs.label_all}" itemValue="#{null}" noSelectionOption="true" />
+													<f:selectItem itemLabel="#{msgs.label_direct}" itemValue="#{followUpDetails.convDirectType}" />
+													<f:selectItem itemLabel="#{msgs.label_injection}" itemValue="#{followUpDetails.convInjectType}" />
+												</p:selectOneMenu>
+											</f:facet>
+											<h:outputText value="#{msgs.label_direct}" rendered="#{conversation.conversationType == followUpDetails.convDirectType}" style="width:100%" />
+											<h:outputText value="#{msgs.label_injection}" rendered="#{conversation.conversationType == followUpDetails.convInjectType}" style="width:100%" />
+										</p:column>
+
+										<p:column styleClass='centerText' filterBy="#{conversation.conversationResult}" headerText="#{msgs.label_conversationResult}" filterMatchMode="exact">
+											<f:facet name="filter">
+												<p:selectOneMenu onchange="PF('followUpConversation').filter()" style="width:100%">
+													<f:selectItem itemLabel="#{msgs.label_all}" itemValue="#{null}" noSelectionOption="true" />
+													<f:selectItem itemLabel="#{msgs.label_conversationNoResults}" itemValue="#{followUpDetails.convNoResultType}" />
+													<f:selectItem itemLabel="#{msgs.label_positive}" itemValue="#{followUpDetails.convPosResultType}" />
+													<f:selectItem itemLabel="#{msgs.label_negative}" itemValue="#{followUpDetails.convNegResultType}" />
+												</p:selectOneMenu>
+											</f:facet>
+											<h:outputText value="#{msgs.label_conversationNoResults}" rendered="#{conversation.conversationResult == followUpDetails.convNoResultType}" style="width:100%" />
+											<h:outputText value="#{msgs.label_positive}" rendered="#{conversation.conversationResult == followUpDetails.convPosResultType}" style="width:100%" />
+											<h:outputText value="#{msgs.label_negative}" rendered="#{conversation.conversationResult == followUpDetails.convNegResultType}" style="width:100%" />
+										</p:column>
+
+										<p:column styleClass='centerText' headerText="#{msgs.label_details}">
+											<h:commandButton value="&#xf06e;" styleClass="btn btn-trans-icon" title="#{msgs.label_view}" onclick="this.form.target='_blank'" action="#{followUpDetails.viewConversationDetail(conversation)}" />
+										</p:column>
+
+										<p:column styleClass='centerText' headerText="#{msgs.label_edit}" rendered="#{followUpDetails.followUp.id == null}">
+											<h:commandButton value="&#xf14b;" styleClass="btn btn-trans-icon" title="#{msgs.label_edit}" onclick="this.form.target='_blank'" action="#{followUpDetails.editConversationDetail(conversation)}" />
+										</p:column>
+
+										<p:column styleClass='centerText' headerText="#{msgs.label_archiveDocumentsShow}">
+											<h:commandButton styleClass="btn btn-success" value="&#xf0c5; #{msgs.label_archiveDocumentsShow}">
+												<f:ajax render="formId:downloadDlgPanelId formId:openDownloadDialogueFlagId formId:openDownloadPopupFlagId formId:downloadedFileParamId" listener="#{followUpDetails.getDownloadedAttachmentsIdList(conversation.id, followUpDetails.conversationEntityType)}" onevent="handleDownloadFiles" />
+											</h:commandButton>
+										</p:column>
+									</p:dataTable>
+								</h:panelGroup>
+							</p:tab>
+
+							<p:tab title="#{msgs.title_followUpResult}">
+								<h:panelGroup id="followUpResultPanelId">
+									<p:dataTable reflow="true" tableStyle="table-layout: auto" paginator="true" var="result" value="#{followUpDetails.followUpResultList}" widgetVar="followUpResults" emptyMessage="#{msgs.label_emptyFollowUpResults}">
+										<p:column style="text-align: center;">
+											<f:facet name="header"> # </f:facet>
+	                                	#{index + 1}
+	                            	</p:column>
+
+										<p:column styleClass='centerText' filterBy="#{result.domainIdFollowResultsDesc}" headerText="#{msgs.label_type}" filterMatchMode="exact">
+											<f:facet name="filter">
+												<p:selectOneMenu onchange="PF('followUpResults').filter()" style="width:100%">
+													<f:selectItem itemLabel="#{msgs.label_all}" itemValue="#{null}" noSelectionOption="true" />
+													<f:selectItems var="resultType" itemLabel="#{resultType.description}" itemValue="#{resultType.description}" value="#{followUpDetails.followUpResultTypesList}" />
+												</p:selectOneMenu>
+											</f:facet>
+											<h:outputText value="#{result.domainIdFollowResultsDesc}" style="width:100%" />
+										</p:column>
+
+										<p:column styleClass='centerText' filterBy="#{result.resultDateString} #{result.resultTime}" headerText="#{msgs.label_ResultDateAndTime}" filterMatchMode="contains">
+											<h:outputText value="#{result.resultDateString} #{result.resultTime}" />
+										</p:column>
+
+										<p:column styleClass='centerText' filterBy="#{result.domainIdTransTypeDesc}" headerText="#{msgs.label_followUpResultTrans}" filterMatchMode="exact">
+											<f:facet name="filter">
+												<p:selectOneMenu onchange="PF('followUpResults').filter()" style="width:100%">
+													<f:selectItem itemLabel="#{msgs.label_all}" itemValue="#{null}" noSelectionOption="true" />
+													<f:selectItems var="resultType" itemLabel="#{resultType.description}" itemValue="#{resultType.description}" value="#{followUpDetails.followUpTransTypesList}" />
+												</p:selectOneMenu>
+											</f:facet>
+											<h:outputText value="#{result.domainIdTransTypeDesc}" style="width:100%" />
+										</p:column>
+
+										<p:column styleClass='centerText' filterBy="#{result.domainIdResultRegionDesc}" headerText="#{msgs.label_followUpResultRegion}" filterMatchMode="exact">
+											<f:facet name="filter">
+												<p:selectOneMenu onchange="PF('followUpResults').filter()" style="width:100%">
+													<f:selectItem itemLabel="#{msgs.label_all}" itemValue="#{null}" noSelectionOption="true" />
+													<f:selectItems var="resultType" itemLabel="#{resultType.regionName}" itemValue="#{resultType.regionName}" value="#{followUpDetails.regionsList}" />
+												</p:selectOneMenu>
+											</f:facet>
+											<h:outputText value="#{result.domainIdResultRegionDesc}" style="width:100%" />
+										</p:column>
+
+										<p:column styleClass='centerText' filterBy="#{result.resultDetails}" headerText="#{msgs.label_followUpResultDetails}" filterMatchMode="contains">
+											<h:outputText value="#{result.resultDetails}" />
+										</p:column>
+
+										<p:column styleClass='centerText' headerText="#{msgs.label_archiveDocumentsShow}">
+											<h:commandButton styleClass="btn btn-success" value="&#xf0c5; #{msgs.label_archiveDocumentsShow}">
+												<f:ajax render="formId:downloadDlgPanelId formId:openDownloadDialogueFlagId formId:openDownloadPopupFlagId formId:downloadedFileParamId" listener="#{followUpDetails.getDownloadedAttachmentsIdList(result.id, followUpDetails.resultEntityType)}" onevent="handleDownloadFiles" />
+											</h:commandButton>
+										</p:column>
+									</p:dataTable>
+								</h:panelGroup>
+							</p:tab>
+
+							<p:tab title="#{msgs.title_letters}">
+								<h:panelGroup id="letterPanelId">
+									<p:dataTable reflow="true" tableStyle="table-layout: auto" paginator="true" var="letter" value="#{followUpDetails.letterList}" widgetVar="followUpLetters" emptyMessage="#{msgs.label_emptyFollowUpLetters}">
+										<p:column style="text-align: center;">
+											<f:facet name="header"> # </f:facet>
+	                                	#{index + 1}
+	                            	</p:column>
+
+										<p:column styleClass='centerText' filterBy="#{letter.letterNumber}" headerText="#{msgs.label_letterNumber}" filterMatchMode="contains">
+											<h:outputText value="#{letter.letterNumber}" />
+										</p:column>
+
+										<p:column styleClass='centerText' filterBy="#{letter.letterDateString}" headerText="#{msgs.label_dateD}" filterMatchMode="contains">
+											<h:outputText value="#{letter.letterDateString}" />
+										</p:column>
+
+										<p:column styleClass='centerText' filterBy="#{letter.type}" headerText="#{msgs.label_letterType}" filterMatchMode="exact">
+											<f:facet name="filter">
+												<p:selectOneMenu onchange="PF('followUpLetters').filter()" style="width:100%">
+													<f:selectItem itemLabel="#{msgs.label_all}" itemValue="#{null}" noSelectionOption="true" />
+													<f:selectItem itemLabel="#{msgs.label_issued}" itemValue="#{followUpDetails.letterIssuedType}" />
+													<f:selectItem itemLabel="#{msgs.label_incoming}" itemValue="#{followUpDetails.letterIncomingType}" />
+												</p:selectOneMenu>
+											</f:facet>
+											<h:outputText value="#{letter.type == followUpDetails.letterIssuedType ? msgs.label_issued : msgs.label_incoming}" />
+										</p:column>
+
+										<p:column styleClass='centerText' filterBy="#{letter.organization}" headerText="#{msgs.label_unitSource}" filterMatchMode="contains">
+											<h:outputText value="#{letter.organization}" />
+										</p:column>
+
+										<p:column styleClass='centerText' filterBy="#{letter.notes}" headerText="#{msgs.label_comment}" filterMatchMode="contains">
+											<h:outputText value="#{letter.notes}" />
+										</p:column>
+
+										<p:column styleClass='centerText' headerText="#{msgs.label_archiveDocumentsShow}">
+											<h:commandButton styleClass="btn btn-success" value="&#xf0c5; #{msgs.label_archiveDocumentsShow}">
+												<f:ajax render="formId:downloadDlgPanelId formId:openDownloadDialogueFlagId formId:openDownloadPopupFlagId formId:downloadedFileParamId" listener="#{followUpDetails.getDownloadedAttachmentsIdList(letter.id, followUpDetails.letterEntityType)}" onevent="handleDownloadFiles" />
+											</h:commandButton>
+										</p:column>
+									</p:dataTable>
+								</h:panelGroup>
+							</p:tab>
+						</p:accordionPanel>
+					</td>
+				</tr>
+
+			</table>
+
+			<h:panelGroup id="downloadDlgPanelId">
+				<p:dialog dir="#{msgs.dir}" header="#{msgs.label_archiveDocumentsShow}" id="dlgId" widgetVar="dlg" modal="true" height="180px;" width="720px">
+					<h:panelGroup id="internalDlgPanelId">
+						<table width="100%">
+							<tr>
+								<td>
+									<p:dataTable tableStyle="table-layout:auto" reflow="true" liveResize="true" paginatorPosition="bottom" id="fileListIds" paginator="true" style="width:100%" rowIndexVar="index" rows="10" var="row" value="#{followUpDetails.attachmentList}" widgetVar="table" rowHover="true">
+										<p:column styleClass='centerText'>
+											<f:facet name="header">#</f:facet>
+		                                    #{index + 1}
+	                                   	</p:column>
+										<p:column styleClass='centerText'>
+											<f:facet name="header">
+													#{msgs.label_fileName}
+												</f:facet>
+											<h:outputText value="#{row.fileName}" />
+										</p:column>
+										<p:column styleClass='centerText'>
+											<f:facet name="header">
+												#{msgs.label_download}
+											</f:facet>
+											<h:commandButton styleClass="btn btn-success" value="&#xf019; #{msgs.label_download}">
+												<f:ajax render="formId:internalDlgPanelId formId:downloadedFileParamId" listener="#{followUpDetails.getDownloadParam(row.attachmentId)}" onevent="function(e){if(e.status == 'success') return downloadFile();}" />
+											</h:commandButton>
+										</p:column>
+									</p:dataTable>
+								</td>
+							</tr>
+						</table>
+					</h:panelGroup>
+				</p:dialog>
+				<h:inputHidden id="downloadedFileParamId" value="#{followUpDetails.downloadFileParamId}" />
+				<h:inputHidden id="openDownloadPopupFlagId" value="#{followUpDetails.openDownloadPopupFlag}" />
+				<h:inputHidden id="openDownloadDialogueFlagId" value="#{followUpDetails.openDownloadDialogueFlag}" />
+			</h:panelGroup>
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>

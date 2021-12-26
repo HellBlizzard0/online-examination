@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:util="http://java.sun.com/jsf/composite/util" xmlns:rich="http://richfaces.org/rich">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+</h:head>
+<h:body styleClass="screenBg">
+	<h:form id="formId" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/Template.xhtml">
+
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+				<tr>
+					<td class="screenTitle">#{msgs.title_informationInfoTypeReport}</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.label_searchData}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="searchContainerId">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<th width="15%">#{msgs.label_region}</th>
+									<td width="20%">
+										<h:selectOneMenu rendered="#{empty informationInfoTypeReport.employeeRegionName}" value="#{informationInfoTypeReport.regionId}">
+											<f:selectItem itemLabel="" itemValue="" />
+											<f:selectItems value="#{informationInfoTypeReport.regionDepartmentsList}" var="dep" itemLabel="#{dep.arabicName}" itemValue="#{dep.id}" />
+											<f:ajax execute="@form" render="@form" listener="#{informationInfoTypeReport.updateSectorList()}"></f:ajax>
+										</h:selectOneMenu>
+
+										<h:outputText rendered="#{not empty informationInfoTypeReport.employeeRegionName}" value="#{informationInfoTypeReport.employeeRegionName}" />
+									</td>
+
+									<th width="15%">#{msgs.label_infoType}</th>
+									<td width="20%">
+										<h:selectOneMenu styleClass="form-control" value="#{informationInfoTypeReport.infoTypeId}">
+											<f:selectItem itemValue="" itemLabel=" " />
+											<f:selectItems value="#{informationInfoTypeReport.infoTypeList}" var="infoType" itemLabel="#{infoType.description}" itemValue="#{infoType.id}" />
+											<f:ajax event="change" execute="@this" render="formId:infoSubjectMenuId" listener="#{informationInfoTypeReport.getInfoSubjectByInfoTypeId()}" />
+										</h:selectOneMenu>
+									</td>
+
+								</tr>
+								<tr>
+									<th width="15%">#{msgs.label_sector}</th>
+									<td width="20%">
+										<h:selectOneMenu value="#{informationInfoTypeReport.sectorId}">
+											<f:selectItem itemValue="" />
+											<f:selectItems value="#{informationInfoTypeReport.sectorDepartmentsList}" var="dep" itemLabel="#{dep.arabicName}" itemValue="#{dep.id}" />
+										</h:selectOneMenu>
+									</td>
+
+									<th width="15%">#{msgs.label_infoSubject}</th>
+									<td width="20%">
+										<h:selectOneMenu styleClass="form-control" id="infoSubjectMenuId" value="#{informationInfoTypeReport.infoSubjectId}">
+											<f:selectItem itemValue="" itemLabel=" " />
+											<f:selectItems value="#{informationInfoTypeReport.infoSubjectList}" var="infoSubject" itemLabel="#{infoSubject.description}" itemValue="#{infoSubject.id}" />
+										</h:selectOneMenu>
+									</td>
+
+								</tr>
+
+								<tr>
+									<th width="15%">
+										<h:outputText value="*" style="color:red;" />
+										#{msgs.label_fromDate}
+									</th>
+									<td width="20%">
+										<util:advancedHijriDate value="#{informationInfoTypeReport.fromDate}" />
+									</td>
+
+									<th width="15%">
+										<h:outputText value="*" style="color:red;" />
+										#{msgs.label_toDate}
+									</th>
+									<td width="20%">
+										<util:advancedHijriDate value="#{informationInfoTypeReport.toDate}" />
+									</td>
+
+								</tr>
+
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td width="100%">
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td width="100%">
+									<h:commandButton class="btn btn-success" value="&#xf021; #{msgs.label_reset}" title="#{msgs.label_reset}" action="#{informationInfoTypeReport.reset()}" />
+									<h:commandButton class="btn btn-success" value="&#xf0f6; #{msgs.label_printStatisticalReport}" title="#{msgs.label_printStatisticalReport}" action="#{informationInfoTypeReport.printReportStatistics()}" />
+									<h:commandButton class="btn btn-success" value="&#xf02f; #{msgs.label_print}" title="#{msgs.label_print}" action="#{informationInfoTypeReport.printReport()}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+			</table>
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>

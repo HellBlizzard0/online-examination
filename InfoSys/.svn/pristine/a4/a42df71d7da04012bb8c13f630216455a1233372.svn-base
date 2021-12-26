@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+	<script type="text/javascript">
+          window.onkeypress = function(e) {
+			  var keyCode = window.event.keyCode || e.keyCode || e.which;
+		      if (keyCode == '13') {
+		    	  document.getElementById('searchCountryForm:searchCountryBtnID').click();
+		    	  return false;
+		      }
+		  };
+		            
+          function selectCountry(callerId){
+            var idTokens = callerId.split(':');
+            var countryId = document.getElementById('searchCountryForm:countryListDataTableId:'+idTokens[2]+':countryId').value;
+            var countryName = document.getElementById('searchCountryForm:countryListDataTableId:'+idTokens[2]+':countryName').innerHTML;
+            returnVal = new Array();
+            
+            returnVal[0] = countryId;
+            returnVal[1] = countryName;
+            window.returnValue = returnVal;
+            
+            window.opener.HandlePopupResult(returnVal);
+            window.close();
+          }
+
+          window.onunload = unloadPage;
+
+          function unloadPage()
+          {
+        	  window.opener.releaseMask();
+          }
+        </script>
+</h:head>
+<h:body styleClass="screenBg" onunload="unloadPage();">
+	<h:form id="searchCountryForm" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/TemplateMiniSearch.xhtml">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%" class="bgcolor-pup">
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td class="screenTitle">
+						<h:outputText value="#{msgs.title_countriesInquiry}" />
+					</td>
+				</tr>
+
+
+
+				<tr>
+					<td width="100%">
+						<h:panelGroup id="countrySearchPanelId">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<th width="15%">#{msgs.label_name}</th>
+									<td width="35%">
+										<h:inputText styleClass="form-control" value="#{countriesMiniSearch.searchCountryName}" />
+									</td>
+									<td width="40%" colspan="6"></td>
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:commandButton id="resetBtnId" styleClass="btn btn-default" value="#{msgs.label_reset}" action="#{countriesMiniSearch.resetSearch()}">
+										<f:ajax render="searchCountryForm:countrySearchPanelId" />
+									</h:commandButton>
+									<h:commandButton id="searchCountryBtnID" styleClass="btn btn-default" action="#{countriesMiniSearch.searchCountry()}" value="#{msgs.label_search}">
+										<f:ajax render="searchCountryForm:countryListId searchCountryForm:notifyMessagesId" execute="searchCountryForm:countrySearchPanelId" />
+									</h:commandButton>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td width="100%">
+						<h:panelGroup id="countryListId">
+							<p:dataTable reflow="true" tableStyle="table-layout: auto" paginator="true" id="countryListDataTableId" rows="#{countriesMiniSearch.rowsCount}" rowIndexVar="index" var="row" value="#{countriesMiniSearch.searchCountryList}" rowHover="true" >
+								<p:column style="text-align: center;">
+									<f:facet name="header">#</f:facet>
+                                #{index + 1}
+                            </p:column>
+								<p:column>
+									<f:facet name="header">#{msgs.label_name}</f:facet>
+									<h:outputText id="countryName" value="#{row.arabicName}" />
+									<h:inputHidden id="countryId" value="#{row.id}" />
+								</p:column>
+								<p:column>
+									<f:facet name="header">#{msgs.label_selectCountry}</f:facet>
+									<h:commandButton onclick="selectCountry(this.id); return false;" value="" title="#{msgs.label_selectCountry}" image="/resources/images/select.png" />
+								</p:column>
+							</p:dataTable>
+						</h:panelGroup>
+					</td>
+				</tr>
+			</table>
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>

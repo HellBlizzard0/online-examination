@@ -1,0 +1,596 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:of="http://omnifaces.org/functions" xmlns:o="http://omnifaces.org/ui" xmlns:h="http://java.sun.com/jsf/html" xmlns:util="http://java.sun.com/jsf/composite/util" xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:code="http://java.sun.com/jsf/composite/code">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+
+	<script type="text/javascript">
+		var mode;
+		function getEmployee(contextPath, m) {
+			mode = m;
+			openEmpsMiniSearch(contextPath, 2);
+			return false;
+		}
+
+		function getLabCheck(contextPath, m) {
+			mode = m;
+			openLabCheckMiniSearch(contextPath);
+			return false;
+		}
+
+		function releaseMask() {
+			unMaskScreen();
+		}
+
+		function handleDownloadFiles(e) {
+			openDownloadPopupFlagId = document
+					.getElementById('labCheckRegFormId:openDownloadPopupFlagId').value;
+			openDownloadDialogueFlagId = document
+					.getElementById('labCheckRegFormId:openDownloadDialogueFlagId').value;
+
+			if (e.status == 'success') {
+				if (openDownloadPopupFlagId == 'true') {
+					downloadFile();
+				} else if (openDownloadDialogueFlagId == 'true') {
+					PF('dlg').show();
+				}
+			}
+		}
+
+		function uploadFile() {
+			fileArchivingParam = document
+					.getElementById('labCheckRegFormId:fileArchivingParamId').value;
+			openUploadFile('#{labCheckReg.boolServerUploadPath}',
+					fileArchivingParam);
+			return false;
+		}
+
+		function downloadFile() {
+			downloadedFileParamId = document
+					.getElementById('labCheckRegFormId:downloadedFileParamId').value;
+			openDownloadFile('#{labCheckReg.boolServerDownloadPath}',
+					downloadedFileParamId);
+			return false;
+		}
+
+		function HandlePopupResult(ret) {
+			unMaskScreen();
+			if (ret != null) {
+				if (mode == 1) {
+					document
+							.getElementById('labCheckRegFormId:selectedEmployeeId').value = ret[0];
+					document
+							.getElementById('labCheckRegFormId:insertNewRecord')
+							.click();
+					return true;
+				} else if (mode == 2) {
+					document
+							.getElementById('labCheckRegFormId:orderRefNumberId').value = ret[0];
+					document
+							.getElementById('labCheckRegFormId:orderRefNumberInputHiddenId').value = ret[0];
+					document.getElementById(
+							'labCheckRegFormId:insertReferenceOrderNo').click();
+					return true;
+				}
+			}
+			return false;
+		}
+
+		function validateMandatoryData() {
+			var remarks = document
+					.getElementById("labCheckRegFormId:remarksId");
+
+			var errorMsg;
+			var successValidation = true;
+
+			if ($(remarks).val().length > 500) {
+				successValidation = false;
+				errorMsg = '#{msgs.error_remarksExceedMaxLength}';
+			}
+
+			if (!successValidation) {
+				showErrorMessage(errorMsg);
+			}
+
+			if (successValidation) {
+				return confirm('#{msgs.q_save}');
+			} else {
+				return successValidation;
+			}
+		}
+	</script>
+
+</h:head>
+<h:body styleClass="screenBg">
+	<h:form id="labCheckRegFormId" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/Template.xhtml">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+
+
+				<tr>
+					<td class="screenTitle">
+						<h:outputText value="#{msgs.title_labCheck}" rendered="#{ ( not empty labCheckReg.labCheck.wFInstanceId) and (empty labCheckReg.currentTask)}" />
+						<h:outputText rendered="#{ ( empty labCheckReg.labCheck.wFInstanceId) and labCheckReg.pageMode != 2}" value="#{msgs.title_labCheckReg}" />
+						<h:outputText rendered="#{ ( empty labCheckReg.labCheck.wFInstanceId) and labCheckReg.pageMode == 2}" value="#{msgs.title_randomLabCheckReg}" />
+						<h:outputText rendered="#{ (not empty labCheckReg.labCheck.wFInstanceId) and (not empty labCheckReg.currentTask)}" value="#{msgs.title_labCheckRegWf}" />
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.label_labCheckDetail}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="labCheckContainerId">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<th width="15%">
+										<h:outputText value="#{msgs.label_missionOrderNumber}" />
+										<h:outputText rendered="#{ empty labCheckReg.labCheck.wFInstanceId or labCheckReg.pageMode==3}" value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<h:inputText rendered="#{ empty labCheckReg.labCheck.wFInstanceId or labCheckReg.pageMode==3}" styleClass="form-control inputnumber" value="#{labCheckReg.labCheck.orderNumber}" maxlength="20" />
+										<h:outputText rendered="#{ not empty labCheckReg.labCheck.wFInstanceId and labCheckReg.pageMode!=3}" value="#{labCheckReg.labCheck.orderNumber}" />
+									</td>
+
+
+									<th width="15%">
+										<h:outputText value="#{msgs.label_orderDate}" />
+										<h:outputText rendered="#{ empty labCheckReg.labCheck.wFInstanceId or labCheckReg.pageMode==3}" value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<util:advancedHijriDate rendered="#{ empty labCheckReg.labCheck.wFInstanceId or labCheckReg.pageMode==3}" value="#{labCheckReg.labCheck.orderDate}" />
+										<h:outputText rendered="#{ not empty labCheckReg.labCheck.wFInstanceId and labCheckReg.pageMode!=3}" value="#{labCheckReg.labCheck.orderDateString}" />
+									</td>
+
+								</tr>
+
+								<tr>
+									<th width="15%">
+										<h:outputText value="#{msgs.label_referenceOrderNo}" />
+										<h:commandButton rendered="#{empty labCheckReg.labCheck.wFInstanceId or labCheckReg.pageMode==3}" value="&#xf002;" styleClass="btn btn-trans-icon" id="searchLabCheckBtnId" onclick="return getLabCheck('#{request.contextPath}',2);" />
+										<h:commandButton id="insertReferenceOrderNo" style="display:none;">
+											<f:ajax execute="labCheckRegFormId:orderRefNumberInputHiddenId">
+											</f:ajax>
+										</h:commandButton>
+									</th>
+									<td width="20%">
+										<h:inputText id="orderRefNumberId" styleClass="form-control inputnumber" disabled="true" value="#{labCheckReg.labCheck.orderReferenceNumber}" maxlength="20" />
+										<h:inputHidden id="orderRefNumberInputHiddenId" value="#{labCheckReg.labCheck.orderReferenceNumber}" />
+									</td>
+									<td width="15%"></td>
+									<td width="20%"></td>
+								</tr>
+
+								<tr>
+									<th width="15%">
+										<h:outputText value="#{msgs.label_orderIssueSite}" />
+										<h:outputText rendered="#{empty labCheckReg.labCheck.wFInstanceId or labCheckReg.pageMode==3}" value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<h:selectOneMenu disabled="#{not empty labCheckReg.labCheck.wFInstanceId and labCheckReg.pageMode!=3}" styleClass="form-control" value="#{labCheckReg.labCheck.orderSourceDomainId}">
+											<f:selectItems value="#{labCheckReg.orderSourcesList}" var="source" itemValue="#{source.id}" itemLabel="#{source.description}" />
+										</h:selectOneMenu>
+									</td>
+									<td width="15%"></td>
+									<td width="20%"></td>
+								</tr>
+
+								<tr>
+									<th>
+										<h:outputText value="#{msgs.label_checkReason} &nbsp;" />
+										<h:outputText rendered="#{ empty labCheckReg.labCheck.wFInstanceId or labCheckReg.pageMode==3}" value="*" style="color:red;" />
+									</th>
+									<td colspan="4" style="padding-left: 0px">
+										<table width="100%">
+											<tr>
+												<td width="30%">
+													<h:selectOneMenu value="#{labCheckReg.labCheck.checkReason}" styleClass="form-control" rendered="#{ (empty labCheckReg.labCheck.wFInstanceId and labCheckReg.pageMode != 2) or labCheckReg.pageMode==3}">
+														<f:selectItems value="#{labCheckReg.labCheckReasonsEnumList}" var="checkReason" itemLabel="#{checkReason.arabicDescription}" itemValue="#{checkReason.code}" />
+														<f:ajax event="change" execute="@this" render="labCheckRegFormId:casesPanelId" />
+													</h:selectOneMenu>
+
+													<h:outputText value="#{msgs.label_RandomMissionFromDirectorate}" rendered="#{ empty labCheckReg.labCheck.wFInstanceId and labCheckReg.pageMode == 2}" />
+
+													<h:selectOneMenu disabled="true" rendered="#{not empty labCheckReg.labCheck.wFInstanceId and labCheckReg.pageMode!=3}" value="#{labCheckReg.labCheck.checkReason}" styleClass="form-control">
+														<f:selectItems value="#{labCheckReg.labCheckReasonsEnumList}" var="checkReason" itemLabel="#{checkReason.arabicDescription}" itemValue="#{checkReason.code}" />
+													</h:selectOneMenu>
+												</td>
+												<td>
+													<h:panelGroup id="casesPanelId">
+														<h:panelGroup rendered="#{labCheckReg.labCheck.checkReason ==labCheckReg.casesReason}">
+															<table width="100%">
+																<tr>
+																	<th width="11%">
+																		<h:outputText value="#{msgs.label_caseNumber }" />
+																		<h:outputText rendered="#{ empty labCheckReg.labCheck.wFInstanceId or labCheckReg.pageMode==3}" value="*" style="color:red;" />
+																	</th>
+																	<td width="25%">
+																		<h:inputText maxlength="50" styleClass="form-control" value="#{labCheckReg.labCheck.caseNumber}" rendered="#{ empty labCheckReg.labCheck.wFInstanceId or labCheckReg.pageMode==3}" />
+																		<h:outputText rendered="#{ not empty labCheckReg.labCheck.wFInstanceId and labCheckReg.pageMode!=3}" value="#{labCheckReg.labCheck.caseNumber }" />
+																	</td>
+																</tr>
+																<tr>
+																	<th width="11%">
+																		<h:outputText value="#{msgs.label_caseDate }" />
+																		<h:outputText rendered="#{ empty labCheckReg.labCheck.wFInstanceId or labCheckReg.pageMode==3}" value="*" style="color:red;" />
+																	</th>
+																	<td width="28%">
+																		<util:advancedHijriDate rendered="#{ empty labCheckReg.labCheck.wFInstanceId or labCheckReg.pageMode==3}" value="#{labCheckReg.labCheck.caseDate}" />
+																		<h:outputText rendered="#{ not empty labCheckReg.labCheck.wFInstanceId and labCheckReg.pageMode!=3}" value="#{labCheckReg.labCheck.caseDateString}" />
+																	</td>
+
+																</tr>
+															</table>
+														</h:panelGroup>
+													</h:panelGroup>
+												</td>
+											</tr>
+										</table>
+									</td>
+
+								</tr>
+
+								<tr>
+									<th>
+										<h:outputText value="#{msgs.label_comment}" />
+									</th>
+									<td colspan="4">
+										<h:inputTextarea id="remarksId" styleClass="form-control" disabled="#{not empty labCheckReg.labCheck.wFInstanceId and labCheckReg.pageMode!=3}" value="#{labCheckReg.labCheck.remarks}" rows="6" cols="100" />
+									</td>
+
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td width="100%">
+									<h:commandButton rendered="#{(not empty labCheckReg.labCheck.id) and (labCheckReg.pageMode==1)}" styleClass="btn btn-success" id="archiveBtnUploadId" value="&#xf187; #{msgs.label_archiveDocuments}">
+										<f:ajax listener="#{labCheckReg.getUploadParam(labCheckReg.labCheck.id)}" render="labCheckRegFormId:fileArchivingParamId" onevent="function(e){if(e.status == 'success') return uploadFile();}" />
+									</h:commandButton>
+
+									<h:commandButton rendered="#{not empty labCheckReg.labCheck.id}" styleClass="btn btn-success" id="archiveBtnDownloadId" value="&#xf0c5; #{msgs.label_archiveDocumentsShow}">
+										<f:ajax render="labCheckRegFormId:downloadDlgPanelId labCheckRegFormId:openDownloadDialogueFlagId labCheckRegFormId:openDownloadPopupFlagId labCheckRegFormId:downloadedFileParamId" listener="#{labCheckReg.getDownloadedAttachmentsIdList(labCheckReg.labCheck.id)}" onevent="handleDownloadFiles" />
+									</h:commandButton>
+									<h:inputHidden id="fileArchivingParamId" value="#{labCheckReg.fileArchivingParam}" />
+									<h:inputHidden id="downloadedFileParamId" value="#{labCheckReg.downloadFileParamId}" />
+									<h:inputHidden id="openDownloadPopupFlagId" value="#{labCheckReg.openDownloadPopupFlag}" />
+									<h:inputHidden id="openDownloadDialogueFlagId" value="#{labCheckReg.openDownloadDialogueFlag}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="labCheckEmployeesPaneId" rendered="#{labCheckReg.pageMode != 2}">
+							<table width="100%">
+								<tr>
+									<td colspan="2">
+										<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+											<tr>
+												<td>
+													<h:outputText value="#{msgs.title_empsInquiry}" />
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+								<tr>
+									<td width="100%" height="15" />
+								</tr>
+
+								<tr>
+									<td>
+										<table width="100%" border="0" cellpadding="0" cellspacing="0">
+											<tr>
+												<td width="100%">
+													<h:inputHidden id="selectedEmployeeId" value="#{labCheckReg.selectedEmpId}" />
+													<h:commandButton id="insertNewRecord" style="display:none;" action="#{labCheckReg.addEmployee()}">
+														<f:ajax execute="labCheckRegFormId:labCheckEmployeesPaneId" render="labCheckRegFormId:labCheckEmployeesPaneId">
+														</f:ajax>
+													</h:commandButton>
+													<h:commandButton class="btn btn-warning" onclick="return getEmployee('#{request.contextPath}', 1);" value="#{msgs.label_addEmployee}" rendered="#{ empty labCheckReg.labCheck.wFInstanceId or labCheckReg.pageMode==3}">
+													</h:commandButton>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+								<tr>
+									<td width="100%" height="15" />
+								</tr>
+								<tr>
+									<td>
+										<table width="100%">
+											<tr>
+												<td>
+													<p:dataTable tableStyle="table-layout:auto" reflow="true" liveResize="true" paginatorPosition="bottom" id="labCheckEmployeeId" paginator="true" style="width:100%" rowIndexVar="index" rows="10" var="labCheckEmpRow" value="#{labCheckReg.labCheckEmployeeDataList}" rowHover="true">
+														<p:column styleClass='centerText'>
+															<f:facet name="header">
+																#
+															</f:facet>
+					                                    	#{index + 1}
+				                                   		</p:column>
+
+														<p:column styleClass='centerText'>
+															<f:facet name="header">
+																#{msgs.label_name}
+															</f:facet>
+															<h:outputText value="#{labCheckEmpRow.employeeFullName}" />
+														</p:column>
+
+														<p:column styleClass='centerText'>
+															<f:facet name="header">
+																#{msgs.label_socialNumber}
+															</f:facet>
+															<h:outputText value="#{labCheckEmpRow.employeeSocialId}" />
+														</p:column>
+
+														<p:column styleClass='centerText'>
+															<f:facet name="header"> 
+																#{msgs.label_militaryNumber}
+															</f:facet>
+															<h:outputText value="#{labCheckEmpRow.employeeMilitaryNumber}" />
+														</p:column>
+
+														<p:column styleClass='centerText'>
+															<f:facet name="header"> 
+																#{msgs.label_rank}
+															</f:facet>
+															<h:outputText value="#{labCheckEmpRow.employeeRank}" />
+														</p:column>
+
+														<p:column styleClass='centerText'>
+															<f:facet name="header"> 
+																#{msgs.label_unitAndDep}
+															</f:facet>
+															<h:outputText value="#{labCheckEmpRow.employeeDepartmentName}" />
+														</p:column>
+
+														<p:column styleClass='centerText' rendered="#{ not  empty labCheckReg.labCheck.wFInstanceId and labCheckReg.pageMode!=3}">
+															<f:facet name="header"> #{msgs.title_perviousChecks} </f:facet>
+															<h:commandButton value="&#xf05a;" styleClass="btn btn-trans-icon" action="#{labCheckReg.getPerviousEmployeeChecks(labCheckEmpRow.employeeId)}">
+																<f:ajax render="labCheckRegFormId:labCheckEmployeesDetailsPaneId">
+																</f:ajax>
+															</h:commandButton>
+														</p:column>
+
+														<p:column styleClass='centerText' rendered="#{ empty labCheckReg.labCheck.wFInstanceId or labCheckReg.pageMode==3}">
+															<f:facet name="header">
+																<h:outputText value="#{msgs.label_delete}" />
+															</f:facet>
+															<h:commandButton value="&#xf00d;" styleClass="btn btn-trans-icon" action="#{labCheckReg.deleteEmployee(labCheckEmpRow)}" onclick="return confirm('#{msgs.q_delete}');">
+																<f:ajax render="labCheckRegFormId:labCheckEmployeesPaneId">
+																</f:ajax>
+															</h:commandButton>
+														</p:column>
+
+													</p:dataTable>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="labCheckEmployeesDetailsPaneId">
+							<h:panelGroup rendered="#{ (not empty labCheckReg.selectedEmpId) and ( not empty labCheckReg.labCheck.wFInstanceId)}">
+								<table width="100%">
+									<tr>
+										<td colspan="2">
+											<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+												<tr>
+													<td>
+														<h:outputText value="#{msgs.title_perviousChecks}" />
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+
+									<tr>
+										<td>
+											<table width="100%">
+												<tr>
+													<td>
+														<p:dataTable tableStyle="table-layout:auto" reflow="true" liveResize="true" paginatorPosition="bottom" id="labCheckEmployeeDetailsId" paginator="true" style="width:100%" rowIndexVar="index" rows="10" var="empRow" value="#{labCheckReg.perviousLabCheckEmployeeDataList}" rowHover="true">
+															<p:column styleClass='centerText'>
+																<f:facet name="header">
+																#
+															</f:facet>
+					                                    	#{index + 1}
+				                                   		</p:column>
+
+															<p:column styleClass='centerText'>
+																<f:facet name="header">
+																#{msgs.label_checkDate}
+															</f:facet>
+																<h:outputText value="#{empRow.sampleDateString}" />
+															</p:column>
+
+															<p:column styleClass='centerText'>
+																<f:facet name="header">
+																#{msgs.label_checkReason}
+															</f:facet>
+																<h:selectOneMenu disabled="true" value="#{empRow.checkReason}" styleClass="form-control">
+																	<f:selectItems value="#{labCheckReg.labCheckReasonsEnumList}" var="checkReason" itemLabel="#{checkReason.arabicDescription}" itemValue="#{checkReason.code}" />
+																</h:selectOneMenu>
+															</p:column>
+
+															<p:column styleClass='centerText'>
+																<f:facet name="header"> 
+																#{msgs.label_checkResult}
+															</f:facet>
+																<h:outputText value="#{msgs.label_noSample}" rendered="#{empRow.checkStatus==labCheckReg.noSampleCheckResult}" />
+																<h:outputText value="#{msgs.label_checkPrivation}" rendered="#{empRow.checkStatus==labCheckReg.checkPrivationCheckResult}" />
+																<h:outputText value="#{msgs.label_negative}" rendered="#{empRow.checkStatus==labCheckReg.negativeCheckResult}" />
+																<h:outputText value="#{msgs.label_positiveUnderApprove}" rendered="#{empRow.checkStatus==labCheckReg.positiveUnderApproveCheckResult}" />
+																<h:outputText value="#{msgs.label_positive}" rendered="#{empRow.checkStatus==labCheckReg.positiveCheckResult}" />
+																<h:outputText value="#{msgs.label_sendingToForce}" rendered="#{empRow.checkStatus==labCheckReg.sendingToForceCheckResult}" />
+																<h:outputText value="#{msgs.label_retest}" rendered="#{empRow.checkStatus==labCheckReg.retestCheckResult}" />
+																<h:outputText value="#{msgs.label_cheatingInSample}" rendered="#{empRow.checkStatus==labCheckReg.cheatingCheckResult}" />
+															</p:column>
+
+															<p:column styleClass='centerText'>
+																<f:facet name="header"> 
+																#{msgs.label_metrial}
+															</f:facet>
+																<h:outputText value="#{empRow.domainMaterialTypeDescripttion}" />
+															</p:column>
+
+														</p:dataTable>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+							</h:panelGroup>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup rendered="#{not empty labCheckReg.currentTask}">
+							<table class="sectionContent" width="100%" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<th width="15%">#{msgs.label_comment}</th>
+									<td width="85%">
+										<h:inputTextarea onkeypress="return valdiateMaxLength(this, 500);" onblur="return isValdiateMaxLength(this, 500);" styleClass="form-control" id="taskNotesId" value="#{labCheckReg.currentTask.notes}" />
+									</td>
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td width="100%">
+						<code:prevTasks rendered="#{ not empty labCheckReg.currentTask}" value="#{labCheckReg.prevTasks}" />
+					</td>
+				</tr>
+
+
+				<tr>
+					<td>
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:commandButton id="printBtnId" styleClass="btn btn-success" action="#{labCheckReg.print()}" value="&#xf02f; #{msgs.label_print}" rendered="#{not empty labCheckReg.labCheck.id}" />
+
+									<h:commandButton rendered="#{empty labCheckReg.labCheck.wFInstanceId}" styleClass="btn btn-success" value="&#xf0c7; #{msgs.label_save}" action="#{labCheckReg.save()}" onclick="return validateMandatoryData();">
+									</h:commandButton>
+									<h:commandButton rendered="#{ (empty labCheckReg.labCheck.wFInstanceId and labCheckReg.pageMode !=2) or (not empty labCheckReg.labCheck.wFInstanceId and labCheckReg.role==labCheckReg.requesterRole and (not empty labCheckReg.currentTask))}" styleClass="btn btn-success" value="&#xf1d8; #{msgs.label_saveAndSend}" action="#{labCheckReg.saveAndSend()}" onclick="return confirm('#{msgs.q_confirm}');">
+									</h:commandButton>
+
+									<h:commandButton id="rejectBtnId" styleClass="btn btn-danger" action="#{labCheckReg.doReject()}" rendered="#{ (labCheckReg.role==labCheckReg.regionAntiDrugManager) or (labCheckReg.role==labCheckReg.generalAntiDrugManager) or (labCheckReg.role==labCheckReg.regionDirector) or (labCheckReg.role==labCheckReg.generalDirector) or (labCheckReg.role==labCheckReg.regionSecurityManager) }" value="&#xf00d; #{msgs.label_reject}" onclick="return confirm('#{msgs.q_reject}');" />
+
+									<h:commandButton rendered="#{ (labCheckReg.role==labCheckReg.regionAntiDrugManager) or (labCheckReg.role==labCheckReg.generalAntiDrugManager) }" class="btn btn-success" value="&#xf00c; #{msgs.label_approve}" action="#{labCheckReg.doApproveDM()}" onclick="return confirm('#{msgs.q_approve}');" />
+
+									<h:commandButton rendered="#{ (labCheckReg.role==labCheckReg.regionSecurityManager)}" class="btn btn-success" value="&#xf00c; #{msgs.label_approve}" action="#{labCheckReg.doApproveRegionSecurityManager()}" onclick="return confirm('#{msgs.q_approve}');" />
+
+									<h:commandButton rendered="#{ (labCheckReg.role==labCheckReg.regionDirector) or (labCheckReg.role==labCheckReg.generalDirector) }" class="btn btn-success" value="&#xf00c; #{msgs.label_approve}" action="#{labCheckReg.doApproveSM()}" onclick="return confirm('#{msgs.q_approve}');" />
+
+									<h:commandButton rendered="#{labCheckReg.role==labCheckReg.notification}" class="btn btn-success" value="#{msgs.label_notified}" action="#{labCheckReg.doNotify()}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+			</table>
+			<h:panelGroup id="downloadDlgPanelId">
+				<p:dialog dir="#{msgs.dir}" header="#{msgs.label_archiveDocumentsShow}" id="dlgId" widgetVar="dlg" modal="true" height="180px;" width="720px">
+					<h:panelGroup rendered="#{not empty labCheckReg.attachmentList}">
+						<table width="100%">
+							<tr>
+								<td>
+									<p:dataTable tableStyle="table-layout:auto" reflow="true" liveResize="true" paginatorPosition="bottom" id="fileListIds" paginator="true" style="width:100%" rowIndexVar="index" rows="10" var="row" value="#{labCheckReg.attachmentList}" rowHover="true">
+										<p:column styleClass='centerText'>
+											<f:facet name="header">#</f:facet>
+		                                    #{index + 1}
+	                                   	</p:column>
+										<p:column styleClass='centerText'>
+											<f:facet name="header">
+													#{msgs.label_fileName}
+												</f:facet>
+											<h:outputText value="#{row.fileName}" />
+										</p:column>
+										<p:column styleClass='centerText'>
+											<f:facet name="header">
+												#{msgs.label_download}
+											</f:facet>
+											<h:commandButton styleClass="btn btn-success" value="&#xf019; #{msgs.label_download}">
+												<f:ajax render="labCheckRegFormId:downloadDlgPanelId labCheckRegFormId:downloadedFileParamId" listener="#{labCheckReg.getDownloadParam(row.attachmentId)}" onevent="function(e){if(e.status == 'success') return downloadFile();}" />
+											</h:commandButton>
+										</p:column>
+										<p:column styleClass='centerText' rendered="#{labCheckReg.pageMode == 1}">
+											<f:facet name="header">
+												#{msgs.label_delete}
+											</f:facet>
+											<h:commandButton styleClass="btn btn-trans-icon" value="&#xf00d;">
+												<f:ajax render="labCheckRegFormId:downloadDlgPanelId labCheckRegFormId:downloadedFileParamId" listener="#{labCheckReg.getDeleteParam(row)}" />
+											</h:commandButton>
+										</p:column>
+									</p:dataTable>
+								</td>
+							</tr>
+						</table>
+					</h:panelGroup>
+				</p:dialog>
+			</h:panelGroup>
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>

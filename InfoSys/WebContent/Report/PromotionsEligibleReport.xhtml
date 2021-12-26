@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:util="http://java.sun.com/jsf/composite/util" xmlns:rich="http://richfaces.org/rich">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+</h:head>
+<h:body styleClass="screenBg">
+	<h:form id="formId" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/Template.xhtml">
+
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+				<tr>
+					<td class="screenTitle">#{msgs.title_promotionsEligibleReport}</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.label_searchData}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="searchContainerId">
+							<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+
+								<tr>
+									<th width="15%">
+										#{msgs.label_region}
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<h:selectOneMenu rendered="#{empty promotionsEligibleReport.employeeRegionName}" value="#{promotionsEligibleReport.regionId}" styleClass="form-control">
+											<f:selectItem itemLabel="#{msgs.label_all}" itemValue="-1" />
+											<f:selectItems value="#{promotionsEligibleReport.regionDepartmentsList}" var="dep" itemLabel="#{dep.arabicName}" itemValue="#{dep.id}" />
+										</h:selectOneMenu>
+										<h:outputText rendered="#{not empty promotionsEligibleReport.employeeRegionName}" value="#{promotionsEligibleReport.employeeRegionName}" />
+									</td>
+
+									<td width="35%"></td>
+
+								</tr>
+
+								<tr>
+									<th width="15%">
+										#{msgs.label_category}
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<h:selectOneMenu value="#{promotionsEligibleReport.categoryId}" styleClass="form-control">
+											<f:selectItem itemLabel="#{msgs.label_solider}" itemValue="#{promotionsEligibleReport.solider}" />
+											<f:selectItem itemLabel="#{msgs.label_officer}" itemValue="#{promotionsEligibleReport.officer}" />
+											<f:ajax execute="@this" render="formId:rankId" listener="#{promotionsEligibleReport.onCategoryChange()}" />
+										</h:selectOneMenu>
+									</td>
+
+
+									<th width="15%">
+										#{msgs.label_currentRank}
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<h:selectOneMenu id="rankId" value="#{promotionsEligibleReport.rank}" styleClass="form-control">
+											<f:selectItem itemLabel="#{msgs.label_all}" itemValue="#{promotionsEligibleReport.all}" />
+											<f:selectItems value="#{promotionsEligibleReport.ranksList}" var="rank" itemLabel="#{rank.description}" itemValue="#{rank.id}" />
+										</h:selectOneMenu>
+									</td>
+
+								</tr>
+
+								<tr>
+									<th width="15%">
+										#{msgs.label_promotionEligibleLastDate}
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<util:advancedHijriDate value="#{promotionsEligibleReport.promotionEligibleLastDate}" />
+									</td>
+
+									<th width="15%">
+										#{msgs.label_promotionExecutionDate}
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<util:advancedHijriDate value="#{promotionsEligibleReport.promotionExecutionDate}" />
+										<h:outputText value="#{msgs.label_labCheckIncluded}" style="margin-right: 4px;" />
+									</td>
+
+								</tr>
+
+								<tr>
+									<th width="15%">
+										#{msgs.label_labCheckStatus}
+										<h:outputText value="*" style="color:red;" />
+									</th>
+									<td width="20%">
+										<h:selectOneRadio value="#{promotionsEligibleReport.labCheckStatus}" styleClass="form-control">
+											<f:selectItem itemLabel="#{msgs.label_all}" itemValue="#{promotionsEligibleReport.all}" />
+											<f:selectItem itemLabel="#{msgs.label_labCheckNotExist}" itemValue="#{promotionsEligibleReport.labCheckNotExist}" />
+											<f:selectItem itemLabel="#{msgs.label_labCheckExist}" itemValue="#{promotionsEligibleReport.labCheckExist}" />
+											<f:ajax execute="@this" render="formId:labCheckResultHeaderId formId:labCheckResulDetailstId" listener="#{promotionsEligibleReport.onLabCheckStatusChange()}" />
+										</h:selectOneRadio>
+									</td>
+									<th width="15%">
+										<h:panelGroup id="labCheckResultHeaderId">
+											<h:outputText value="#{msgs.label_checkResult}" rendered="#{promotionsEligibleReport.checkReusltFlag}" />
+											<h:outputText value="*" style="color:red;" rendered="#{promotionsEligibleReport.checkReusltFlag}" />
+										</h:panelGroup>
+									</th>
+									<td width="20%">
+										<h:panelGroup id="labCheckResulDetailstId">
+											<h:selectOneMenu rendered="#{promotionsEligibleReport.checkReusltFlag}" value="#{promotionsEligibleReport.labCheckResult}" styleClass="form-control">
+												<f:selectItem itemLabel="#{msgs.label_all}" itemValue="#{promotionsEligibleReport.all}" />
+												<f:selectItem itemLabel="#{msgs.label_noSample}" itemValue="#{promotionsEligibleReport.noSampleCheckResult}" />
+												<f:selectItem itemLabel="#{msgs.label_sampleTakenAndWaitResult}" itemValue="#{promotionsEligibleReport.sampleTakenCheckResult}" />
+												<f:selectItem itemLabel="#{msgs.label_negative}" itemValue="#{promotionsEligibleReport.negativeCheckResult}" />
+												<f:selectItem itemLabel="#{msgs.label_positive}" itemValue="#{promotionsEligibleReport.positiveCheckResult}" />
+												<f:selectItem itemLabel="#{msgs.label_positiveUnderApprove}" itemValue="#{promotionsEligibleReport.positiveUnderApproveCheckResult}" />
+											</h:selectOneMenu>
+										</h:panelGroup>
+									</td>
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td width="100%">
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td width="100%">
+									<h:commandButton class="btn btn-success" value="&#xf021; #{msgs.label_reset}" title="#{msgs.label_reset}" action="#{promotionsEligibleReport.init()}">
+										<f:ajax render="formId:searchContainerId" />
+									</h:commandButton>
+									<h:commandButton class="btn btn-success" value="&#xf02f; #{msgs.label_print}" title="#{msgs.label_print}" action="#{promotionsEligibleReport.printReport()}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+			</table>
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>

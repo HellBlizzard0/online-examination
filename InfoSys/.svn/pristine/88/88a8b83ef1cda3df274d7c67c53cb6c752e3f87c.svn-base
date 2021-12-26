@@ -1,0 +1,821 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:util="http://java.sun.com/jsf/composite/util" xmlns:code="http://java.sun.com/jsf/composite/code">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+	<script type="text/javascript">
+		var m;
+		function getDepartment(contextPath) {
+			m = 1;
+			openDepartmentsMiniSearch(contextPath, 1, null, null);
+			return false;
+		}
+
+		function getEmployee(contextPath) {
+			m = 2;
+			openEmpsMiniSearch(contextPath, 2);
+			return false;
+		}
+
+		function getNonEmployee(contextPath) {
+			m = 3;
+			openNonEmpsMiniSearch(contextPath, 1);
+			return false;
+		}
+
+		function getEmployeeInfoSysDetails(contextPath, socialId) {
+			openEmployeeInfoSysDetailsBySocialId(contextPath, socialId);
+			return false;
+		}
+
+		function releaseMask() {
+			unMaskScreen();
+		}
+
+		function HandlePopupResult(ret) {
+			unMaskScreen();
+			if (ret != null) {
+				if (m == 1) {
+					document
+							.getElementById('securityCheckRegFormId:departmentSearchIdId').value = ret[0];
+					document
+							.getElementById('securityCheckRegFormId:departmentSearchNameId').innerHTML = ret[1];
+					document
+							.getElementById('securityCheckRegFormId:departmentSearchNameHiddenId').value = ret[1];
+					return true;
+				} else if (m == 2) {
+					document
+							.getElementById('securityCheckRegFormId:personsPanelId:selectedEmployeeIdId').value = ret[0];
+					document
+							.getElementById('securityCheckRegFormId:personsPanelId:selectedEmployeeNameId').value = ret[1];
+					document
+							.getElementById('securityCheckRegFormId:personsPanelId:selectedEmployeeSocialIdId').value = ret[2];
+					document
+							.getElementById('securityCheckRegFormId:personsPanelId:selectedEmployeeMilitaryNoId').value = ret[3];
+					document
+							.getElementById('securityCheckRegFormId:personsPanelId:selectedEmployeeRankId').value = ret[4];
+					document
+							.getElementById(
+									'securityCheckRegFormId:personsPanelId:employeeHiddenBtnId')
+							.click();
+					return true;
+				} else if (m == 3) {
+					document
+							.getElementById('securityCheckRegFormId:personsPanelId:selectedNonemployeeIdId').value = ret[0];
+					document
+							.getElementById('securityCheckRegFormId:personsPanelId:selectedNonemployeeNameId').value = ret[1];
+					document
+							.getElementById('securityCheckRegFormId:personsPanelId:selectedNonemployeeIdentityId').value = ret[2];
+					document
+							.getElementById('securityCheckRegFormId:personsPanelId:selectedNonemployeeNationalityId').value = ret[4];
+					document
+							.getElementById('securityCheckRegFormId:personsPanelId:selectedNonemployeeSponsorId').value = ret[5];
+					document
+							.getElementById(
+									'securityCheckRegFormId:personsPanelId:nonemployeeHiddenBtnId')
+							.click();
+					return true;
+				}
+			}
+			return false;
+		}
+
+		function validateMandatoryData() {
+			var securityCheckReason = document
+					.getElementById("securityCheckRegFormId:securityCheckReasonId");
+
+			var errorMsg;
+			var successValidation = true;
+
+			if ($(securityCheckReason).val().length > 500) {
+				successValidation = false;
+				errorMsg = '#{msgs.error_securityCheckReasonExceedMaxLength}';
+			}
+
+			if (!successValidation) {
+				showErrorMessage(errorMsg);
+			}
+
+			if (successValidation) {
+				return confirm('#{msgs.q_save}');
+			} else {
+				return successValidation;
+			}
+		}
+
+		function handleDownloadFiles(e) {
+			openDownloadPopupFlagId = document
+					.getElementById('securityCheckRegFormId:openDownloadPopupFlagId').value;
+			openDownloadDialogueFlagId = document
+					.getElementById('securityCheckRegFormId:openDownloadDialogueFlagId').value;
+
+			if (e.status == 'success') {
+				if (openDownloadPopupFlagId == 'true') {
+					downloadFile();
+				} else if (openDownloadDialogueFlagId == 'true') {
+					PF('dlg').show();
+				}
+			}
+		}
+
+		function uploadFile() {
+			fileArchivingParam = document
+					.getElementById('securityCheckRegFormId:fileArchivingParamId').value;
+			openUploadFile(
+					'#{securityCheckRegisteration.boolServerUploadPath}',
+					fileArchivingParam);
+			return false;
+		}
+
+		function downloadFile() {
+			downloadedFileParamId = document
+					.getElementById('securityCheckRegFormId:downloadedFileParamId').value;
+			openDownloadFile(
+					'#{securityCheckRegisteration.boolServerDownloadPath}',
+					downloadedFileParamId);
+			return false;
+		}
+	</script>
+</h:head>
+<h:body styleClass="screenBg">
+	<h:form id="securityCheckRegFormId" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/Template.xhtml">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+
+				<h:panelGroup rendered="#{securityCheckRegisteration.viewMode == 1}">
+					<tr>
+						<td class="screenTitle">#{msgs.title_securityCheckRegisterationEmp}</td>
+					</tr>
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{securityCheckRegisteration.viewMode == 2}">
+					<tr>
+						<td class="screenTitle">#{msgs.title_securityCheckRegisterationNonEmp}</td>
+					</tr>
+				</h:panelGroup>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.label_requestData}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<th width="15%">#{msgs.label_requestNumber}</th>
+								<td width="20%">
+									<h:outputText id="requestNumberId" value="#{securityCheckRegisteration.securityCheck.requestNumber}" />
+								</td>
+
+								<th width="15%">#{msgs.label_requestDate}</th>
+								<td width="20%">
+									<h:outputText id="requestDateViewId" value="#{securityCheckRegisteration.securityCheck.requestDateString}" />
+								</td>
+
+							</tr>
+
+							<tr>
+								<th width="15%">
+									#{msgs.label_requestSource}
+									<h:outputText rendered="#{securityCheckRegisteration.pageMode == 2}" value="*" style="color:red;" />
+								</th>
+								<td width="20%">
+									<h:selectOneMenu class="form-control inputnumber" rendered="#{securityCheckRegisteration.pageMode == 2}" value="#{securityCheckRegisteration.securityCheck.requestSource}">
+										<f:selectItem itemValue="" itemLabel=" " />
+										<f:selectItems value="#{securityCheckRegisteration.requestSourceEnumList}" var="f" itemLabel="#{f.description}" itemValue="#{f.description}" />
+										<f:ajax event="change" render="securityCheckRegFormId:departmentPenelGroupId" execute="@this" />
+									</h:selectOneMenu>
+									<h:outputText  rendered="#{securityCheckRegisteration.pageMode != 2}" value="#{securityCheckRegisteration.securityCheck.requestSource}" />
+
+								</td>
+
+								<th width="15%">
+									#{msgs.label_unit}
+									<h:outputText rendered="#{securityCheckRegisteration.pageMode == 2}"/>
+								</th>
+								<td width="20%">
+									<h:panelGroup id="departmentPenelGroupId">
+										<h:panelGroup rendered="#{securityCheckRegisteration.pageMode == 2 and securityCheckRegisteration.securityCheck.requestSource == securityCheckRegisteration.othersRequestSource}">
+											<h:commandButton value="&#xf002;" styleClass="btn btn-trans-icon" id="searchDepartmentBtnId" onclick="return getDepartment('#{request.contextPath}');" />
+											<h:inputHidden id="departmentSearchIdId" value="#{securityCheckRegisteration.securityCheck.departmentOrderSrcId}" />
+											<h:inputHidden id="departmentSearchNameHiddenId" value="#{securityCheckRegisteration.securityCheck.departmentOrderSrcName}" />
+										</h:panelGroup>
+										<h:outputText id="departmentSearchNameId" value="#{securityCheckRegisteration.securityCheck.departmentOrderSrcName}" />
+									</h:panelGroup>
+								</td>
+							</tr>
+
+							<tr>
+								<th width="15%">#{msgs.label_incomingSide}</th>
+								<td width="20%">
+									<h:selectOneMenu styleClass="form-control" rendered="#{securityCheckRegisteration.pageMode == 2}" value="#{securityCheckRegisteration.securityCheck.domainIncomingSideId}">
+										<f:selectItem itemValue="#{null}" itemLabel=" " />
+										<f:selectItems value="#{securityCheckRegisteration.incomingSideList}" var="side" itemLabel="#{side.description}" itemValue="#{side.id}" />
+									</h:selectOneMenu>
+									<h:outputText id="incomingSideViewId" rendered="#{securityCheckRegisteration.pageMode != 2}" value="#{securityCheckRegisteration.securityCheck.domainIncomingSideDescription}" />
+								</td>
+
+
+								<th width="15%">#{msgs.label_incomingNumber}</th>
+								<td width="20%">
+									<h:inputText id="incomingNumberId" styleClass="form-control inputnumber" value="#{securityCheckRegisteration.securityCheck.incomingNumber}" rendered="#{securityCheckRegisteration.pageMode == 2}" maxlength="20" />
+									<h:outputText id="incomingNumberViewId" rendered="#{securityCheckRegisteration.pageMode != 2}" value="#{securityCheckRegisteration.securityCheck.incomingNumber}" />
+								</td>
+							</tr>
+
+							<tr>
+								<th width="15%">#{msgs.label_incomingDate}</th>
+								<td width="35%">
+									<util:advancedHijriDate id="incomingDateId" rendered="#{securityCheckRegisteration.pageMode == 2}" value="#{securityCheckRegisteration.securityCheck.incomingDate}" />
+									<h:outputText id="incomingDateViewId" rendered="#{securityCheckRegisteration.pageMode != 2}" value="#{securityCheckRegisteration.securityCheck.incomingDateString}" />
+								</td>
+
+								<th width="15%">#{msgs.label_securityCheckSearchReason}</th>
+
+								<td width="20%">
+									<h:selectOneMenu styleClass="form-control" disabled="#{securityCheckRegisteration.pageMode != 2}" value="#{securityCheckRegisteration.securityCheck.domainReasonId}">
+										<f:selectItem itemValue="#{null}" itemLabel=" " />
+										<f:selectItems value="#{securityCheckRegisteration.securityCheckReasonList}" var="reason" itemLabel="#{reason.description}" itemValue="#{reason.id}" />
+									</h:selectOneMenu>
+									<h:outputText rendered="#{securityCheckRegisteration.pageMode != 2}" value="#{securityCheckRegisteration.securityCheck.domainReasonDescription}" />
+								</td>
+							</tr>
+							<tr>
+								<th width="15%"></th>
+								<td width="20%"></td>
+
+								<th width="15%">
+									#{msgs.label_securityCheckReason}
+									<h:outputText rendered="#{securityCheckRegisteration.pageMode == 2}" value="*" style="color:red;" />
+								</th>
+								<td width="20%">
+									<h:inputTextarea onkeypress="return valdiateMaxLength(this, 500);" onblur="return isValdiateMaxLength(this, 500);" rendered="#{securityCheckRegisteration.pageMode == 2}" styleClass="form-control" id="securityCheckReasonId" value="#{securityCheckRegisteration.securityCheck.reason}" />
+									<h:outputText id="reasonViewId" rendered="#{securityCheckRegisteration.pageMode != 2}" value="#{securityCheckRegisteration.securityCheck.reason}" />
+								</td>
+
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td width="100%">
+									<h:commandButton rendered="#{(not empty securityCheckRegisteration.securityCheck.id) and (securityCheckRegisteration.pageMode==2)}" styleClass="btn btn-success" id="archiveBtnUploadId" value="&#xf187; #{msgs.label_archiveDocuments}">
+										<f:ajax listener="#{securityCheckRegisteration.getUploadParam(securityCheckRegisteration.securityCheck.id)}" render="securityCheckRegFormId:fileArchivingParamId" onevent="function(e){if(e.status == 'success') return uploadFile();}" />
+									</h:commandButton>
+
+									<h:commandButton rendered="#{not empty securityCheckRegisteration.securityCheck.id}" styleClass="btn btn-success" id="archiveBtnDownloadId" value="&#xf0c5; #{msgs.label_archiveDocumentsShow}">
+										<f:ajax render="securityCheckRegFormId:downloadDlgPanelId securityCheckRegFormId:openDownloadDialogueFlagId securityCheckRegFormId:openDownloadPopupFlagId securityCheckRegFormId:downloadedFileParamId" listener="#{securityCheckRegisteration.getDownloadedAttachmentsIdList(securityCheckRegisteration.securityCheck.id)}" onevent="handleDownloadFiles" />
+									</h:commandButton>
+									<h:inputHidden id="fileArchivingParamId" value="#{securityCheckRegisteration.fileArchivingParam}" />
+									<h:inputHidden id="downloadedFileParamId" value="#{securityCheckRegisteration.downloadFileParamId}" />
+									<h:inputHidden id="openDownloadPopupFlagId" value="#{securityCheckRegisteration.openDownloadPopupFlag}" />
+									<h:inputHidden id="openDownloadDialogueFlagId" value="#{securityCheckRegisteration.openDownloadDialogueFlag}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.label_personsData}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<p:accordionPanel id="personsPanelId" activeIndex="#{securityCheckRegisteration.activeIndex}" multiple="true">
+							<p:tab title="#{msgs.label_employees}" rendered="#{securityCheckRegisteration.viewMode == 1 or securityCheckRegisteration.viewMode == 0}">
+
+								<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+									<tr>
+										<td>
+											<h:panelGroup id="insertEmployeePanelId">
+												<table width="100%">
+													<tr>
+														<td>
+															<h:panelGroup rendered="#{securityCheckRegisteration.pageMode == 2}">
+																<h:commandButton styleClass="btn btn-warning" value="#{msgs.label_insertEmployee}" onclick="return getEmployee('#{request.contextPath}');" />
+
+																<h:inputHidden id="selectedEmployeeIdId" value="#{securityCheckRegisteration.insertedEmployee.employeeId}" />
+																<h:inputHidden id="selectedEmployeeNameId" value="#{securityCheckRegisteration.insertedEmployee.fullName}" />
+																<h:inputHidden id="selectedEmployeeSocialIdId" value="#{securityCheckRegisteration.insertedEmployee.socialID}" />
+																<h:inputHidden id="selectedEmployeeMilitaryNoId" value="#{securityCheckRegisteration.insertedEmployee.militaryNo}" />
+																<h:inputHidden id="selectedEmployeeRankId" value="#{securityCheckRegisteration.insertedEmployee.rank}" />
+																<h:commandButton style="display:none;" id="employeeHiddenBtnId" action="#{securityCheckRegisteration.insertEmployee()}">
+																	<f:ajax render="securityCheckRegFormId:personsPanelId:employeesDataTableId" execute="securityCheckRegFormId:personsPanelId:insertEmployeePanelId" />
+																</h:commandButton>
+															</h:panelGroup>
+														</td>
+													</tr>
+												</table>
+											</h:panelGroup>
+										</td>
+									</tr>
+
+									<tr>
+										<td>
+											<p:dataTable reflow="true" tableStyle="table-layout: auto" paginator="true" id="employeesDataTableId" rows="#{securityCheckRegisteration.rowsCount}" rowIndexVar="index" var="row" value="#{securityCheckRegisteration.employeeList}" rowHover="true">
+												<p:column styleClass='centerText'>
+													<f:facet name="header">#</f:facet>
+					                                #{index + 1}
+					                            </p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header">
+														<h:outputText value="#{msgs.label_name}" />
+													</f:facet>
+													<h:outputText value="#{row.fullName}" />
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header">
+														<h:outputText value="#{msgs.label_socialNumber}" />
+													</f:facet>
+													<h:outputText value="#{row.socialID}" />
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header">
+														<h:outputText value="#{msgs.label_militaryNumber}" />
+													</f:facet>
+													<h:outputText value="#{row.militaryNo}" />
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header">
+														<h:outputText value="#{msgs.label_rank}" />
+													</f:facet>
+													<h:outputText value="#{row.rank}" />
+												</p:column>
+												<p:column styleClass='centerText' rendered="#{securityCheckRegisteration.processed or securityCheckRegisteration.pageMode == 3}">
+													<f:facet name="header"> #{msgs.label_notesExist} </f:facet>
+													<h:selectBooleanCheckbox rendered="#{securityCheckRegisteration.pageMode == 3}" value="#{row.notesExist}" />
+													<h:outputText rendered="#{not empty row.notesExist and securityCheckRegisteration.pageMode != 3 and row.notesExist}" value="#{msgs.label_yes}" />
+													<h:outputText rendered="#{not empty row.notesExist and securityCheckRegisteration.pageMode != 3 and not row.notesExist}" value="#{msgs.label_no}" />
+												</p:column>
+												<p:column styleClass='centerText' rendered="#{securityCheckRegisteration.processed or securityCheckRegisteration.pageMode == 3}">
+													<f:facet name="header"> #{msgs.label_notesDetails} </f:facet>
+													<h:commandButton id="notesDetailsBtnId" value="&#xf05a;" styleClass="btn btn-trans-icon" onclick="return getEmployeeInfoSysDetails('#{request.contextPath}','#{row.socialID}');" />
+													<h:commandButton id="notesPrintDetailsBtnId" value="&#xf02f;" styleClass="btn btn-trans-icon" action="#{securityCheckRegisteration.printEmployeeDetails(row.employeeId)}" />
+												</p:column>
+												<p:column styleClass='centerText' rendered="#{securityCheckRegisteration.pageMode == 2}">
+													<f:facet name="header">#{msgs.label_delete}</f:facet>
+
+													<h:commandButton value="&#xf00d;" styleClass="btn btn-trans-icon" action="#{securityCheckRegisteration.deleteEmployee(row)}" onclick="return confirm('#{msgs.q_delete}');">
+														<f:ajax render="securityCheckRegFormId:personsPanelId:employeesDataTableId" execute="securityCheckRegFormId:personsPanelId:employeesDataTableId" />
+													</h:commandButton>
+
+												</p:column>
+												<p:column rendered="#{securityCheckRegisteration.processed or securityCheckRegisteration.pageMode == 3}">
+													<f:facet name="header"> #{msgs.label_comment} </f:facet>
+													<p:rowToggler rendered="#{not empty row.domainNoteSrcId or securityCheckRegisteration.pageMode == 3}" />
+												</p:column>
+												<p:rowExpansion>
+													<table>
+														<tr>
+															<td style="border-style: none;">
+																<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+																	<tr>
+																		<td style="border-style: none;">
+																			<h:outputText value="#{msgs.label_otherExternalNotes}" />
+																		</td>
+																	</tr>
+																</table>
+															</td>
+														</tr>
+
+														<tr>
+															<td style="border-style: none;">
+																<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+																	<tr>
+																		<th width="15%">
+																			#{msgs.label_noteSide}
+																			<h:outputText rendered="#{securityCheckRegisteration.pageMode == 3}" value="*" style="color:red;" />
+																		</th>
+																		<td width="35%" style="border-color: white;">
+																			<h:selectOneMenu styleClass="form-control" rendered="#{securityCheckRegisteration.pageMode == 3}" value="#{row.domainNoteSrcId}">
+																				<f:selectItem itemLabel=" " itemValue="#{null}" />
+																				<f:selectItems value="#{securityCheckRegisteration.noteSideList}" var="side" itemLabel="#{side.description}" itemValue="#{side.id}" />
+																				<f:ajax event="change"  execute="@this" />
+																			</h:selectOneMenu>
+																			<h:outputText id="noteSideViewId" rendered="#{securityCheckRegisteration.pageMode != 3}" value="#{row.domainNoteSrcDescription}" />
+																		</td>
+
+																		<th width="15%">
+																			#{msgs.label_noteSubject}
+																			<h:outputText rendered="#{securityCheckRegisteration.pageMode == 3}" value="*" style="color:red;" />
+																		</th>
+																		<td width="35%" style="border-color: white;">
+																			<h:inputText styleClass="form-control" id="noteSubjectEditId" rendered="#{securityCheckRegisteration.pageMode == 3}" value="#{row.noteSubject}" />
+																			<h:outputText id="noteSubjectViewId" rendered="#{securityCheckRegisteration.pageMode != 3}" value="#{row.noteSubject}" />
+																		</td>
+																	</tr>
+																	<tr>
+																		<th width="15%">
+																			#{msgs.label_noteDetails}
+																			<h:outputText rendered="#{securityCheckRegisteration.pageMode == 3}" value="*" style="color:red;" />
+																		</th>
+																		<td width="35%" style="border-color: white;">
+																			<h:inputTextarea onkeypress="return valdiateMaxLength(this, 500);" onblur="return isValdiateMaxLength(this, 500);" styleClass="form-control" id="noteDetailEditId" disabled="#{securityCheckRegisteration.pageMode != 3}" value="#{row.noteDetail}" />
+																		</td>
+																	</tr>
+																</table>
+															</td>
+														</tr>
+
+														<tr>
+															<td style="border-style: none;">
+																<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+																	<tr>
+																		<td style="border-style: none;">
+																			<h:commandButton rendered="#{securityCheckRegisteration.pageMode == 3}" styleClass="btn btn-default" id="resetBtnId" value="#{msgs.label_save}" action="#{securityCheckRegisteration.refreshSubmit()}">
+																				<f:ajax execute="securityCheckRegFormId:personsPanelId:employeesDataTableId" render="securityCheckRegFormId:personsPanelId:employeesDataTableId" />
+																			</h:commandButton>
+																		</td>
+																	</tr>
+																</table>
+															</td>
+														</tr>
+													</table>
+												</p:rowExpansion>
+											</p:dataTable>
+										</td>
+									</tr>
+								</table>
+							</p:tab>
+
+							<p:tab title="#{msgs.label_nonEmployees}" rendered="#{securityCheckRegisteration.viewMode == 2 or securityCheckRegisteration.viewMode == 0}">
+
+								<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+									<tr>
+										<td>
+											<h:panelGroup id="insertNonemployeePanelId">
+												<table width="100%">
+													<tr>
+														<td>
+															<h:panelGroup rendered="#{securityCheckRegisteration.pageMode == 2}">
+																<h:commandButton styleClass="btn btn-warning" value="#{msgs.label_insertNewNonEmployee}" onclick="return getNonEmployee('#{request.contextPath}');" />
+
+																<h:inputHidden id="selectedNonemployeeIdId" value="#{securityCheckRegisteration.insertedNonEmployee.nonEmployeeId}" />
+																<h:inputHidden id="selectedNonemployeeNameId" value="#{securityCheckRegisteration.insertedNonEmployee.fullName}" />
+																<h:inputHidden id="selectedNonemployeeIdentityId" value="#{securityCheckRegisteration.insertedNonEmployee.identity}" />
+																<h:inputHidden id="selectedNonemployeeSponsorId" value="#{securityCheckRegisteration.insertedNonEmployee.sponsorDescription}" />
+																<h:inputHidden id="selectedNonemployeeNationalityId" value="#{securityCheckRegisteration.insertedNonEmployee.countryArabicName}" />
+																<h:commandButton style="display:none;" id="nonemployeeHiddenBtnId" action="#{securityCheckRegisteration.insertNonemployee()}">
+																	<f:ajax render="securityCheckRegFormId:personsPanelId:nonemployeesDataTableId" execute="securityCheckRegFormId:personsPanelId:insertNonemployeePanelId" />
+																</h:commandButton>
+															</h:panelGroup>
+														</td>
+													</tr>
+												</table>
+											</h:panelGroup>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<p:dataTable reflow="true" tableStyle="table-layout: auto" paginator="true" id="nonemployeesDataTableId" rows="#{securityCheckRegisteration.rowsCount}" rowIndexVar="index" var="row" value="#{securityCheckRegisteration.nonEmployeeList}" rowHover="true">
+												<p:column styleClass='centerText'>
+													<f:facet name="header">#</f:facet>
+					                                #{index + 1}
+					                            </p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header">
+														<h:outputText value="#{msgs.label_name}" />
+													</f:facet>
+													<h:outputText value="#{row.fullName}" />
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header">
+														<h:outputText value="#{msgs.label_identity}" />
+													</f:facet>
+													<h:outputText value="#{row.identity}" />
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header"> #{msgs.label_sponsorDescription} </f:facet>
+													<h:outputText value="#{row.sponsorDescription}" />
+												</p:column>
+												<p:column styleClass='centerText'>
+													<f:facet name="header"> #{msgs.label_nationality} </f:facet>
+													<h:outputText value="#{row.countryArabicName}" />
+												</p:column>
+												<p:column styleClass='centerText' rendered="#{securityCheckRegisteration.processed or securityCheckRegisteration.pageMode == 3}">
+													<f:facet name="header"> #{msgs.label_notesExist} </f:facet>
+													<h:selectBooleanCheckbox rendered="#{securityCheckRegisteration.pageMode == 3}" value="#{row.notesExist}" />
+													<h:outputText rendered="#{not empty row.notesExist and securityCheckRegisteration.pageMode != 3 and row.notesExist}" value="#{msgs.label_yes}" />
+													<h:outputText rendered="#{not empty row.notesExist and securityCheckRegisteration.pageMode != 3 and not row.notesExist}" value="#{msgs.label_no}" />
+												</p:column>
+												<p:column styleClass='centerText' rendered="#{securityCheckRegisteration.processed or securityCheckRegisteration.pageMode == 3}">
+													<f:facet name="header"> #{msgs.label_notesDetails} </f:facet>
+													<h:commandButton id="notesDetailsBtnId" value="&#xf05a;" styleClass="btn btn-trans-icon" onclick="return getEmployeeInfoSysDetails('#{request.contextPath}','#{row.identity}');" />
+													<h:commandButton id="notesNonPrintDetailsBtnId" value="&#xf02f;" styleClass="btn btn-trans-icon" action="#{securityCheckRegisteration.printNonEmployeeDetails(row.nonEmployeeId)}" />
+												</p:column>
+												<p:column styleClass='centerText' rendered="#{securityCheckRegisteration.pageMode == 2}">
+													<f:facet name="header">
+														<h:outputText value="#{msgs.label_delete}" />
+													</f:facet>
+													<h:commandButton value="&#xf00d;" styleClass="btn btn-trans-icon" action="#{securityCheckRegisteration.deleteNonEmployee(row)}" onclick="return confirm('#{msgs.q_delete}');">
+														<f:ajax render="securityCheckRegFormId:personsPanelId:nonemployeesDataTableId" execute="securityCheckRegFormId:personsPanelId:nonemployeesDataTableId" />
+													</h:commandButton>
+												</p:column>
+												<p:column rendered="#{securityCheckRegisteration.processed or securityCheckRegisteration.pageMode == 3}">
+													<f:facet name="header"> #{msgs.label_comment} </f:facet>
+													<p:rowToggler rendered="#{not empty row.domainNoteSrcId or securityCheckRegisteration.pageMode == 3}" />
+												</p:column>
+												<p:rowExpansion>
+													<table>
+														<tr>
+															<td style="border-style: none;">
+																<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+																	<tr>
+																		<td style="border-style: none;">
+																			<h:outputText value="#{msgs.label_otherExternalNotes}" />
+																		</td>
+																	</tr>
+																</table>
+															</td>
+														</tr>
+
+														<tr>
+															<td style="border-style: none;">
+																<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+																	<tr>
+																		<th width="15%">
+																			#{msgs.label_noteSide}
+																			<h:outputText rendered="#{securityCheckRegisteration.pageMode == 3}" value="*" style="color:red;" />
+																		</th>
+																		<td width="35%" style="border-color: white;">
+																			<h:selectOneMenu styleClass="form-control" rendered="#{securityCheckRegisteration.pageMode == 3}" value="#{row.domainNoteSrcId}">
+																				<f:selectItem itemLabel=" " itemValue="#{null}" />
+																				<f:selectItems value="#{securityCheckRegisteration.noteSideList}" var="side" itemLabel="#{side.description}" itemValue="#{side.id}" />
+																				<f:ajax event="change"  execute="@this" />
+																			</h:selectOneMenu>
+																			<h:outputText id="noteSideViewId" rendered="#{securityCheckRegisteration.pageMode != 3}" value="#{row.domainNoteSrcDescription}" />
+																		</td>
+
+																		<th width="15%">
+																			#{msgs.label_noteSubject}
+																			<h:outputText rendered="#{securityCheckRegisteration.pageMode == 3}" value="*" style="color:red;" />
+																		</th>
+																		<td width="35%" style="border-color: white;">
+																			<h:inputText styleClass="form-control" id="noteSubjectEditId" rendered="#{securityCheckRegisteration.pageMode == 3}" value="#{row.noteSubject}" />
+																			<h:outputText id="noteSubjectViewId" rendered="#{securityCheckRegisteration.pageMode != 3}" value="#{row.noteSubject}" />
+																		</td>
+																	</tr>
+
+																	<tr>
+																		<th width="15%">
+																			#{msgs.label_noteDetails}
+																			<h:outputText rendered="#{securityCheckRegisteration.pageMode == 3}" value="*" style="color:red;" />
+																		</th>
+																		<td width="35%" style="border-color: white;">
+																			<h:inputTextarea onkeypress="return valdiateMaxLength(this, 500);" onblur="return isValdiateMaxLength(this, 500);" styleClass="form-control" id="noteDetailEditId" disabled="#{securityCheckRegisteration.pageMode != 3}" value="#{row.noteDetail}" />
+																		</td>
+																	</tr>
+																</table>
+															</td>
+														</tr>
+
+														<tr>
+															<td style="border-style: none;">
+																<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+																	<tr>
+																		<td style="border-style: none;">
+																			<h:commandButton rendered="#{securityCheckRegisteration.pageMode == 3}" styleClass="btn btn-default" id="resetBtnId" value="#{msgs.label_reset}" action="#{securityCheckRegisteration.init(row)}">
+																				<f:ajax execute="securityCheckRegFormId:personsPanelId:nonemployeesDataTableId" render="securityCheckRegFormId:personsPanelId:nonemployeesDataTableId" />
+																			</h:commandButton>
+																		</td>
+																	</tr>
+																</table>
+															</td>
+														</tr>
+													</table>
+												</p:rowExpansion>
+											</p:dataTable>
+										</td>
+									</tr>
+								</table>
+							</p:tab>
+						</p:accordionPanel>
+					</td>
+				</tr>
+
+				<tr>
+					<td>
+						<h:panelGroup id="commentPanelId" rendered="#{securityCheckRegisteration.pageMode == 1 and securityCheckRegisteration.currentTask != null and securityCheckRegisteration.role != 'Notification' and securityCheckRegisteration.role != 'History' }">
+							<table width="100%">
+								<tr>
+									<td width="100%" height="5" />
+								</tr>
+
+								<tr>
+									<td>
+										<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+											<tr>
+												<td>
+													<h:outputText value="#{msgs.label_decisions}" />
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+
+								<tr>
+									<td width="100%" height="5" />
+								</tr>
+
+								<tr>
+									<td>
+										<table class="sectionContent" width="100%" border="0" cellpadding="0" cellspacing="0">
+											<tr>
+												<th width="15%">#{msgs.label_comment}</th>
+												<td width="35%">
+													<h:inputTextarea onkeypress="return valdiateMaxLength(this, 500);" onblur="return isValdiateMaxLength(this, 500);" styleClass="form-control" id="securityCheckApprovalRemarksId" value="#{securityCheckRegisteration.currentTask.notes}" />
+												</td>
+												<td width="50%"></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</h:panelGroup>
+
+						<h:panelGroup id="commentViewPanelId" rendered="#{not empty securityCheckRegisteration.currentTask.notes}">
+							<table width="100%">
+								<tr>
+									<td width="100%" height="5" />
+								</tr>
+
+								<tr>
+									<td>
+										<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+											<tr>
+												<td>
+													<h:outputText value="#{msgs.label_decisions}" />
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+
+								<tr>
+									<td width="100%" height="5" />
+								</tr>
+
+								<tr>
+									<td>
+										<table class="sectionContent" width="100%" border="0" cellpadding="0" cellspacing="0">
+											<tr>
+												<th width="15%">#{msgs.label_comment}</th>
+												<td width="35%">
+													<h:outputText value="#{securityCheckRegisteration.currentTask.notes}" />
+												</td>
+												<td width="50%"></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td width="100%">
+						<code:prevTasks rendered="#{not empty securityCheckRegisteration.currentTask}" value="#{securityCheckRegisteration.prevTasks}" />
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:commandButton id="printBtnId" styleClass="btn btn-success" action="#{securityCheckRegisteration.print()}" value="&#xf02f; #{msgs.label_print}" rendered="#{not empty securityCheckRegisteration.securityCheck.id}" />
+
+									<h:commandButton id="saveBtnId" styleClass="btn btn-success" action="#{securityCheckRegisteration.saveSecurityCheck()}" rendered="#{securityCheckRegisteration.pageMode == 2 and empty securityCheckRegisteration.currentTask}" value="&#xf0c7; #{msgs.label_save}" onclick="return validateMandatoryData();">
+									</h:commandButton>
+
+									<h:commandButton id="saveAndSendBtnId" styleClass="btn btn-success" action="#{securityCheckRegisteration.saveAndSendSecurityCheck()}" rendered="#{securityCheckRegisteration.pageMode == 2}" value="&#xf1d8; #{msgs.label_saveAndSend}" onclick="return confirm('#{msgs.q_confirm}');">
+									</h:commandButton>
+
+									<h:commandButton id="saveSecurityCheckProcessingBtnId" styleClass="btn btn-success" action="#{securityCheckRegisteration.saveSecurityCheckProcessing()}" value="&#xf1d8; #{msgs.label_saveAndSend}" onclick="return confirm('#{msgs.q_confirm}');" rendered="#{securityCheckRegisteration.pageMode == 3}">
+										<f:ajax execute="securityCheckRegFormId:personsPanelId" render="securityCheckRegFormId:notifyMessagesId" />
+									</h:commandButton>
+
+									<h:commandButton id="printReplyBtnId" styleClass="btn btn-success" action="#{securityCheckRegisteration.printReplyLetter()}" value="&#xf02f; #{msgs.label_printReplyLetter}" rendered="#{securityCheckRegisteration.pageMode == 1 and securityCheckRegisteration.role == 'Notification' and securityCheckRegisteration.securityCheck.status == 5}" />
+
+									<h:commandButton id="doNotifyBtnId" styleClass="btn btn-success" action="#{securityCheckRegisteration.doNotify()}" value="#{msgs.label_notified}" rendered="#{securityCheckRegisteration.pageMode == 1 and securityCheckRegisteration.role == 'Notification'}">
+										<f:ajax render="securityCheckRegFormId:notifyMessagesId" />
+									</h:commandButton>
+
+									<h:commandButton id="rejectBtnId" styleClass="btn btn-danger" action="#{securityCheckRegisteration.rejectSecurityCheck()}" value="&#xf00d; #{msgs.label_reject}" rendered="#{securityCheckRegisteration.pageMode == 1 and securityCheckRegisteration.currentTask != null and securityCheckRegisteration.role != 'Notification' and securityCheckRegisteration.role != 'History'}" onclick="return confirm('#{msgs.q_reject}');">
+										<f:ajax render="securityCheckRegFormId:notifyMessagesId" execute="securityCheckRegFormId:commentPanelId" />
+									</h:commandButton>
+
+									<h:commandButton id="approveBtnId" styleClass="btn btn-success" action="#{securityCheckRegisteration.approveSecurityCheck()}" value="&#xf00c; #{msgs.label_approve}" rendered="#{securityCheckRegisteration.pageMode == 1 and securityCheckRegisteration.currentTask != null and securityCheckRegisteration.role != 'Notification' and securityCheckRegisteration.role != 'History'}" onclick="return confirm('#{msgs.q_approve}');">
+										<f:ajax render="securityCheckRegFormId:notifyMessagesId" execute="securityCheckRegFormId:commentPanelId" />
+									</h:commandButton>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+			</table>
+
+			<h:panelGroup id="downloadDlgPanelId">
+				<p:dialog dir="#{msgs.dir}" header="#{msgs.label_archiveDocumentsShow}" id="dlgId" widgetVar="dlg" modal="true" height="180px;" width="720px">
+					<h:panelGroup id="internalDlgPanelId">
+						<table width="100%">
+							<tr>
+								<td>
+									<p:dataTable tableStyle="table-layout:auto" reflow="true" liveResize="true" paginatorPosition="bottom" id="fileListIds" paginator="true" style="width:100%" rowIndexVar="index" rows="10" var="row" value="#{securityCheckRegisteration.attachmentList}" widgetVar="table" rowHover="true">
+										<p:column styleClass='centerText'>
+											<f:facet name="header">#</f:facet>
+		                                    #{index + 1}
+	                                   	</p:column>
+										<p:column styleClass='centerText'>
+											<f:facet name="header">
+													#{msgs.label_fileName}
+												</f:facet>
+											<h:outputText value="#{row.fileName}" />
+										</p:column>
+										<p:column styleClass='centerText'>
+											<f:facet name="header">
+												#{msgs.label_download}
+											</f:facet>
+											<h:commandButton styleClass="btn btn-success" value="&#xf019; #{msgs.label_download}">
+												<f:ajax render="securityCheckRegFormId:internalDlgPanelId securityCheckRegFormId:downloadedFileParamId" listener="#{securityCheckRegisteration.getDownloadParam(row.attachmentId)}" onevent="function(e){if(e.status == 'success') return downloadFile();}" />
+											</h:commandButton>
+										</p:column>
+										<p:column styleClass='centerText' rendered="#{securityCheckRegisteration.pageMode==2}">
+											<f:facet name="header">
+												#{msgs.label_delete}
+											</f:facet>
+											<h:commandButton styleClass="btn btn-trans-icon" value="&#xf00d;">
+												<f:ajax render="securityCheckRegFormId:internalDlgPanelId securityCheckRegFormId:downloadedFileParamId" listener="#{securityCheckRegisteration.getDeleteParam(row)}" />
+											</h:commandButton>
+										</p:column>
+									</p:dataTable>
+								</td>
+							</tr>
+						</table>
+					</h:panelGroup>
+				</p:dialog>
+			</h:panelGroup>
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>

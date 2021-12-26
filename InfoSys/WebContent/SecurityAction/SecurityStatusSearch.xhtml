@@ -1,0 +1,575 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:util="http://java.sun.com/jsf/composite/util" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<h:outputStylesheet library="css" name="styles.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	<h:outputStylesheet library="css" name="bootstrap.css" />
+	<h:outputScript name="utilities.js" library="javascript" target="head" />
+</h:head>
+<h:body styleClass="screenBg">
+	<h:form id="formId" dir="#{msgs.dir}">
+		<ui:decorate template="/Main/Template.xhtml">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tr>
+					<td class="screenTitle">
+						<h:outputText value="#{msgs.title_securityStatus}" />
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<p:accordionPanel id="searchAccordionPanel">
+							<p:ajax event="tabChange" listener="#{securityStatusSearch.onTabChange}" />
+							<p:ajax event="tabClose" listener="#{securityStatusSearch.onTabChange}" />
+							<p:tab id="personTabId" title="#{msgs.label_securityStatusforPerson}">
+								<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+									<tr>
+										<th width="15%">
+											#{msgs.label_socialType}
+											<h:outputText value="*" style="color:red;" />
+										</th>
+										<td width="35%">
+											<h:selectOneMenu value="#{securityStatusSearch.searchSocialType}" styleClass="form-control">
+												<f:selectItem itemLabel="#{msgs.label_nationalIdentity}" itemValue="#{securityStatusSearch.nationalIdentity}" />
+												<f:selectItem itemLabel="#{msgs.label_resident}" itemValue="#{securityStatusSearch.resident}" />
+												<f:selectItem itemLabel="#{msgs.label_visitVisa}" itemValue="#{securityStatusSearch.visitVisa}" />
+												<ui:remove>
+													<f:selectItem itemLabel="#{msgs.label_khaleejiPassport}" itemValue="#{securityStatusSearch.khaleejiPassport}" />
+													<f:selectItem itemLabel="#{msgs.label_khaleejiIdentity}" itemValue="#{securityStatusSearch.khaleejiIdentity}" />
+												</ui:remove>
+												<f:ajax event="change" execute="@this" render="formId:searchAccordionPanel formId:personSearchResultPaneId formId:khalijiPassportSearchResultPaneId formId:khalijiIdentitySearchResultPaneId formId:vehicleSearchResultPaneId formId:printPanelId" listener="#{securityStatusSearch.resetSearchParams()}" />
+											</h:selectOneMenu>
+										</td>
+										<th width="15%">
+											<h:outputText value="#{msgs.label_socialId}" rendered="#{securityStatusSearch.searchSocialType == securityStatusSearch.nationalIdentity or securityStatusSearch.searchSocialType == securityStatusSearch.resident or securityStatusSearch.searchSocialType == securityStatusSearch.khaleejiIdentity}" />
+											<h:outputText value="#{msgs.label_passportNumber}" rendered="#{securityStatusSearch.searchSocialType == securityStatusSearch.khaleejiPassport}" />
+											<h:outputText value="#{msgs.label_borderNumber}" rendered="#{securityStatusSearch.searchSocialType == securityStatusSearch.visitVisa}" />
+											<h:outputText value="*" style="color:red;" />
+										</th>
+										<td width="35%">
+											<h:inputText id="socialIdSearchId" styleClass="form-control inputnumber" value="#{securityStatusSearch.searchSocialId}" maxlength="10" />
+										</td>
+									</tr>
+									<tr>
+										<th width="15%">
+											<h:outputText value="#{msgs.label_birthDate}" rendered="#{securityStatusSearch.searchSocialType == securityStatusSearch.nationalIdentity or securityStatusSearch.searchSocialType == securityStatusSearch.resident or securityStatusSearch.searchSocialType == securityStatusSearch.visitVisa}" />
+											<h:outputText value="#{msgs.label_nationality}" rendered="#{securityStatusSearch.searchSocialType == securityStatusSearch.khaleejiPassport or securityStatusSearch.searchSocialType == securityStatusSearch.khaleejiIdentity}" />
+											<h:outputText value="*" style="color:red;" />
+										</th>
+										<td>
+											<util:advancedHijriDate birthDateRange="true" value="#{securityStatusSearch.searchBirthDate}" rendered="#{securityStatusSearch.searchSocialType == securityStatusSearch.nationalIdentity}" />
+											<p:calendar value="#{securityStatusSearch.searchBirthDate}" styleClass="in-calendar" pattern="dd-MM-yyyy" mask="true" showOn="button" rendered="#{securityStatusSearch.searchSocialType == securityStatusSearch.resident or securityStatusSearch.searchSocialType == securityStatusSearch.visitVisa}" />
+											<h:outputText value="#{msgs.label_greg}" rendered="#{securityStatusSearch.searchSocialType == securityStatusSearch.resident or securityStatusSearch.searchSocialType == securityStatusSearch.visitVisa}" />
+											<h:selectOneMenu value="#{securityStatusSearch.searchCountryCode}" styleClass="form-control" rendered="#{securityStatusSearch.searchSocialType == securityStatusSearch.khaleejiPassport}">
+												<f:selectItems value="#{securityStatusSearch.countriesList}" var="country" itemLabel="#{country.arabicName}" itemValue="#{country.yaqeenCode}" />
+											</h:selectOneMenu>
+
+											<h:selectOneMenu value="#{securityStatusSearch.searchCountryCode}" styleClass="form-control" rendered="#{securityStatusSearch.searchSocialType == securityStatusSearch.khaleejiIdentity}">
+												<f:selectItems value="#{securityStatusSearch.gccCountriesList}" var="country" itemLabel="#{country.code}" itemValue="#{country.value}" />
+											</h:selectOneMenu>
+										</td>
+									</tr>
+								</table>
+							</p:tab>
+							<p:tab id="carTabId" title="#{msgs.label_securityStatusforvehicle}">
+								<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+									<tr>
+										<th width="15%">
+											#{msgs.label_plateNumber}
+											<h:outputText value="*" style="color:red;" />
+										</th>
+										<td width="35%">
+											<h:selectOneMenu style="width:12%;" value="#{securityStatusSearch.plateText1}" styleClass="form-control">
+												<f:selectItems value="#{securityStatusSearch.plateNumberList}" var="number" itemLabel="#{number}" itemValue="#{number}" />
+											</h:selectOneMenu>
+											<h:selectOneMenu style="width:12%;" value="#{securityStatusSearch.plateText2}" styleClass="form-control">
+												<f:selectItems value="#{securityStatusSearch.plateNumberList}" var="number" itemLabel="#{number}" itemValue="#{number}" />
+											</h:selectOneMenu>
+											<h:selectOneMenu style="width:12%;" value="#{securityStatusSearch.plateText3}" styleClass="form-control">
+												<f:selectItems value="#{securityStatusSearch.plateNumberList}" var="number" itemLabel="#{number}" itemValue="#{number}" />
+											</h:selectOneMenu>
+											<h:inputText style="width:20%;" styleClass="form-control inputnumber" value="#{securityStatusSearch.plateNumber}" maxlength="4" onkeypress="return checkDigit(event)" />
+										</td>
+										<th width="15%">
+											#{msgs.label_RegisterationType}
+											<h:outputText value="*" style="color:red;" />
+										</th>
+										<td width="35%">
+											<h:selectOneMenu value="#{securityStatusSearch.plateType}" styleClass="form-control">
+												<f:selectItem itemLabel="#{msgs.label_privateCar}" itemValue="#{securityStatusSearch.privateCar}" />
+												<f:selectItem itemLabel="#{msgs.label_publicTransport}" itemValue="#{securityStatusSearch.publicTransport}" />
+												<f:selectItem itemLabel="#{msgs.label_privateTransport}" itemValue="#{securityStatusSearch.privateTransport}" />
+												<f:selectItem itemLabel="#{msgs.label_publicBus}" itemValue="#{securityStatusSearch.publicBus}" />
+												<f:selectItem itemLabel="#{msgs.label_privateBus}" itemValue="#{securityStatusSearch.privateBus}" />
+												<f:selectItem itemLabel="#{msgs.label_taxi}" itemValue="#{securityStatusSearch.taxi}" />
+												<f:selectItem itemLabel="#{msgs.label_heavyEquipment}" itemValue="#{securityStatusSearch.heavyEquipment}" />
+												<f:selectItem itemLabel="#{msgs.label_export}" itemValue="#{securityStatusSearch.export}" />
+												<f:selectItem itemLabel="#{msgs.label_diplomatic}" itemValue="#{securityStatusSearch.diplomatic}" />
+												<f:selectItem itemLabel="#{msgs.label_motorcyle}" itemValue="#{securityStatusSearch.motorCycle}" />
+												<f:selectItem itemLabel="#{msgs.label_temporary}" itemValue="#{securityStatusSearch.temporary}" />
+											</h:selectOneMenu>
+										</td>
+									</tr>
+								</table>
+							</p:tab>
+						</p:accordionPanel>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td width="100%">
+						<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:commandButton styleClass="btn btn-default" id="searchBtnId" value="&#xf002; #{msgs.label_search}" action="#{securityStatusSearch.search()}">
+										<f:ajax execute="formId:searchAccordionPanel" render="formId:personSearchResultPaneId formId:khalijiPassportSearchResultPaneId formId:khalijiIdentitySearchResultPaneId formId:vehicleSearchResultPaneId formId:printPanelId" />
+									</h:commandButton>
+
+									<h:commandButton styleClass="btn btn-default" id="resetBtnId" value="&#xf021;#{msgs.label_reset}" action="#{securityStatusSearch.resetSearch()}">
+										<f:ajax render="formId:searchAccordionPanel formId:personSearchResultPaneId formId:khalijiPassportSearchResultPaneId formId:khalijiIdentitySearchResultPaneId formId:vehicleSearchResultPaneId formId:printPanelId" />
+									</h:commandButton>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td>
+						<table class="sectionTitle" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<h:outputText value="#{msgs.title_searchResults}" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%" height="5" />
+				</tr>
+
+				<tr>
+					<td align="center" width="100%">
+						<h:panelGroup id="personSearchResultPaneId">
+							<h:panelGroup rendered="#{not empty securityStatusSearch.personInfoResult and (securityStatusSearch.searchSocialType == securityStatusSearch.nationalIdentity or securityStatusSearch.searchSocialType == securityStatusSearch.resident or securityStatusSearch.searchSocialType == securityStatusSearch.visitVisa)}">
+								<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+									<tr>
+										<th width="15%">
+											<h:outputText value="#{msgs.label_securityStatus}" style=" color: red; font-size: medium; " />
+										</th>
+										<td width="35%">
+											<h:outputText rendered="#{!securityStatusSearch.personInfoResultStatusString.contains(msgs.label_notWanted)}" value="#{securityStatusSearch.personInfoResultStatusString}" style="color : red; font-size:24px" />
+											<h:outputText rendered="#{securityStatusSearch.personInfoResultStatusString.contains(msgs.label_notWanted)}" value="#{securityStatusSearch.personInfoResultStatusString}" style="color : green; font-size:24px" />
+										</td>
+										<td colspan="2" width="50%">
+											<h:graphicImage value="/image?id=#{securityStatusSearch.personalPhotoId}" />
+										</td>
+									</tr>
+									<tr>
+										<th width="15%">#{msgs.label_name}</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.personInfoResult.arabicName}" />
+											<h:inputText disabled="true" value="#{securityStatusSearch.personInfoResult.englishName}" />
+										</td>
+									</tr>
+
+									<tr>
+										<th width="15%">#{msgs.label_socialType}</th>
+										<td width="35%">
+											<h:selectOneMenu disabled="true" value="#{securityStatusSearch.searchSocialType}" styleClass="form-control">
+												<f:selectItem itemLabel="#{msgs.label_nationalIdentity}" itemValue="#{securityStatusSearch.nationalIdentity}" />
+												<f:selectItem itemLabel="#{msgs.label_resident}" itemValue="#{securityStatusSearch.resident}" />
+												<f:selectItem itemLabel="#{msgs.label_visitVisa}" itemValue="#{securityStatusSearch.visitVisa}" />
+											</h:selectOneMenu>
+										</td>
+
+										<th width="15%">
+											<h:outputText value="#{msgs.label_number}" rendered="#{securityStatusSearch.searchSocialType != securityStatusSearch.visitVisa}" />
+											<h:outputText value="#{msgs.label_borderNumber}" rendered="#{securityStatusSearch.searchSocialType == securityStatusSearch.visitVisa}" />
+										</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.searchSocialId}" />
+										</td>
+									</tr>
+									<tr>
+										<th width="15%">#{msgs.label_releaseDate}</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.personInfoResult.idIssueDateH}" />
+										</td>
+										<th width="15%">
+											<h:outputText value="#{msgs.label_source}" rendered="#{securityStatusSearch.searchSocialType != securityStatusSearch.visitVisa}" />
+											<h:outputText value="#{msgs.label_vistVisaNumber}" rendered="#{securityStatusSearch.searchSocialType == securityStatusSearch.visitVisa}" />
+										</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.personInfoResult.idIssuePlace.value}" rendered="#{securityStatusSearch.searchSocialType != securityStatusSearch.visitVisa}" />
+											<h:inputText disabled="true" value="#{securityStatusSearch.personInfoResult.visaNumber.value}" rendered="#{securityStatusSearch.searchSocialType == securityStatusSearch.visitVisa}" />
+										</td>
+									</tr>
+									<tr>
+										<th width="15%">#{msgs.label_expiryDate}</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.personInfoResult.idExpiryDateH}" />
+										</td>
+										<th width="15%">#{msgs.label_versionNumber}</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.personInfoResult.idVersionNumber}" />
+										</td>
+									</tr>
+									<tr>
+										<th width="15%">#{msgs.label_lifeStatus}</th>
+										<td width="35%">
+											<h:selectOneRadio style="width:50%" disabled="true" value="#{securityStatusSearch.personInfoResult.lifeStatus}">
+												<f:selectItem itemValue="#{securityStatusSearch.lifeStatusLive}" itemLabel="#{msgs.label_alive}" />
+												<f:selectItem itemValue="#{securityStatusSearch.lifeStatusDead}" itemLabel="#{msgs.label_dead}" />
+											</h:selectOneRadio>
+										</td>
+										<th width="15%">#{msgs.label_birthDate}</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.personInfoResult.dateOfBirthG}" />
+										</td>
+									</tr>
+									<tr>
+										<th width="15%">#{msgs.label_gender}</th>
+										<td width="35%">
+											<h:selectOneRadio style="width:50%" disabled="true" value="#{securityStatusSearch.personInfoResult.gender}">
+												<f:selectItem itemValue="#{securityStatusSearch.genderMale}" itemLabel="#{msgs.label_male}" />
+												<f:selectItem itemValue="#{securityStatusSearch.genderFemale}" itemLabel="#{msgs.label_female}" />
+											</h:selectOneRadio>
+										</td>
+										<th width="15%">#{msgs.label_job}</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.personInfoResult.occupationDesc}" />
+										</td>
+									</tr>
+									<tr>
+										<th width="15%">#{msgs.label_passportExpiryDate}</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.personInfoResult.passportExpiryDate.value}" />
+										</td>
+										<th width="15%">#{msgs.label_nationality}</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.personInfoResult.nationalityDesc}" />
+										</td>
+									</tr>
+									<tr>
+										<th width="15%">#{msgs.label_jobOwnerNumber}</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.personInfoResult.sponsorMoiNumber}" />
+										</td>
+										<th width="15%">#{msgs.label_jobOwner}</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.personInfoResult.sponsorName}" />
+										</td>
+									</tr>
+
+									<tr>
+										<td colspan="4" width="100%" height="5" />
+									</tr>
+								</table>
+							</h:panelGroup>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td align="center" width="100%">
+						<h:panelGroup id="khalijiPassportSearchResultPaneId">
+							<h:panelGroup rendered="#{not empty securityStatusSearch.personInfoResult and securityStatusSearch.searchSocialType == securityStatusSearch.khaleejiPassport}">
+								<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+									<tr>
+										<th width="15%">#{msgs.label_securityStatus}</th>
+										<td width="35%">
+											<h:outputText rendered="#{!securityStatusSearch.personInfoResultStatusString.contains(msgs.label_notWanted)}" value="#{securityStatusSearch.personInfoResultStatusString}" style="color : red; font-size:24px" />
+											<h:outputText rendered="#{securityStatusSearch.personInfoResultStatusString.contains(msgs.label_notWanted)}" value="#{securityStatusSearch.personInfoResultStatusString}" style="color : green; font-size:24px" />
+										</td>
+										<td width="15%" />
+										<td width="35%" />
+									</tr>
+									<tr>
+										<th width="15%">#{msgs.label_name}</th>
+										<td colspan="3" width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.personInfoResult.arabicName}" />
+											<h:inputText disabled="true" value="#{securityStatusSearch.personInfoResult.englishName}" />
+										</td>
+									</tr>
+
+									<tr>
+										<th width="15%">#{msgs.label_socialType}</th>
+										<td width="35%">
+											<h:selectOneMenu disabled="true" value="#{securityStatusSearch.searchSocialType}" styleClass="form-control">
+												<f:selectItem itemLabel="#{msgs.label_khaleejiPassport}" itemValue="#{securityStatusSearch.khaleejiPassport}" />
+											</h:selectOneMenu>
+										</td>
+
+										<th width="15%">#{msgs.label_number}"</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.personInfoResult.passportNumber}" />
+										</td>
+									</tr>
+									<tr>
+										<th width="15%">#{msgs.label_releaseDate}</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.personInfoResult.idIssueDateH}" />
+										</td>
+										<th width="15%">#{msgs.label_birthDate}</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.personInfoResult.dateOfBirthG}" />
+										</td>
+									</tr>
+									<tr>
+										<th width="15%">#{msgs.label_expiryDate}</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.personInfoResult.idExpiryDateH}" />
+										</td>
+										<th width="15%">#{msgs.label_nationality}</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.personInfoResult.nationalityDesc}" />
+										</td>
+									</tr>
+									<tr>
+										<th width="15%">#{msgs.label_lifeStatus}</th>
+										<td width="35%">
+											<h:selectOneRadio style="width:50%" disabled="true" value="#{securityStatusSearch.personInfoResult.lifeStatus}">
+												<f:selectItem itemValue="#{securityStatusSearch.lifeStatusLive}" itemLabel="#{msgs.label_alive}" />
+												<f:selectItem itemValue="#{securityStatusSearch.lifeStatusDead}" itemLabel="#{msgs.label_dead}" />
+											</h:selectOneRadio>
+										</td>
+									</tr>
+									<tr>
+										<th width="15%">#{msgs.label_gender}</th>
+										<td width="35%">
+											<h:selectOneRadio style="width:50%" disabled="true" value="#{securityStatusSearch.personInfoResult.gender}">
+												<f:selectItem itemValue="#{securityStatusSearch.genderMale}" itemLabel="#{msgs.label_male}" />
+												<f:selectItem itemValue="#{securityStatusSearch.genderFemale}" itemLabel="#{msgs.label_female}" />
+											</h:selectOneRadio>
+										</td>
+									</tr>
+
+									<tr>
+										<td colspan="4" width="100%" height="5" />
+									</tr>
+								</table>
+							</h:panelGroup>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td align="center" width="100%">
+						<h:panelGroup id="khalijiIdentitySearchResultPaneId">
+							<h:panelGroup rendered="#{not empty securityStatusSearch.personInfoResult and securityStatusSearch.searchSocialType == securityStatusSearch.khaleejiIdentity}">
+								<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+									<tr>
+										<th width="15%">#{msgs.label_securityStatus}</th>
+										<td width="35%">
+											<h:outputText rendered="#{!securityStatusSearch.personInfoResultStatusString.contains(msgs.label_notWanted)}" value="#{securityStatusSearch.personInfoResultStatusString}" style="color : red; font-size:24px" />
+											<h:outputText rendered="#{securityStatusSearch.personInfoResultStatusString.contains(msgs.label_notWanted)}" value="#{securityStatusSearch.personInfoResultStatusString}" style="color : green; font-size:24px" />
+										</td>
+										<td width="15%" />
+										<td width="35%" />
+									</tr>
+									<tr>
+										<th width="15%">#{msgs.label_name}</th>
+										<td colspan="3" width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.personInfoResult.arabicName}" />
+											<h:inputText disabled="true" value="#{securityStatusSearch.personInfoResult.englishName}" />
+										</td>
+									</tr>
+
+									<tr>
+										<th width="15%">#{msgs.label_socialType}</th>
+										<td width="35%">
+											<h:selectOneMenu disabled="true" value="#{securityStatusSearch.searchSocialType}" styleClass="form-control">
+												<f:selectItem itemLabel="#{msgs.label_khaleejiIdentity}" itemValue="#{securityStatusSearch.khaleejiIdentity}" />
+											</h:selectOneMenu>
+										</td>
+
+										<th width="15%">#{msgs.label_number}"</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.personInfoResult.visaNumber}" />
+										</td>
+									</tr>
+									<tr>
+										<th width="15%">#{msgs.label_releaseDate}</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.personInfoResult.idIssueDateH}" />
+										</td>
+										<th width="15%">#{msgs.label_birthDate}</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.personInfoResult.dateOfBirthG}" />
+										</td>
+									</tr>
+									<tr>
+										<th width="15%">#{msgs.label_expiryDate}</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.personInfoResult.idExpiryDateH}" />
+										</td>
+										<th width="15%">#{msgs.label_passportNumber}</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.personInfoResult.passportNumber.value}" />
+										</td>
+									</tr>
+									<tr>
+										<th width="15%">#{msgs.label_lifeStatus}</th>
+										<td width="35%">
+											<h:selectOneRadio style="width:50%" disabled="true" value="#{securityStatusSearch.personInfoResult.lifeStatus}">
+												<f:selectItem itemValue="#{securityStatusSearch.lifeStatusLive}" itemLabel="#{msgs.label_alive}" />
+												<f:selectItem itemValue="#{securityStatusSearch.lifeStatusDead}" itemLabel="#{msgs.label_dead}" />
+											</h:selectOneRadio>
+										</td>
+										<th width="15%">#{msgs.label_nationality}</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.personInfoResult.nationalityDesc}" />
+										</td>
+									</tr>
+									<tr>
+										<th width="15%">#{msgs.label_gender}</th>
+										<td width="35%">
+											<h:selectOneRadio style="width:50%" disabled="true" value="#{securityStatusSearch.personInfoResult.gender}">
+												<f:selectItem itemValue="#{securityStatusSearch.genderMale}" itemLabel="#{msgs.label_male}" />
+												<f:selectItem itemValue="#{securityStatusSearch.genderFemale}" itemLabel="#{msgs.label_female}" />
+											</h:selectOneRadio>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="4" width="100%" height="5" />
+									</tr>
+								</table>
+							</h:panelGroup>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%">
+						<h:panelGroup id="vehicleSearchResultPaneId">
+							<h:panelGroup rendered="#{not empty securityStatusSearch.carInfoByPlateResult}">
+								<table class="sectionContent" border="0" cellpadding="0" cellspacing="0">
+									<tr>
+										<th width="15%">#{msgs.label_securityStatus}</th>
+										<td width="35%">
+											<h:outputText rendered="#{securityStatusSearch.carInfoByPlateResult.legalStatus}" value="#{msgs.label_unsystematic}" style="color : red; font-size:24px" />
+											<h:outputText rendered="#{!securityStatusSearch.carInfoByPlateResult.legalStatus}" value="#{msgs.label_systematic}" style="color : green; font-size:24px" />
+										</td>
+									</tr>
+									<tr>
+										<th width="15%">#{msgs.label_vehicleOwner}</th>
+										<td width="35%">
+											<h:inputText disabled="true" />
+										</td>
+										<th width="15%">#{msgs.label_ownerIdentity}</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.carInfoByPlateResult.ownerId}" />
+										</td>
+									</tr>
+									<tr>
+										<th width="15%">#{msgs.label_plateNumber}</th>
+										<td width="35%">
+											<h:inputText disabled="true" style="width:12%;" value="#{securityStatusSearch.plateText1}" />
+											<h:inputText disabled="true" style="width:12%;" value="#{securityStatusSearch.plateText2}" />
+											<h:inputText disabled="true" style="width:12%;" value="#{securityStatusSearch.plateText3}" />
+											<h:inputText disabled="true" style="width:20%;" value="#{securityStatusSearch.plateNumber}" />
+										</td>
+										<th width="15%">#{msgs.label_RegisterationType}</th>
+										<td width="35%">
+											<h:selectOneMenu disabled="true" value="#{securityStatusSearch.plateType}" styleClass="form-control">
+												<f:selectItem itemLabel="#{msgs.label_privateCar}" itemValue="#{securityStatusSearch.privateCar}" />
+												<f:selectItem itemLabel="#{msgs.label_publicTransport}" itemValue="#{securityStatusSearch.publicTransport}" />
+												<f:selectItem itemLabel="#{msgs.label_privateTransport}" itemValue="#{securityStatusSearch.privateTransport}" />
+												<f:selectItem itemLabel="#{msgs.label_publicBus}" itemValue="#{securityStatusSearch.publicBus}" />
+												<f:selectItem itemLabel="#{msgs.label_privateBus}" itemValue="#{securityStatusSearch.privateBus}" />
+												<f:selectItem itemLabel="#{msgs.label_taxi}" itemValue="#{securityStatusSearch.taxi}" />
+												<f:selectItem itemLabel="#{msgs.label_heavyEquipment}" itemValue="#{securityStatusSearch.heavyEquipment}" />
+												<f:selectItem itemLabel="#{msgs.label_export}" itemValue="#{securityStatusSearch.export}" />
+												<f:selectItem itemLabel="#{msgs.label_diplomatic}" itemValue="#{securityStatusSearch.diplomatic}" />
+												<f:selectItem itemLabel="#{msgs.label_motorcyle}" itemValue="#{securityStatusSearch.motorCycle}" />
+												<f:selectItem itemLabel="#{msgs.label_temporary}" itemValue="#{securityStatusSearch.temporary}" />
+											</h:selectOneMenu>
+											<h:inputText disabled="true" value="#{securityStatusSearch.carInfoByPlateResult.regPlace}" />
+										</td>
+									</tr>
+									<tr>
+										<th width="15%">#{msgs.label_vehicleMarker}</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.carInfoByPlateResult.vehicleMaker}" />
+										</td>
+										<th width="15%">#{msgs.label_vehicleModel}</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.carInfoByPlateResult.vehicleModel}" />
+										</td>
+									</tr>
+									<tr>
+										<th width="15%">#{msgs.label_boatColor}</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.carInfoByPlateResult.majorColor}" />
+										</td>
+										<th width="15%">#{msgs.label_modelYear}</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.carInfoByPlateResult.modelYear}" />
+										</td>
+									</tr>
+									<tr>
+										<th width="15%">#{msgs.label_sequenceNumber}</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.carInfoByPlateResult.sequenceNumber}" />
+										</td>
+										<th width="15%">#{msgs.label_releaseRegion}</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.carInfoByPlateResult.regPlace}" />
+										</td>
+									</tr>
+									<tr>
+										<th width="15%">#{msgs.label_releaseDate}</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.carInfoByPlateResult.regIssueDate}" />
+										</td>
+										<th width="15%">#{msgs.label_expiryDate}</th>
+										<td width="35%">
+											<h:inputText disabled="true" value="#{securityStatusSearch.carInfoByPlateResult.regExpiryHDate}" />
+										</td>
+									</tr>
+									<tr>
+										<td colspan="4" width="100%" height="5" />
+									</tr>
+								</table>
+							</h:panelGroup>
+						</h:panelGroup>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="100%">
+						<h:panelGroup id="printPanelId">
+							<h:panelGroup rendered="#{not empty securityStatusSearch.personInfoResult or not empty securityStatusSearch.carInfoByPlateResult}">
+								<table class="actionsSection" border="0" cellpadding="0" cellspacing="0">
+									<tr>
+										<td>
+											<h:commandButton class="btn btn-success" value="&#xf02f; #{msgs.label_print}" title="#{msgs.label_print}" action="#{securityStatusSearch.printReport()}" />
+										</td>
+									</tr>
+								</table>
+							</h:panelGroup>
+						</h:panelGroup>
+					</td>
+				</tr>
+			</table>
+		</ui:decorate>
+	</h:form>
+</h:body>
+</html>

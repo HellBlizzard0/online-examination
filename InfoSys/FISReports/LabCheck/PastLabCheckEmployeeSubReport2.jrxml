@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PastLabCheckEmployeeSubReport2" pageWidth="842" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="842" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="20" uuid="66244e2c-e31d-4460-b1f9-81a03aed4391">
+	<property name="ireport.zoom" value="1.1269722013523664"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#C3CFD9">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#E6F3FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Table Dataset 1" uuid="0c47bbd3-7d02-48d8-9489-6518de8d9033"/>
+	<parameter name="P_EMPLOYEE_ID" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_END_TREATMENT_DATE" class="java.lang.String"/>
+	<parameter name="P_LAB_CHECK_STATUS" class="java.lang.Integer"/>
+	<parameter name="P_SCHEMA_NAME" class="java.lang.String">
+		<defaultValueExpression><![CDATA["INFOSYS"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT LAB_CHECK_EMP.ID,LAB_CHECK_EMP.CHECK_DATE,LAB_CHECK_EMP.CHECK_STATUS,LAB_CHECK_EMP.CUREMENT,LAB_CHECK_EMP.DOMAINS_ID_CURE_HOSPITAL,LAB_CHECK_EMP.DOMAINS_ID_MATERIAL_TYPE,LAB_CHECK_EMP.DOMNS_ID_NATNL_FORC_MTRL_TYP,LAB_CHECK_EMP.LAB_CHECKS_ID,LAB_CHECK_EMP.NATIONAL_FORCE_SAMPLE_NUMBER,LAB_CHECK_EMP.NATNAL_FORCE_SMPLE_SENT_DATE,LAB_CHECK_EMP.SAMPLE_DATE,LAB_CHECK_EMP.SAMPLE_NUMBER,LAB_CHECK_EMP.PERIODIC_RETEST_DATE,LAB_CHECK_EMP.STP_VW_EMPLOYEES_ID,LAB_CHECK_EMP.EDITOR_EMPLOYEE_ID,LAB_CHECK_EMP.EDITING_DATE,LAB_CHECK_EMP.SAMPLE_NUMBER_BEFORE_EDIT,LAB_CHECK_EMP.SAMPLE_DATE_BEFORE_EDIT,LAB_CHECK_EMP.CHECK_STATUS_BEFORE_EDIT,LAB_CHECK_EMP.DMNS_ID_MAT_TYPE_BEFORE_EDIT,LAB_CHECK_EMP.NTNAL_FRC_SMPL_NUM_BEFORE_EDIT,LAB_CHECK_EMP.NTNL_FRC_SMPL_SNT_DT_BFR_EDIT,LAB_CHECK_EMP.DMNS_ID_CURE_HOSPITAL_BFR_EDIT,LAB_CHECK_EMP.CUREMENT_BEFORE_EDIT,LAB_CHECK_EMP.DMN_ID_NTNL_FRC_MTRL_BFR_EDT,LAB_CHECK_EMP.PRIODIC_RETST_DATE_BEFORE_EDIT,LAB_CHECK_EMP.EMPLOYEE_FULL_NAME,LAB_CHECK_EMP.EMPLOYEE_SOCIAL_ID,LAB_CHECK_EMP.EMPLOYEE_MILITARY_NO,LAB_CHECK_EMP.EMPLOYEE_RANK_ID,LAB_CHECK_EMP.EMPLOYEE_RANK,LAB_CHECK_EMP.EMPLOYEE_DEP_NAME,LAB_CHECK_EMP.EMPLOYEE_DEP_ID,LAB_CHECK_EMP.EMPLOYEE_TITLE_DESCRIPTION,LAB_CHECK_EMP.EDITOR_EMPLOYEE_NAME,LAB_CHECK_EMP.EDITOR_EMPLOYEE_RANK,LAB_CHECK_EMP.EDITOR_EMPLOYEE_DEP_ID,LAB_CHECK_EMP.EDITOR_EMPLOYEE_DEP_NAME,LAB_CHECK_EMP.EMPLOYEE_REGION_ID,LAB_CHECK_EMP.EMPLOYEE_REGION_NAME,LAB_CHECK_EMP.ORDER_NUMBER,LAB_CHECK_EMP.ORDER_DATE,LAB_CHECK_EMP.WF_INSTANCES_ID,LAB_CHECK_EMP.CHECK_REASON,LAB_CHECK_EMP.LAB_CHECK_STATUS,LAB_CHECK_EMP.STP_VW_DEPARTMENT_REGION_ID,LAB_CHECK_EMP.LAB_CHECK_ORDER_REMARKS,LAB_CHECK_EMP.ORDER_SOURCE_DOMAIN_DESC,LAB_CHECK_EMP.DOMNS_MATERIAL_TYPE_DESC,LAB_CHECK_EMP.DOMNS_NTIONAL_MAT_TYPE_DESC,LAB_CHECK_EMP.DMNS_MAT_TYPE_DESC_BFOR_EDIT,LAB_CHECK_EMP.DMNS_NTNL_MAT_TYP_DSC_BFR_EDT,LAB_CHECK_EMP.HOSPITAL_NAME,LAB_CHECK_EMP.HOSPITAL_NAME_BEFORE_EDIT,LAB_CHECK_EMP.RETEST_NUMBER,LAB_CHECK_EMP.RETESTED,LAB_CHECK_EMP.SECURITY_FORCES_REMARKS,LAB_CHECK_EMP.MEDICAL_AFFARIS_REMARKS,LAB_CHECK_EMP.TEMP_MIG_1,LAB_CHECK_EMP.TEMP_MIG_2,LAB_CHECK_EMP.TEMP_MIG_3,LAB_CHECK_EMP.TEMP_MIG_4,
+CASE LAB_CHECK_EMP."CHECK_REASON"
+WHEN     1 THEN 'الترقية'
+WHEN     2 THEN 'مفاجئ'
+WHEN     3 THEN 'قضايا'
+WHEN     4 THEN 'مهمة من المديرية'
+WHEN     5 THEN 'عرض على اللجنة الطبية'
+WHEN     6 THEN 'بغرض العلاج بطوعه واختياره'
+WHEN     7 THEN 'دورة'
+END	AS CHECK_REASON_ARABIC,
+CASE LAB_CHECK_EMP."CHECK_STATUS"
+WHEN 1 THEN 'لم يتم أخذ العينة'
+WHEN 2 THEN 'سلبي'
+WHEN 3 THEN 'إيجابي تحت التأكيد'
+WHEN 4 THEN 'تم إرسال لقوي الأمن'
+WHEN 5 THEN 'إيجابي'
+WHEN 6 THEN 'امتناع فحص'
+WHEN 7 THEN'تم أخذ العينة' END AS CHECK_STATUS_ARABIC,
+CASE LAB_CHECK_EMP."LAB_CHECK_STATUS"
+WHEN     0 THEN 'تم التسجيل'
+WHEN     1 THEN 'تحت الاعتماد'
+WHEN     2 THEN 'تم الاعتماد'
+WHEN     3 THEN 'تم الرفض' END AS LAB_CHECK_STATUS_ARABIC
+FROM $P!{P_SCHEMA_NAME}.FIS_VW_LAB_CHECK_EMPLOYEES LAB_CHECK_EMP
+WHERE  LAB_CHECK_EMP.ID=(
+    SELECT max(LCE.ID) FROM $P!{P_SCHEMA_NAME}.FIS_VW_LAB_CHECK_EMPLOYEES LCE
+    WHERE LCE.STP_VW_EMPLOYEES_ID = $P{P_EMPLOYEE_ID}
+    AND   LCE.DOMNS_ID_NATNL_FORC_MTRL_TYP IS NOT NULL
+    AND   LCE.CHECK_REASON = 6
+    AND   LCE.LAB_CHECK_STATUS = $P{P_LAB_CHECK_STATUS})]]>
+	</queryString>
+	<field name="ID" class="java.math.BigDecimal"/>
+	<field name="CHECK_DATE" class="java.sql.Timestamp"/>
+	<field name="CHECK_STATUS" class="java.math.BigDecimal"/>
+	<field name="CUREMENT" class="java.math.BigDecimal"/>
+	<field name="DOMAINS_ID_CURE_HOSPITAL" class="java.math.BigDecimal"/>
+	<field name="DOMAINS_ID_MATERIAL_TYPE" class="java.math.BigDecimal"/>
+	<field name="DOMNS_ID_NATNL_FORC_MTRL_TYP" class="java.math.BigDecimal"/>
+	<field name="LAB_CHECKS_ID" class="java.math.BigDecimal"/>
+	<field name="NATIONAL_FORCE_SAMPLE_NUMBER" class="java.lang.String"/>
+	<field name="NATNAL_FORCE_SMPLE_SENT_DATE" class="java.sql.Timestamp"/>
+	<field name="SAMPLE_DATE" class="java.sql.Timestamp"/>
+	<field name="SAMPLE_NUMBER" class="java.lang.String"/>
+	<field name="PERIODIC_RETEST_DATE" class="java.sql.Timestamp"/>
+	<field name="STP_VW_EMPLOYEES_ID" class="java.math.BigDecimal"/>
+	<field name="EDITOR_EMPLOYEE_ID" class="java.math.BigDecimal"/>
+	<field name="EDITING_DATE" class="java.sql.Timestamp"/>
+	<field name="SAMPLE_NUMBER_BEFORE_EDIT" class="java.lang.String"/>
+	<field name="SAMPLE_DATE_BEFORE_EDIT" class="java.sql.Timestamp"/>
+	<field name="CHECK_STATUS_BEFORE_EDIT" class="java.math.BigDecimal"/>
+	<field name="DMNS_ID_MAT_TYPE_BEFORE_EDIT" class="java.math.BigDecimal"/>
+	<field name="NTNAL_FRC_SMPL_NUM_BEFORE_EDIT" class="java.lang.String"/>
+	<field name="NTNL_FRC_SMPL_SNT_DT_BFR_EDIT" class="java.sql.Timestamp"/>
+	<field name="DMNS_ID_CURE_HOSPITAL_BFR_EDIT" class="java.math.BigDecimal"/>
+	<field name="CUREMENT_BEFORE_EDIT" class="java.math.BigDecimal"/>
+	<field name="DMN_ID_NTNL_FRC_MTRL_BFR_EDT" class="java.math.BigDecimal"/>
+	<field name="PRIODIC_RETST_DATE_BEFORE_EDIT" class="java.sql.Timestamp"/>
+	<field name="EMPLOYEE_FULL_NAME" class="java.lang.String"/>
+	<field name="EMPLOYEE_SOCIAL_ID" class="java.lang.String"/>
+	<field name="EMPLOYEE_MILITARY_NO" class="java.lang.String"/>
+	<field name="EMPLOYEE_RANK_ID" class="java.math.BigDecimal"/>
+	<field name="EMPLOYEE_RANK" class="java.lang.String"/>
+	<field name="EMPLOYEE_DEP_NAME" class="java.lang.String"/>
+	<field name="EMPLOYEE_DEP_ID" class="java.math.BigDecimal"/>
+	<field name="EMPLOYEE_TITLE_DESCRIPTION" class="java.lang.String"/>
+	<field name="EDITOR_EMPLOYEE_NAME" class="java.lang.String"/>
+	<field name="EDITOR_EMPLOYEE_RANK" class="java.lang.String"/>
+	<field name="EDITOR_EMPLOYEE_DEP_ID" class="java.math.BigDecimal"/>
+	<field name="EDITOR_EMPLOYEE_DEP_NAME" class="java.lang.String"/>
+	<field name="EMPLOYEE_REGION_ID" class="java.math.BigDecimal"/>
+	<field name="EMPLOYEE_REGION_NAME" class="java.lang.String"/>
+	<field name="ORDER_NUMBER" class="java.lang.String"/>
+	<field name="ORDER_DATE" class="java.sql.Timestamp"/>
+	<field name="WF_INSTANCES_ID" class="java.math.BigDecimal"/>
+	<field name="CHECK_REASON" class="java.math.BigDecimal"/>
+	<field name="LAB_CHECK_STATUS" class="java.math.BigDecimal"/>
+	<field name="STP_VW_DEPARTMENT_REGION_ID" class="java.math.BigDecimal"/>
+	<field name="LAB_CHECK_ORDER_REMARKS" class="java.lang.String"/>
+	<field name="ORDER_SOURCE_DOMAIN_DESC" class="java.lang.String"/>
+	<field name="DOMNS_MATERIAL_TYPE_DESC" class="java.lang.String"/>
+	<field name="DOMNS_NTIONAL_MAT_TYPE_DESC" class="java.lang.String"/>
+	<field name="DMNS_MAT_TYPE_DESC_BFOR_EDIT" class="java.lang.String"/>
+	<field name="DMNS_NTNL_MAT_TYP_DSC_BFR_EDT" class="java.lang.String"/>
+	<field name="HOSPITAL_NAME" class="java.lang.String"/>
+	<field name="HOSPITAL_NAME_BEFORE_EDIT" class="java.lang.String"/>
+	<field name="RETEST_NUMBER" class="java.math.BigDecimal"/>
+	<field name="RETESTED" class="java.math.BigDecimal"/>
+	<field name="SECURITY_FORCES_REMARKS" class="java.lang.String"/>
+	<field name="MEDICAL_AFFARIS_REMARKS" class="java.lang.String"/>
+	<field name="TEMP_MIG_1" class="java.lang.String"/>
+	<field name="TEMP_MIG_2" class="java.lang.String"/>
+	<field name="TEMP_MIG_3" class="java.lang.String"/>
+	<field name="TEMP_MIG_4" class="java.lang.String"/>
+	<field name="CHECK_REASON_ARABIC" class="java.lang.String"/>
+	<field name="CHECK_STATUS_ARABIC" class="java.lang.String"/>
+	<field name="LAB_CHECK_STATUS_ARABIC" class="java.lang.String"/>
+	<variable name="TABLE_INDEX" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$V{REPORT_COUNT}]]></variableExpression>
+		<initialValueExpression><![CDATA[1]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="25" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="700" y="0" width="110" height="25" forecolor="#000000" backcolor="#CCCCCC" uuid="e290f592-47c7-41e8-a57b-94c0a42baa37"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[تاريخ البدء بالعلاج]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="131" y="0" width="115" height="25" forecolor="#000000" backcolor="#CCCCCC" uuid="c4935e35-a065-40a7-a83d-5a0a97bac367"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[نتيجة المتابعة العلاجية]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="419" y="0" width="171" height="25" forecolor="#000000" backcolor="#CCCCCC" uuid="c340f188-d284-4fe4-bd05-9d31d0d9af2c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[الجهة المصدرة للمتابعة العلاجية]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="131" height="25" forecolor="#000000" backcolor="#CCCCCC" uuid="d91c3e66-8a23-4b31-a7ad-64d53e4aa5ac"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[ملاحظات]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="590" y="0" width="110" height="25" forecolor="#000000" backcolor="#CCCCCC" uuid="0610c605-aefc-4dfe-a92a-171cdda18f64"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[تاريخ الانتهاء من العلاج]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="246" y="0" width="173" height="25" forecolor="#000000" backcolor="#CCCCCC" uuid="6bd35cba-3b95-4514-984f-0655714bce77"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[الجهة المحول لها]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="25" splitType="Stretch">
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="590" y="0" width="110" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="c8e7f8dc-ece4-43c7-9327-e8789e22c84f">
+					<printWhenExpression><![CDATA[$F{CHECK_STATUS}.equals( new BigDecimal(5) )]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_END_TREATMENT_DATE}.substring(6,10)
++"/"+
+$P{P_END_TREATMENT_DATE}.substring(3,5)
++"/"+
+$P{P_END_TREATMENT_DATE}.substring(0,2)
++"هـ"]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="131" y="0" width="115" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="a08a4d31-ca1e-49a2-8644-3ada3fbabbaa">
+					<printWhenExpression><![CDATA[$F{CHECK_STATUS}.equals( new BigDecimal(5) )]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CHECK_STATUS_ARABIC}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="419" y="0" width="171" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="5e7c39ee-829b-418c-8cee-acfd0c53b026">
+					<printWhenExpression><![CDATA[$F{CHECK_STATUS}.equals( new BigDecimal(5) )]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ORDER_SOURCE_DOMAIN_DESC}]]></textFieldExpression>
+			</textField>
+			<textField pattern="yyyy/MM/mm هـ" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="700" y="0" width="110" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="551a65e8-9f25-46f1-a1f8-54e6c5b29540">
+					<printWhenExpression><![CDATA[$F{CHECK_STATUS}.equals( new BigDecimal(5) )]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ORDER_DATE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="0" y="0" width="131" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="c3d82178-f1d9-47ac-80dc-424d4088b1c1">
+					<printWhenExpression><![CDATA[$F{CHECK_STATUS}.equals( new BigDecimal(5) )]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LAB_CHECK_ORDER_REMARKS}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="246" y="0" width="173" height="25" forecolor="#000000" backcolor="#FFFFFF" uuid="8dbfab87-ca52-4fa5-96cf-7b4d705f8126">
+					<printWhenExpression><![CDATA[$F{CHECK_STATUS}.equals( new BigDecimal(5) )]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{HOSPITAL_NAME}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
