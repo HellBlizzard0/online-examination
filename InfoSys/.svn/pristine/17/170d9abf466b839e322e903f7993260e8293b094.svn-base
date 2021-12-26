@@ -1,7 +1,0 @@
-
-$dir: rtl !default;
-
-@import '_main.scss';
-
-
-
