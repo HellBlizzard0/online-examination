@@ -8,7 +8,7 @@
 </head>
 <body>
 <%
-    response.sendRedirect("Main/Welcome.jsf");
+    response.sendRedirect("Main/Welcome.xhtml");
 %>
 
 </body>
