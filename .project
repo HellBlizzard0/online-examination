@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>abc</name>
+	<name>OnlineExamination</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -32,6 +32,11 @@
 		</buildCommand>
 		<buildCommand>
 			<name>org.eclipse.wst.validation.validationbuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>oracle.eclipse.tools.weblogic.sharedLibraryFrameworkValidator</name>
 			<arguments>
 			</arguments>
 		</buildCommand>

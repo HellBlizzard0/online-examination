@@ -9,6 +9,7 @@
   <installed facet="wst.jsdt.web" version="1.0"/>
   <installed facet="jboss.m2" version="1.0"/>
   <installed facet="jbossws.core" version="3.0"/>
-  <installed facet="jst.jsf" version="2.3"/>
   <installed facet="jst.jaxrs" version="1.1"/>
+  <installed facet="wls.web" version="12.2.1"/>
+  <installed facet="jst.jsf" version="2.3"/>
 </faceted-project>

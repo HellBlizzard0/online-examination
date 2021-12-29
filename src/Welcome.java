@@ -11,4 +11,5 @@ import javax.servlet.http.HttpSession;
 public class Welcome implements Serializable {
 
 	public static final String welcomeTitle = "Welcome to Online Examination Project";
+	public static String textField = "";
 }

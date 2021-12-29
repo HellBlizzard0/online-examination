@@ -1,20 +1,27 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:prime="http://primefaces.org/ui">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:prime="http://primefaces.org/ui">
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<!-- <h:outputStylesheet library="css" name="grid.css" />
 	<h:outputStylesheet library="css" rendered="#{msgs.dir == 'rtl'}" name="styles.css" />
 
 	<h:outputStylesheet name="grid/grid.css" library="primefaces" />
-	<h:outputStylesheet name="bootstrap.css" library="css" />
 	<h:outputScript name="utilities.js" library="javascript" target="head" /> -->
 
+	<h:outputStylesheet name="bootstrap.css" library="css" />
 
 
 </h:head>
 <h:body styleClass="screenBg" style="overflow-x: hidden;">
 	<h1>Hello World!</h1>
-<p>The Project is working!</p>
+	<p>The Project is working!</p>
+	<h:inputText value="#{Welcome.textField}" styrle="color:blue;font-size:18px;"/>
+	<h:commandButton action="welcome?faces-redirect=true" />
+	<h:outputText value="#{Welcome.textField}" styleClass="btn btn-default"/>	
+	
 </h:body>
 </html>
