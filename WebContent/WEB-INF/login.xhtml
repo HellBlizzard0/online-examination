@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+</h:head>
+<h:body>
+	<h:form>
+		<h:outputText value="Enter username: " />
+		<h:inputText label="Username" value="#{login.username}" />
+		<br />
+		<h:outputText value="Enter password: " />
+		<h:inputText label="Username" value="#{login.password}" />
+		<br />
+		<h:outputText value="Remember me? " />
+		<h:selectBooleanCheckbox value="#{login.rememberMe}" />
+		<br />
+		<h:commandButton label="Login" action="login?faces-redirect=true" />
+	</h:form>
+</h:body>
+
+
+</html>
