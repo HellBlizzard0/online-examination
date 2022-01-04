@@ -22,5 +22,12 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JSF 2.3 Mojarra 2.2.0">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+			<attribute name="owner.project.facets" value="jst.jsf"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/aalsaqqa/Downloads/mysql-connector-java-5.1.18.bundle.jar/mysql-connector-java-5.1.18.bundle.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

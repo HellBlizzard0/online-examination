@@ -2,8 +2,8 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core">
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
 <h:head>
 	<title>JSF On Eclipse</title>
 	<link rel="stylesheet"
@@ -19,12 +19,28 @@
 		name="WEB-INF/bootstrap/js/bootstrap.min.js" />
 </h:head>
 <h:body>
-	<h:form>
-		<h:outputText value="#{helloClass.message}"></h:outputText>
-		<br />
-		<h:outputText value="To Login, Click the following button" />
-		<br />
-		<h:commandButton label="Login" value="Login1" action="WEB-INF/login.xhtml" styleClass="btn btn-primary"/>
+	<h3>Add New Student</h3>
+	
+
+	<h:form prependId="false">
+		<table cellpadding="2" cellspacing="2">
+			
+			<tr>
+				<td>username</td>
+				<td><h:inputText label="Username"
+						value="#{login.username}"></h:inputText></td>
+			</tr>
+			<tr>
+				<td>password</td>
+				<td><h:inputSecret value="#{login.password}" /> </td>
+			</tr>
+
+			<tr>
+				<td>&nbsp;</td>
+				<td><h:commandButton value="Save"
+						action="#{login.login()}"></h:commandButton></td>
+			</tr>
+		</table>
 	</h:form>
 </h:body>
 </html>
