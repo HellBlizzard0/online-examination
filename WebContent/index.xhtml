@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>JSF On Eclipse</title>
+	<link rel="stylesheet"
+		href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+		integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn"
+		crossorigin="anonymous" />
+	<h:outputStylesheet library="css"
+		name="/WEB-INF/bootstrap/bootstrap.css" />
+	<h:outputStylesheet library="css"
+		name="/WEB-INF/bootstrap/bootstrap.min.css" />
+	<h:outputScript library="js" name="WEB-INF/bootstrap/js/bootstrap.js" />
+	<h:outputScript library="js"
+		name="WEB-INF/bootstrap/js/bootstrap.min.js" />
+</h:head>
+<h:body>
+	<h3>Add New Student</h3>
+	
+
+	<h:form prependId="false">
+		<table cellpadding="2" cellspacing="2">
+			
+			<tr>
+				<td>username</td>
+				<td><h:inputText label="Username"
+						value="#{login.username}"></h:inputText></td>
+			</tr>
+			<tr>
+				<td>password</td>
+				<td><h:inputSecret value="#{login.password}" /> </td>
+			</tr>
+
+			<tr>
+				<td>&nbsp;</td>
+				<td><h:commandButton value="Save"
+						action="#{login.login()}"></h:commandButton></td>
+			</tr>
+		</table>
+	</h:form>
+</h:body>
+</html>
