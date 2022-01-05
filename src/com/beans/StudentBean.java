@@ -35,11 +35,5 @@ public class StudentBean {
 		return "success?faces-redirect=true";
 	}
 	
-	/**
-	 * Temporary Method, remove if unneeded
-	 * */
-	public void execute() {
-		Student.doSomehting();
-	}
 
 }
