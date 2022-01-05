@@ -17,6 +17,7 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 import com.entities.Student;
+import com.models.AdminModel;
 import com.util.HibernateUtil;
 import com.util.SessionManager;
 
@@ -25,6 +26,15 @@ import com.util.SessionManager;
 public class LoginBean {
 	private String username;
 	private String password;
+	private boolean studentLogin;
+
+	public boolean isStudentLogin() {
+		return studentLogin;
+	}
+
+	public void setStudentLogin(boolean studentLogin) {
+		this.studentLogin = studentLogin;
+	}
 
 	public String getUsername() {
 		return username;
@@ -43,17 +53,13 @@ public class LoginBean {
 	}
 
 	public String login() {
-
-		Session session = SessionManager.getSession();
-		TypedQuery testquery = session.getNamedQuery("student_fetchStudentByLoginCredintials");
-		testquery.setParameter("P_USERNAME", username);
-		testquery.setParameter("P_PASSWORD", password);
-		List<Student> student = testquery.getResultList();
-
-		if (student.size() != 0)
-			return "success";
-		else
+		if (!studentLogin) {
+			if (AdminModel.login(username, password))
+				return "admin-main";
+			else
+				return "failure";
+		} else {
 			return "failure";
-
+		}
 	}
 }

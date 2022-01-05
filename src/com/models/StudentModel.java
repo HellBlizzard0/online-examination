@@ -8,8 +8,6 @@ import com.util.SessionManager;
 
 public class StudentModel {
 
-	private SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-
 	public boolean create(Student student) {
 		boolean result = true;
 		Session session = null;
