@@ -25,7 +25,6 @@ public class SessionManager {
 			session = sessfact.openSession();
 			sessionInitiated = true;
 			return session;
-		}
-			
+		}	
 	}
 }
