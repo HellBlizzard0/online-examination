@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence-unit name="com.entities" transaction-type="RESOURCE_LOCAL">
+	<description>Hibernate EntityManager Demo</description>
+	<class>com.entities.student</class>
+	<exclude-unlisted-classes>true</exclude-unlisted-classes>
+	<properties>
+		<property name="hibernate.dialect"
+			value="org.hibernate.dialect.MySQLDialect" />
+		<property name="hibernate.hbm2ddl.auto" value="update" />
+		<property name="javax.persistence.jdbc.driver"
+			value="com.mysql.jdbc.Driver" />
+		<property name="javax.persistence.jdbc.url"
+			value="jdbc:mysql://onlineexamina.mysql.database.azure.com:3306/online-examination" />
+		<property name="javax.persistence.jdbc.user" value="Mohsen" />
+		<property name="javax.persistence.jdbc.password"
+			value="Online@exam" />
+		<property name="hibernate.archive.autodetection"
+			value="class, hbm" />
+	</properties>
+</persistence-unit>
