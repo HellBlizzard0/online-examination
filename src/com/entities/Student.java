@@ -63,16 +63,6 @@ public class Student implements Serializable {
 		
 	}
 	
-	/**
-	 * Temporary Method, remove if unneeded
-	 * */
-	public static void doSomehting() {
-		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("com.entities.student");
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
-		Query x = entityManager.createNamedQuery("student_fetchAllStudents");
-		System.out.print(x);
-	}
-	
 	public String getName() {
 		return name;
 	}
