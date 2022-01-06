@@ -4,10 +4,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import com.entities.Student;
+import com.util.SessionManager;
 
 public class StudentModel {
-
-	private SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 
 	public boolean create(Student student) {
 		boolean result = true;
@@ -15,7 +14,7 @@ public class StudentModel {
 		Transaction transaction = null;
 		
 		try {
-			session = sessionFactory.openSession();
+			session = SessionManager.getSession();
 			transaction = session.beginTransaction();
 			session.save(student);
 			transaction.commit();

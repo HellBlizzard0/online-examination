@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROCESS model-entity="JSFProcess">
+ <PROCESS-ITEM NAME="rules:#index.xhtml" PATH="/index.xhtml"
+  SHAPE="24,64,50,25" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#index.xhtml:0" NAME="item"
+   PATH="/index.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="login::#WEB-INF#login.xhtml" NAME="output"
+    PATH="/WEB-INF/login.xhtml" TARGET="rules:#WEB-INF#login.xhtml"
+    TITLE="login" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#WEB-INF#success.xhtml"
+  PATH="/WEB-INF/success.xhtml" SHAPE="408,224,50,25"
+  model-entity="JSFProcessGroup" persistent="true"/>
+ <PROCESS-ITEM NAME="rules:#WEB-INF#admin-main.xhtml"
+  PATH="/WEB-INF/admin-main.xhtml" SHAPE="296,112,50,25"
+  model-entity="JSFProcessGroup" persistent="true"/>
+ <PROCESS-ITEM NAME="rules:#WEB-INF#login.xhtml"
+  PATH="/WEB-INF/login.xhtml" SHAPE="152,88,50,57" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#WEB-INF#login.xhtml:0" NAME="item"
+   PATH="/WEB-INF/login.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="admin-main::#WEB-INF#admin-main.xhtml"
+    NAME="output" PATH="/WEB-INF/admin-main.xhtml"
+    TARGET="rules:#WEB-INF#admin-main.xhtml" TITLE="admin-main" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="failure::#WEB-INF#login.xhtml"
+    NAME="output1" PATH="/WEB-INF/login.xhtml"
+    TARGET="rules:#WEB-INF#login.xhtml" TITLE="failure" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+</PROCESS>
