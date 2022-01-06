@@ -4,12 +4,19 @@
  <navigation-rule>
   <from-view-id>/index.xhtml</from-view-id>
   <navigation-case>
-   <from-outcome>success</from-outcome>
-   <to-view-id>/WEB-INF/success.xhtml</to-view-id>
+   <from-outcome>login</from-outcome>
+   <to-view-id>/WEB-INF/login.xhtml</to-view-id>
   </navigation-case>
+ </navigation-rule>
+ <navigation-rule>
+  <from-view-id>/WEB-INF/login.xhtml</from-view-id>
   <navigation-case>
    <from-outcome>admin-main</from-outcome>
    <to-view-id>/WEB-INF/admin-main.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>failure</from-outcome>
+   <to-view-id>/WEB-INF/login.xhtml</to-view-id>
   </navigation-case>
  </navigation-rule>
  <application/>

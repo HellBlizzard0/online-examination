@@ -19,31 +19,7 @@
 		name="WEB-INF/bootstrap/js/bootstrap.min.js" />
 </h:head>
 <h:body>
-	<h3>Add New Student</h3>
-	
-
-	<h:form prependId="false">
-		<table cellpadding="2" cellspacing="2">
-			
-			<tr>
-				<td>username</td>
-				<td><h:inputText label="Username"
-						value="#{login.username}"></h:inputText></td>
-			</tr>
-			<tr>
-				<td>password</td>
-				<td><h:inputSecret value="#{login.password}" /> </td>
-			</tr>
-			<tr>
-				<td>isStudent <h:selectBooleanCheckbox value="#{login.studentLogin}" /></td>
-			</tr>
-
-			<tr>
-				<td>&nbsp;</td>
-				<td><h:commandButton value="Save"
-						action="#{login.login()}"></h:commandButton></td>
-			</tr>
-		</table>
-	</h:form>
+D	<h3>Index</h3>
+	<h:commandButton action="login" />
 </h:body>
 </html>
