@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+
+<!-- INTERFACE -->
+<composite:interface>
+</composite:interface>
+
+<!-- IMPLEMENTATION -->
+<composite:implementation>
+	<div>
+		<b:navBar brand="Online Examination" brandHref="#" fixed="top"
+			inverse="true">
+		</b:navBar>
+		<b:column span="3">
+			<b:panel look="primary" title="Static sidebar">
+				<b:listLinks>
+					<b:navCommandLink header="BootsFaces" />
+					<b:navCommandLink href="http://www.bootsfaces.net" value="BootsFaces"
+						icon="globe" iconAlign="right" />
+					<b:navCommandLink></b:navCommandLink>
+					<b:navCommandLink header="Bootstrap" />
+					<b:navCommandLink href="http://getbootstrap.com/components/#navbar"
+						value="Bootstrap" icon="link"></b:navCommandLink>
+					<b:navCommandLink></b:navCommandLink>
+					<b:navCommandLink header="Preview" />
+					<b:navCommandLink value="Labels and Badges"
+						outcome="/bootstrap/labelsbadge" icon="tag" iconAlign="right" />
+					<b:navCommandLink value="Slider" outcome="/jquery-ui/slider"
+						iconAwesome="sliders" />
+					<b:messages />
+				</b:listLinks>
+			</b:panel>
+		</b:column>
+		<b:container>
+			<b:column span="9">
+				<b:jumbotron>
+					<composite:insertChildren/>
+				</b:jumbotron>
+			</b:column>
+		</b:container>
+		<!-- <b:container>
+			<b:jumbotron>
+				<composite:insertChildren/>
+			</b:jumbotron>
+		</b:container> -->
+	</div>
+</composite:implementation>
+</html>
