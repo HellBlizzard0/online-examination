@@ -8,28 +8,28 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+//import javax.persistence.NamedQueries;
+//import javax.persistence.NamedQuery;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.Table;
+import org.hibernate.annotations.NamedQuery;
+import org.hibernate.annotations.NamedQueries;
 
 @SuppressWarnings("serial")
 @NamedQueries({
 	@NamedQuery(
 			name = "student_fetchAllStudents",
 			query = "select s "
-					+ "from student s"),
+					+ "from Student s"),
 	@NamedQuery(
 			name = "student_fetchStudentByLoginCredintials",
-			query = "select s "
-					+ "from student s "
+			query = "from Student s "
 					+ "where s.username = :P_USERNAME "
 					+ "and s.password = :P_PASSWORD"),
 	@NamedQuery(
 			name = "student_fetchStudentById",
-			query = "select * "
-					+ "from student s "
+			query = "from Student s "
 					+ "where s.id = :P_TO_DATE_STRING")
 })
 
@@ -61,16 +61,6 @@ public class Student implements Serializable {
 	
 	public Student() {
 		
-	}
-	
-	/**
-	 * Temporary Method, remove if unneeded
-	 * */
-	public static void doSomehting() {
-		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("com.entities.student");
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
-		Query x = entityManager.createNamedQuery("student_fetchAllStudents");
-		System.out.print(x);
 	}
 	
 	public String getName() {
