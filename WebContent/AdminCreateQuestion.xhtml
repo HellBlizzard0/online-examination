@@ -15,17 +15,21 @@
 <h:body>
 	<util:MainTemplate>
 		<b:form inline="true">
-			<h:panelGrid columns="1" cellpadding="5">
-				<b:inputText label="Name:" labelStyle="width:80px;">
-					<f:facet name="prepend">
-						<h:outputText value="@" />
-					</f:facet>
-				</b:inputText>
-				<b:inputText label="Username:" labelStyle="width:80px;">
-					<f:facet name="prepend">
-						<b:iconAwesome value="fa-user"></b:iconAwesome>
-					</f:facet>
-				</b:inputText>
+			<h:panelGrid columns="1" cellpadding="10">
+				<b:panel title="Level">
+					<b:inputText label="Title:" labelStyle="width:80px;">
+						<f:facet name="prepend">
+							<h:outputText value="@" />
+						</f:facet>
+					</b:inputText>
+				</b:panel>
+				<b:panel title="Title">
+					<b:inputText label="" labelStyle="width:80px;">
+						<f:facet name="prepend">
+							<b:iconAwesome value="fa-user"></b:iconAwesome>
+						</f:facet>
+					</b:inputText>
+				</b:panel>
 			</h:panelGrid>
 		</b:form>
 	</util:MainTemplate>
