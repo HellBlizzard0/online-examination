@@ -17,7 +17,7 @@
 		<b:navBar brand="Online Examination" brandHref="#" fixed="top"
 			inverse="true">
 		</b:navBar>
-		<b:column span="3">
+		<b:column span="3"><h:form>
 			<b:panel look="primary" title="Static sidebar">
 				<b:listLinks>
 					<b:navCommandLink header="BootsFaces" />
@@ -29,14 +29,14 @@
 						value="Bootstrap" icon="link"></b:navCommandLink>
 					<b:navCommandLink></b:navCommandLink>
 					<b:navCommandLink header="Preview" />
-					<b:navCommandLink value="Labels and Badges"
-						outcome="/bootstrap/labelsbadge" icon="tag" iconAlign="right" />
+					<b:navCommandLink value="Create Question"
+						action="AdminCreateQuestion" icon="tag" iconAlign="right" />
 					<b:navCommandLink value="Slider" outcome="/jquery-ui/slider"
 						iconAwesome="sliders" />
 					<b:messages />
 				</b:listLinks>
 			</b:panel>
-		</b:column>
+		</h:form></b:column>
 		<b:container>
 			<b:column span="9">
 				<b:jumbotron>
