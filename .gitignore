@@ -1,2 +1,6 @@
 /build/
 /target/
+.classpath
+.settings/oracle.eclipse.tools.webtier.ui.prefs
+target/m2e-wtp/web-resources/META-INF/MANIFEST.MF
+target/m2e-wtp/web-resources/META-INF/maven/OnEx/OnEx/pom.properties

@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ng="http://mojarra.dev.java.net/mojarra_ext"
+xmlns:b="http://bootsfaces.net/ui"
+xmlns:co="http://xmlns.jcp.org/jsf/composite/com"
+xmlns:util="http://java.sun.com/jsf/composite/utils">
+
+<h:head>
+<title>Register</title>
+
+
+</h:head>
+<h:body>
+
+<util:MainTemplate>
+
+<hr />
+    
+      
+      
+<h:form>
+
+
+<b:row>
+  <b:column span="6"><b:inputText id="name" required="true" label="name" value="#{studentManagedBean.student.name}" /></b:column>
+   <b:column span="6"><b:message for="name" /></b:column>
+</b:row>
+
+
+<b:row>
+
+  <b:column span="6"><b:inputText id="username" required="true" label="username"  value="#{studentManagedBean.student.username}" /></b:column>
+   <b:column span="6"><b:message for="username" /></b:column>
+</b:row>
+
+
+<b:row>
+  
+  <b:column span="6"><b:inputSecret id="password" required="true" label="Password" value="#{studentManagedBean.student.password}" /></b:column>
+   <b:column span="6"><b:message for="password" /></b:column>
+</b:row>
+
+
+<b:row>
+  <b:column span="6"><b:inputText id="email" required="true" label="Email" value="#{studentManagedBean.student.email}" validatorMessage="The pattren should be like xx@yy.zz" >
+  <f:validateRegex pattern="([^.@]+)(\.[^.@]+)*@([^.@]+\.)+([^.@]+)" />
+    </b:inputText>
+    </b:column>
+  
+  <b:column span="6"><b:message for="email" /></b:column>
+</b:row>
+
+
+<b:row>
+  <b:column span="6"><b:inputText id="department" required="true" label="Department" value="#{studentManagedBean.student.department}" /></b:column>
+   <b:column span="6"><b:message for="department" /></b:column>
+</b:row>
+
+
+<b:row>
+  <b:column span="6"><b:inputText id="level" required="true"  label="Level" value="#{studentManagedBean.student.level}" /></b:column>
+   <b:column span="6"><b:message for="level" /></b:column>
+</b:row>
+
+
+<b:row>
+  <b:column span="4"><b:commandButton action="#{studentManagedBean.save()}" value="Register" /></b:column>
+</b:row>
+
+
+</h:form>
+
+</util:MainTemplate>
+
+
+</h:body>
+</html>

@@ -7,6 +7,10 @@
    <from-outcome>login</from-outcome>
    <to-view-id>/login.xhtml</to-view-id>
   </navigation-case>
+  <navigation-case>
+   <from-outcome>zx</from-outcome>
+   <to-view-id>/Register.xhtml</to-view-id>
+  </navigation-case>
  </navigation-rule>
  <navigation-rule>
   <from-view-id>/login.xhtml</from-view-id>
