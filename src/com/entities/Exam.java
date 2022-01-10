@@ -12,19 +12,19 @@ import org.hibernate.annotations.NamedQuery;
 
 @NamedQueries({
 		@NamedQuery(name = "exam_fetchAllExams",
-				query = "from exam e"),
+				query = "from Exam e"),
 		@NamedQuery(name = "exam_fetchExamById",
-				query = "from exam e "
+				query = "from Exam e "
 						+ "where e.id = :P_ID"),
 		@NamedQuery(name = "exam_fetchExamByDepartment",
-				query = "from exam e "
+				query = "from Exam e "
 						+ "where e.department = :P_DEPARTMENT"),
 		@NamedQuery(name = "exam_fetchExamByLevel",
-				query = "from exam e "
+				query = "from Exam e "
 						+ "where e.level = :P_LEVEL"),
 		@NamedQuery(name = "exam_fetchExamByDepartmentAndLevel",
-				query = "from exam e "
-						+ "where e.department = :P_DEPARTMENT"
+				query = "from Exam e "
+						+ "where e.department = :P_DEPARTMENT "
 						+ "and e.level = :P_LEVEL"),
 
 })

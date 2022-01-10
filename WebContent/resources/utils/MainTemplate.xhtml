@@ -17,30 +17,34 @@
 		<b:navBar brand="Online Examination" brandHref="#" fixed="top"
 			inverse="true">
 		</b:navBar>
-		<b:column span="3"><h:form>
-			<b:panel look="primary" title="Static sidebar">
-				<b:listLinks>
-					<b:navCommandLink header="BootsFaces" />
-					<b:navCommandLink href="http://www.bootsfaces.net" value="BootsFaces"
-						icon="globe" iconAlign="right" />
-					<b:navCommandLink></b:navCommandLink>
-					<b:navCommandLink header="Bootstrap" />
-					<b:navCommandLink href="http://getbootstrap.com/components/#navbar"
-						value="Bootstrap" icon="link"></b:navCommandLink>
-					<b:navCommandLink></b:navCommandLink>
-					<b:navCommandLink header="Preview" />
-					<b:navCommandLink value="Create Question"
-						action="AdminCreateQuestion" icon="tag" iconAlign="right" />
-					<b:navCommandLink value="Create Exam"
-						action="AdminCreateExam" icon="tag" iconAlign="right" />
-					<b:messages />
-				</b:listLinks>
-			</b:panel>
-		</h:form></b:column>
+		<b:column span="3">
+			<h:form>
+				<b:panel look="primary" title="Static sidebar">
+					<b:listLinks>
+						<b:navCommandLink header="BootsFaces" />
+						<b:navCommandLink href="http://www.bootsfaces.net"
+							value="BootsFaces" icon="globe" iconAlign="right" />
+						<b:navCommandLink></b:navCommandLink>
+						<b:navCommandLink header="Bootstrap" />
+						<b:navCommandLink
+							href="http://getbootstrap.com/components/#navbar"
+							value="Bootstrap" icon="link"></b:navCommandLink>
+						<b:navCommandLink></b:navCommandLink>
+						<b:navCommandLink header="Preview" />
+						<b:navCommandLink value="#{msgs.label_AdminViewExamsHeader}"
+							action="#{viewExamsBean.fetchExams()}" icon="tag"
+							iconAlign="right" />
+						<b:navCommandLink value="Create Exam" action="AdminCreateExam"
+							icon="tag" iconAlign="right" />
+						<b:messages />
+					</b:listLinks>
+				</b:panel>
+			</h:form>
+		</b:column>
 		<b:container>
 			<b:column span="9">
 				<b:jumbotron>
-					<composite:insertChildren/>
+					<composite:insertChildren />
 				</b:jumbotron>
 			</b:column>
 		</b:container>
