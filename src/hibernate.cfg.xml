@@ -12,6 +12,8 @@
 		<property name="hibernate.current_session_context_class">thread</property>
 		<mapping class="com.entities.Student" />
 		<mapping class="com.entities.Admin" />
+		<mapping class="com.entities.Exam" />
+		<mapping class="com.entities.Question" />
 		<mapping resource="named-queries.hbm.xml" />
 	</session-factory>
 </hibernate-configuration>

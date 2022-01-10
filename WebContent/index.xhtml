@@ -4,8 +4,7 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:util="http://java.sun.com/jsf/composite/utils"
-	>
+	xmlns:util="http://java.sun.com/jsf/composite/utils">
 
 <h:head>
 	<title>JSF On Eclipse</title>
@@ -14,10 +13,10 @@
 <h:body>
 	<util:MainTemplate>
 		<h3>Index</h3>
-		<form >
-		<h:commandButton label="Login" value="Login" action="login?faces-redirect=true" />
-		<h:commandButton label="Register" action="register" />
-		</form>
+		<h:form>
+			<h:commandButton value="Login" action="login" />
+			<h:commandButton value="Register" action="register" />
+		</h:form>
 	</util:MainTemplate>
 </h:body>
 </html>

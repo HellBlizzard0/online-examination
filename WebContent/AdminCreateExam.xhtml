@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ng="http://mojarra.dev.java.net/mojarra_ext"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:co="http://xmlns.jcp.org/jsf/composite/com"
+	xmlns:util="http://java.sun.com/jsf/composite/utils">
+
+<h:head>
+	<title>AdminCreateExam</title>
+</h:head>
+<h:body>
+	<util:MainTemplate>
+		<b:form horizontal="true">
+			<h1>#{msgs.label_AdminCreateNewExamHeader}</h1>
+			<b:container style="padding-top:5%">
+				<b:row>
+					<b:column  span="12">
+						<b:inputText  placeholder="#{msgs.label_AdminCreateNewExamEnterTitle}" value="#{examManagedBean.exam.title}">
+							<f:facet name="prepend">
+								<h:outputText value="Title" />
+							</f:facet>
+						</b:inputText>
+					</b:column>
+				</b:row>
+				<b:row>
+					<b:column span="4">
+						<b:inputText 
+							value="#{examManagedBean.exam.department}">
+							<f:facet name="prepend">
+								<h:outputText value="Dept." />
+							</f:facet>
+						</b:inputText>
+					</b:column>
+					<b:column offset="4" span="4">
+						<b:inputText title="Level" value="#{examManagedBean.exam.level}">
+							<f:facet name="prepend">
+								<h:outputText value="Level" />
+							</f:facet>
+						</b:inputText>
+					</b:column>
+				</b:row>
+				<b:row>
+					<b:column offset="10" span="2">
+						<b:commandButton value="Save" action="#{examManagedBean.save()}" />
+					</b:column>
+				</b:row>
+			</b:container>
+
+		</b:form>
+	</util:MainTemplate>
+</h:body>
+</html>
