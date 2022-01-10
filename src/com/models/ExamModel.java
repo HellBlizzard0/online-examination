@@ -34,13 +34,14 @@ public class ExamModel {
 		}
 		return result;
 	}
-	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static List<Exam> getExamsList(String dept, int level){
 		Session session = null;
 		try {
 			session = SessionManager.getSession();
 			
 			if(dept != null && level == -1) {
+				
 				TypedQuery query = session.getNamedQuery("exam_fetchExamByDepartmentAndLevel");
 				query.setParameter("P_DEPARTMENT", dept);
 				query.setParameter("P_LEVEL", level);
