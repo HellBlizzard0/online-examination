@@ -5,7 +5,6 @@ import javax.faces.bean.SessionScoped;
 
 import com.entities.Exam;
 import com.models.ExamModel;
-import com.models.StudentModel;
 
 @SessionScoped
 @ManagedBean(name = "examManagedBean")
