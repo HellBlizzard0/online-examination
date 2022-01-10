@@ -11,7 +11,22 @@ import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
 @NamedQueries({
-	
+		@NamedQuery(name = "exam_fetchAllExams",
+				query = "from exam e"),
+		@NamedQuery(name = "exam_fetchExamById",
+				query = "from exam e "
+						+ "where e.id = :P_ID"),
+		@NamedQuery(name = "exam_fetchExamByDepartment",
+				query = "from exam e "
+						+ "where e.department = :P_DEPARTMENT"),
+		@NamedQuery(name = "exam_fetchExamByLevel",
+				query = "from exam e "
+						+ "where e.level = :P_LEVEL"),
+		@NamedQuery(name = "exam_fetchExamByDepartmentAndLevel",
+				query = "from exam e "
+						+ "where e.department = :P_DEPARTMENT"
+						+ "and e.level = :P_LEVEL"),
+
 })
 
 @Entity
@@ -25,13 +40,13 @@ public class Exam {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "EID")
 	private int id;
-	
+
 	@Column(name = "Level")
 	private int level;
-	
+
 	@Column(name = "Title")
 	private String title;
-	
+
 	@Column(name = "Department")
 	private String department;
 
@@ -66,6 +81,5 @@ public class Exam {
 	public void setDepartment(String department) {
 		this.department = department;
 	}
-	
-	
+
 }
