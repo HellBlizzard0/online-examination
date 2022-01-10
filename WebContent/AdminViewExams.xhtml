@@ -9,12 +9,12 @@
 	xmlns:util="http://java.sun.com/jsf/composite/utils">
 
 <h:head>
-	<title>#{msgs.label_AdminViewExamsHeader}</title>
+	<title>View Exams</title>
 
 </h:head>
 <h:body>
 	<util:MainTemplate>
-	<h1 style="padding-top:5%">#{msgs.label_AdminViewExamsHeader}</h1>
+	<h1 style="padding-top:5%">View Exams</h1>
 		<b:dataTable value="#{viewExamsBean.examsList}" var="exam"
 			caption="Exams List" style="padding-top:5%">
 			<b:dataTableColumn value="#{exam.id}" />
