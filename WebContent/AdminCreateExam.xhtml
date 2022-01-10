@@ -14,11 +14,11 @@
 <h:body>
 	<util:MainTemplate>
 		<b:form horizontal="true">
-			<h1>Create New Exam</h1>
+			<h1>#{msgs.label_AdminCreateNewExamHeader}</h1>
 			<b:container style="padding-top:5%">
 				<b:row>
 					<b:column  span="12">
-						<b:inputText  placeholder="Enter Exam Title" value="#{examManagedBean.exam.title}">
+						<b:inputText  placeholder="#{msgs.label_AdminCreateNewExamEnterTitle}" value="#{examManagedBean.exam.title}">
 							<f:facet name="prepend">
 								<h:outputText value="Title" />
 							</f:facet>
