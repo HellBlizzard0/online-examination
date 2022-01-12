@@ -13,7 +13,7 @@ import com.util.SessionManager;
 
 public class ExamModel {
 
-	public boolean create(Exam exam) {
+	public static boolean create(Exam exam) {
 		
 		boolean result = true;
 		Session session = null;
@@ -63,7 +63,7 @@ public class ExamModel {
 				return query.getResultList();
 			}
 		} catch(Exception e) {
-			e.getStackTrace();
+			System.out.println(e);
 		}
 		return null;
 	}

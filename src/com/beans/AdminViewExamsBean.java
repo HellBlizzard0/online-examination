@@ -12,7 +12,7 @@ import com.models.ExamModel;
 
 @SessionScoped
 @ManagedBean(name = "viewExamsBean")
-public class AdminViewExams {
+public class AdminViewExamsBean {
 
 	private List<Exam> examsList;
 	private ArrayList<Exam> selectedExam = new ArrayList<Exam>();
@@ -47,8 +47,6 @@ public class AdminViewExams {
 		return "AdminViewExams";
 	}
 
-	public void onClick(Exam exam) {
-		this.selectedExam.add(exam);
-	}
+	
 
 }

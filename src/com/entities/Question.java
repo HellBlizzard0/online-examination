@@ -1,5 +1,7 @@
 package com.entities;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,7 +15,11 @@ import org.hibernate.annotations.NamedQuery;
 @NamedQueries({
 		@NamedQuery(
 				name = "question_fetchAllQuestions",
-				query = "from Question q")
+				query = "from Question q"),
+		@NamedQuery(
+				name = "question_fetchQuestionsByExamId",
+				query = "from Question q "
+						+ "where q.examId=:P_ID")
 })
 
 @Entity
@@ -61,5 +67,7 @@ public class Question {
 	public void setExamId(int examId) {
 		this.examId = examId;
 	}
+
+	
 
 }

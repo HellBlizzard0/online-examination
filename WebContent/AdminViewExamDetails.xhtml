@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ng="http://mojarra.dev.java.net/mojarra_ext"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:co="http://xmlns.jcp.org/jsf/composite/com"
+	xmlns:util="http://java.sun.com/jsf/composite/utils">
+
+<h:head>
+	<title>TITLE</title>
+
+</h:head>
+<h:body>
+	<util:MainTemplate>
+		<h2 style="padding-top: 10%">#{viewExamDetailsBean.exam.title}</h2>
+
+		<b:container style="padding-top: 5%">
+			<b:row>
+				<b:column span="3">
+					<b:inputText placeholder="Department"
+						value="#{viewExamDetailsBean.exam.department}">
+						<f:facet name="prepend">
+							<b:icon name="fa-institution" />
+						</f:facet>
+					</b:inputText>
+				</b:column>
+				<b:column offset="4" span="3">
+					<b:inputText placeholder="Level"
+						value="#{viewExamDetailsBean.exam.level}">
+						<f:facet name="prepend">
+							<b:icon name="fa-list-ol" />
+						</f:facet>
+					</b:inputText>
+				</b:column>
+			</b:row>
+			<b:row>
+				<b:column offset="10" span="2">
+					<b:form>
+						<b:commandButton look="primary" action="?faces-redirect=true">Update</b:commandButton>
+					</b:form>
+				</b:column>
+			</b:row>
+			<b:form>
+				<b:dataTable value="#{viewExamDetailsBean.questions}" var="question"
+					caption="Questions List" style="padding-top:10%" print="true"
+					class="questionDataTable">
+
+					
+					<b:dataTableColumn value="#{question.id}" >
+					<!-- ID Column -->
+					</b:dataTableColumn>
+
+					
+					<b:dataTableColumn label="Text">
+					<!-- Text Column -->
+						<b:inputText value="#{question.text}"
+							rendered="#{viewExamDetailsBean.edit}" />
+						<h:outputText value="#{question.text}"
+							rendered="#{not viewExamDetailsBean.edit}" />
+					</b:dataTableColumn>
+
+					
+					<b:dataTableColumn label="Score">
+					<!-- Score Column -->
+						<b:inputText value="#{question.score}"
+							rendered="#{viewExamDetailsBean.edit}" style="max-width:fit-content"/>
+						<h:outputText value="#{question.score}"
+							rendered="#{not viewExamDetailsBean.edit}" />
+					</b:dataTableColumn>
+
+					
+					<b:dataTableColumn label="">
+					<!-- Edit Button -->
+						<b:commandButton value="edit" icon="edit" ajax="true"
+							update="@form"
+							onclick="ajax:viewExamDetailsBean.toggleEdit(question)"
+							auto-update="true">
+						</b:commandButton>
+					</b:dataTableColumn>
+
+					
+					<b:dataTableColumn label="">
+					<!-- Delete Button -->
+						<b:commandButton value="Delete" iconAwesome="trash"
+							action="#{viewExamDetailsBean.deleteQuestion(question)}">
+							<f:ajax execute="@this" render="@form" />
+						</b:commandButton>
+					</b:dataTableColumn>
+				</b:dataTable>
+
+				<b:row style="padding-top: 5%">
+					<b:panel look="primary"
+						title="#{viewExamDetailsBean.editQuestion.text}"
+						rendered="#{viewExamDetailsBean.displayQuestionDetails}">
+						<b:dataTable value="#{viewExamDetailsBean.answers}" var="answer"
+							caption="Questions List" style="padding-top:10%"
+							searching="false" lengthChange='false'>
+							<b:dataTableColumn value="#{answer.id}" />
+							<b:dataTableColumn value="#{answer.text}" />
+							<b:dataTableColumn value="#{answer.questionId}" />
+							<b:dataTableColumn value="#{answer.correct}" />
+
+
+						</b:dataTable>
+					</b:panel>
+				</b:row>
+			</b:form>
+		</b:container>
+	</util:MainTemplate>
+</h:body>
+</html>

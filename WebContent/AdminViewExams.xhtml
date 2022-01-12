@@ -22,35 +22,15 @@
 				<b:dataTableColumn value="#{exam.title}" />
 				<b:dataTableColumn value="#{exam.department}" />
 				<b:dataTableColumn value="#{exam.level}" />
-				<b:dataTableColumn label="Checkbox">
-					<b:selectBooleanCheckbox onclick="ajax:viewExamsBean.onClick(exam)"
-						update="@form">Checkbox</b:selectBooleanCheckbox>
+				<b:dataTableColumn label="">
+    			<b:commandButton value="info"
+						action="#{viewExamDetailsBean.viewInformation(exam)}"
+						update="@none" look="info" style="width:80px" />
 				</b:dataTableColumn>
 
 
 			</b:dataTable>
-			<b:container style="padding-top:10%">
-				<b:row>
-					<b:column span="4">
-						<b:inputText
-							placeholder="#{msgs.label_AdminCreateQuestionEnterTitle}"
-							value="#{viewExamsBean.question.text}">
-							<f:facet name="prepend">
-								<h:outputText value="Title" />
-							</f:facet>
-						</b:inputText>
-					</b:column>
-					<b:column offset="3" span="4">
-						<b:inputText
-							placeholder="#{msgs.label_AdminCreateQuestionAddScore}"
-							value="#{viewExamsBean.question.score}">
-							<f:facet name="prepend">
-								<h:outputText value="Title" />
-							</f:facet>
-						</b:inputText>
-					</b:column>
-				</b:row>
-			</b:container>
+
 		</h:form>
 	</util:MainTemplate>
 </h:body>

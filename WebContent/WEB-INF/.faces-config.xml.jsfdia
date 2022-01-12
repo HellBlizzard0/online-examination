@@ -40,7 +40,7 @@
  <PROCESS-ITEM NAME="rules:#admin-main.xhtml" PATH="/admin-main.xhtml"
   SHAPE="640,56,50,25" model-entity="JSFProcessGroup"/>
  <PROCESS-ITEM NAME="rules:#AdminCreateExam.xhtml"
-  PATH="/AdminCreateExam.xhtml" SHAPE="232,232,50,25" model-entity="JSFProcessGroup">
+  PATH="/AdminCreateExam.xhtml" SHAPE="312,232,50,41" model-entity="JSFProcessGroup">
   <PROCESS-ITEM ID="rules:#AdminCreateExam.xhtml:0" NAME="item"
    PATH="/AdminCreateExam.xhtml" model-entity="JSFProcessItem">
    <PROCESS-ITEM-OUTPUT ID="success::#success.xhtml" NAME="output"
@@ -57,6 +57,17 @@
   </PROCESS-ITEM>
  </PROCESS-ITEM>
  <PROCESS-ITEM NAME="rules:#AdminViewExams.xhtml"
-  PATH="/AdminViewExams.xhtml" SHAPE="232,304,50,25"
+  PATH="/AdminViewExams.xhtml" SHAPE="232,304,50,25" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#AdminViewExams.xhtml:0" NAME="item"
+   PATH="/AdminViewExams.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="AdminViewExamDetails::#AdminViewExamDetails.xhtml" NAME="output"
+    PATH="/AdminViewExamDetails.xhtml"
+    TARGET="rules:#AdminViewExamDetails.xhtml"
+    TITLE="AdminViewExamDetails" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#AdminViewExamDetails.xhtml"
+  PATH="/AdminViewExamDetails.xhtml" SHAPE="304,360,50,25"
   model-entity="JSFProcessGroup" persistent="true"/>
 </PROCESS>
