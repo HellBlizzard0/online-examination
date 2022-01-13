@@ -20,8 +20,7 @@ import org.hibernate.annotations.NamedQueries;
 @NamedQueries({
 	@NamedQuery(
 			name = "student_fetchAllStudents",
-			query = "select s "
-					+ "from Student s"),
+			query =  "from Student s"),
 	@NamedQuery(
 			name = "student_fetchStudentByLoginCredintials",
 			query = "from Student s "

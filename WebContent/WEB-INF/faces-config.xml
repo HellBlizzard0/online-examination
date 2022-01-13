@@ -15,6 +15,10 @@
    <from-outcome>zx</from-outcome>
    <to-view-id>/Register.xhtml</to-view-id>
   </navigation-case>
+  <navigation-case>
+   <from-outcome>result</from-outcome>
+   <to-view-id>/ViewResult.xhtml</to-view-id>
+  </navigation-case>
  </navigation-rule>
  <navigation-rule>
   <from-view-id>/WEB-INF/login.xhtml</from-view-id>

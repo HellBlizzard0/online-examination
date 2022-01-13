@@ -18,6 +18,8 @@
 		<h:commandButton label="Login" value="Login" action="login?faces-redirect=true" />
 		<h:commandButton label="Register" action="register" />
 		<h:commandButton value="Register" action="zx" />
+		<h:commandButton value="View Result" action="result" />
+		<h:commandButton action="#{studentManagedBean.getStudentResult()}" value="Search"/>
 		
 		</h:form>
 	</util:MainTemplate>

@@ -13,6 +13,9 @@
    <PROCESS-ITEM-OUTPUT ID="zx::#Register.xhtml" NAME="output2"
     PATH="/Register.xhtml" SHAPE="73,128,128,128,128,344,223,344"
     TARGET="rules:#Register.xhtml" TITLE="zx" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="result::#ViewResult.xhtml" NAME="output3"
+    PATH="/ViewResult.xhtml" SHAPE="73,144,104,144,104,392,223,392"
+    TARGET="rules:#ViewResult.xhtml" TITLE="result" model-entity="JSFProcessItemOutput"/>
   </PROCESS-ITEM>
  </PROCESS-ITEM>
  <PROCESS-ITEM NAME="rules:#WEB-INF#login.xhtml"
@@ -44,4 +47,6 @@
   model-entity="JSFProcessGroup" persistent="true"/>
  <PROCESS-ITEM NAME="rules:#Register.xhtml" PATH="/Register.xhtml"
   SHAPE="224,336,50,25" model-entity="JSFProcessGroup" persistent="true"/>
+ <PROCESS-ITEM NAME="rules:#ViewResult.xhtml" PATH="/ViewResult.xhtml"
+  SHAPE="224,384,50,25" model-entity="JSFProcessGroup" persistent="true"/>
 </PROCESS>
