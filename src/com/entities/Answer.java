@@ -1,10 +1,12 @@
 package com.entities;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.NamedQueries;
@@ -27,13 +29,30 @@ import org.hibernate.annotations.NamedQuery;
 @Entity
 @Table(name = "answer")
 public class Answer {
+	
 	private int id;
 	private String text;
 	private int questionId;
 	private boolean correct;
+	
+	
+
+	public Answer() {
+		super();
+		this.text="";
+	}
+
+	public Answer(int id, String text, int questionId, boolean correct) {
+		super();
+		this.id = id;
+		this.text = text;
+		this.questionId = questionId;
+		this.correct = correct;
+	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+
 	@Column(name = "id")
 	public int getId() {
 		return id;

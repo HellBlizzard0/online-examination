@@ -47,65 +47,58 @@
 					caption="Questions List" style="padding-top:10%" print="true"
 					class="questionDataTable">
 
-					
-					<b:dataTableColumn value="#{question.id}" >
-					<!-- ID Column -->
+
+					<b:dataTableColumn value="#{question.id}">
+						<!-- ID Column -->
 					</b:dataTableColumn>
 
-					
+
 					<b:dataTableColumn label="Text">
-					<!-- Text Column -->
+						<!-- Text Column -->
 						<b:inputText value="#{question.text}"
 							rendered="#{viewExamDetailsBean.edit}" />
 						<h:outputText value="#{question.text}"
 							rendered="#{not viewExamDetailsBean.edit}" />
 					</b:dataTableColumn>
 
-					
-					<b:dataTableColumn label="Score">
-					<!-- Score Column -->
+
+					<b:dataTableColumn label="Score" width="20%">
+						<!-- Score Column -->
 						<b:inputText value="#{question.score}"
-							rendered="#{viewExamDetailsBean.edit}" style="max-width:fit-content"/>
+							rendered="#{viewExamDetailsBean.edit}" />
 						<h:outputText value="#{question.score}"
 							rendered="#{not viewExamDetailsBean.edit}" />
 					</b:dataTableColumn>
 
-					
+
 					<b:dataTableColumn label="">
-					<!-- Edit Button -->
+						<!-- Edit Button -->
 						<b:commandButton value="edit" icon="edit" ajax="true"
 							update="@form"
-							onclick="ajax:viewExamDetailsBean.toggleEdit(question)"
-							auto-update="true">
+							onclick="ajax:viewExamDetailsBean.toggleEditQuestion(question)">
 						</b:commandButton>
 					</b:dataTableColumn>
 
-					
 					<b:dataTableColumn label="">
-					<!-- Delete Button -->
-						<b:commandButton value="Delete" iconAwesome="trash"
+						<!-- Display Answers Button -->
+						<b:commandButton value=""
+							action="#{answersByQuestion.displayAnswers(question)}">
+							<b:iconAwesome value="fa-info" size="lg" />
+
+						</b:commandButton>
+					</b:dataTableColumn>
+
+
+					<b:dataTableColumn label="">
+						<!-- Delete Button -->
+						<b:commandButton value="" iconAwesome="trash"
 							action="#{viewExamDetailsBean.deleteQuestion(question)}">
 							<f:ajax execute="@this" render="@form" />
 						</b:commandButton>
 					</b:dataTableColumn>
 				</b:dataTable>
 
-				<b:row style="padding-top: 5%">
-					<b:panel look="primary"
-						title="#{viewExamDetailsBean.editQuestion.text}"
-						rendered="#{viewExamDetailsBean.displayQuestionDetails}">
-						<b:dataTable value="#{viewExamDetailsBean.answers}" var="answer"
-							caption="Questions List" style="padding-top:10%"
-							searching="false" lengthChange='false'>
-							<b:dataTableColumn value="#{answer.id}" />
-							<b:dataTableColumn value="#{answer.text}" />
-							<b:dataTableColumn value="#{answer.questionId}" />
-							<b:dataTableColumn value="#{answer.correct}" />
 
-
-						</b:dataTable>
-					</b:panel>
-				</b:row>
 			</b:form>
 		</b:container>
 	</util:MainTemplate>

@@ -6,7 +6,12 @@ import java.util.List;
 import javax.persistence.TypedQuery;
 
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.boot.Metadata;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 import com.entities.Answer;
 import com.entities.Question;
@@ -20,12 +25,13 @@ public class AnswerModel {
 		Transaction transaction = null;
 
 		try {
-			session = SessionManager.getSession();
+			session = SessionManager.getSession();	
 			transaction = session.beginTransaction();
 			session.save(answer);
 			transaction.commit();
 		} catch (Exception e) {
 			result = false;
+			System.out.println(e);
 			if (transaction != null) {
 				transaction.rollback();
 			}
@@ -71,5 +77,49 @@ public class AnswerModel {
 			System.out.println(e);
 		}
 		return null;
+	}
+
+	public static boolean delete(Answer answer) {
+		// TODO Auto-generated method stub
+		boolean result = true;
+		Session session = null;
+		Transaction transaction = null;
+
+		try {
+			session = SessionManager.getSession();
+			transaction = session.beginTransaction();
+			session.remove(answer);
+			transaction.commit();
+		} catch (Exception e) {
+			result = false;
+			if (transaction != null) {
+				transaction.rollback();
+			}
+		} finally {
+			session.close();
+		}
+		return result;
+	}
+
+	public static boolean update(Answer answer) {
+		// TODO Auto-generated method stub
+		boolean result = true;
+		Session session = null;
+		Transaction transaction = null;
+
+		try {
+			session = SessionManager.getSession();
+			transaction = session.beginTransaction();
+			session.update(answer);
+			transaction.commit();
+		} catch (Exception e) {
+			result = false;
+			if (transaction != null) {
+				transaction.rollback();
+			}
+		} finally {
+			session.close();
+		}
+		return result;
 	}
 }

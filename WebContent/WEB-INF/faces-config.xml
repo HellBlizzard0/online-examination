@@ -51,5 +51,12 @@
    <to-view-id>/AdminViewExamDetails.xhtml</to-view-id>
   </navigation-case>
  </navigation-rule>
+ <navigation-rule>
+  <from-view-id>/AdminViewExamDetails.xhtml</from-view-id>
+  <navigation-case>
+   <from-outcome>AdminViewAnswersOfQuestion</from-outcome>
+   <to-view-id>/AdminViewAnswersOfQuestion.xhtml</to-view-id>
+  </navigation-case>
+ </navigation-rule>
  <application/>
 </faces-config>

@@ -16,16 +16,17 @@ import com.models.QuestionModel;
 public class AdminViewExamDetailsBean {
 	private Exam exam;
 	private List<Question> questions;
-	private List<Answer> answers;
-	private boolean displayQuestionDetails;
+	
+	private boolean displayQuestionDetails=false;
 	private boolean edit = false;
+	
 
 	public void deleteQuestion(Question question) {
 		questions.remove(question);
 		QuestionModel.delete(question);	
 	}
 	
-	public void toggleEdit(Question question) {
+	public void toggleEditQuestion(Question question) {
 		if (!this.edit) {
 			this.edit = true;
 		} else {
@@ -34,6 +35,12 @@ public class AdminViewExamDetailsBean {
 		}
 
 	}
+	
+	
+	
+	
+	
+	
 
 	public boolean isEdit() {
 		return edit;
@@ -70,17 +77,10 @@ public class AdminViewExamDetailsBean {
 	public String viewInformation(Exam exam) {
 		this.exam = exam;
 		this.questions = QuestionModel.getQuestionList(exam);
-		this.answers = AnswerModel.getAnswerByQuestionIdList(questions);
 
 		return "AdminViewExamDetails";
 	}
 
-	public List<Answer> getAnswers() {
-		return answers;
-	}
-
-	public void setAnswers(List<Answer> answers) {
-		this.answers = answers;
-	}
+	
 
 }
