@@ -14,7 +14,7 @@
 <!-- IMPLEMENTATION -->
 <composite:implementation>
 	<div>
-		<b:navBar brand="Online Examination" brandHref="#" fixed="top"
+		<b:navBar brand="#{msgs.label_NavBarTitle}" brandHref="#" fixed="top"
 			inverse="true">
 		</b:navBar>
 		<b:column span="3">
@@ -36,6 +36,9 @@
 							iconAlign="right" />
 						<b:navCommandLink value="Create Exam" action="AdminCreateExam"
 							icon="tag" iconAlign="right" />
+						<b:navCommandLink value="Logout"
+							action="#{login.logout()}" icon="tag"
+							iconAlign="right" />
 						<b:messages />
 					</b:listLinks>
 				</b:panel>

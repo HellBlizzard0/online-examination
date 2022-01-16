@@ -62,4 +62,11 @@ public class LoginBean {
 			return "failure";
 		}
 	}
+	
+	public String logout() {
+		this.setPassword("");
+		this.setPassword("");
+		this.setStudentLogin(false);
+		return "login";
+	}
 }
