@@ -7,8 +7,6 @@ import javax.persistence.TypedQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import com.entities.Admin;
-import com.entities.Answer;
 import com.entities.Exam;
 import com.util.SessionManager;
 

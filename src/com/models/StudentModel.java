@@ -1,7 +1,6 @@
 package com.models;
 
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import com.entities.Student;
 import com.util.SessionManager;

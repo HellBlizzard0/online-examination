@@ -4,9 +4,6 @@ package com.beans;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-
 import com.entities.Student;
 import com.models.StudentModel;
 
