@@ -4,7 +4,7 @@
  <navigation-rule>
   <from-view-id>/index.xhtml</from-view-id>
   <navigation-case>
-   <from-outcome>login</from-outcome>
+   <from-outcome>loginx</from-outcome>
    <to-view-id>/WEB-INF/login.xhtml</to-view-id>
   </navigation-case>
   <navigation-case>
@@ -19,6 +19,10 @@
    <from-outcome>result</from-outcome>
    <to-view-id>/ViewResult.xhtml</to-view-id>
   </navigation-case>
+  <navigation-case>
+   <from-outcome>login</from-outcome>
+   <to-view-id>/login.xhtml</to-view-id>
+  </navigation-case>
  </navigation-rule>
  <navigation-rule>
   <from-view-id>/WEB-INF/login.xhtml</from-view-id>
@@ -32,6 +36,17 @@
   <navigation-case>
    <from-outcome>about</from-outcome>
    <to-view-id>/WEB-INF/about.xhtml</to-view-id>
+  </navigation-case>
+ </navigation-rule>
+ <navigation-rule>
+  <from-view-id>/login.xhtml</from-view-id>
+  <navigation-case>
+   <from-outcome>admin-main</from-outcome>
+   <to-view-id>/AdminLogin.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>Student-main</from-outcome>
+   <to-view-id>/StudentLogin.xhtml</to-view-id>
   </navigation-case>
  </navigation-rule>
  <application/>

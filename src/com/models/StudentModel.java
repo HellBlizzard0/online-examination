@@ -8,6 +8,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
+import com.beans.LoginBean;
+import com.beans.StudentBean;
 import com.entities.Admin;
 import com.entities.Student;
 import com.util.SessionManager;
@@ -50,6 +52,31 @@ public class StudentModel {
 		}
 		return null;
 		}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static boolean loginStudent(String username, String password) {
+		Session session = null;
+		String encrypted =null;
+		try {
+			session = SessionManager.getSession();
+			encrypted=LoginBean.encrypt(password);
+			TypedQuery query = session.getNamedQuery("student_fetchStudentByLoginCredintials");
+			query.setParameter("P_USERNAME", username);
+			query.setParameter("P_PASSWORD", encrypted);
+			List<Student> student = query.getResultList();
+			
+			if (student.size() != 0)
+				return true;
+			else
+				return false;
+			
+		} catch(Exception e) {
+			e.getStackTrace();
+		}
+		
+		return false;
+	}
+	
 	
 	
 }
