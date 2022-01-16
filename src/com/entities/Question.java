@@ -25,6 +25,18 @@ import org.hibernate.annotations.NamedQuery;
 @Entity
 @Table(name = "question")
 public class Question {
+	public Question(int id, String text, int score, int examId) {
+		super();
+		this.id = id;
+		this.text = text;
+		this.score = score;
+		this.examId = examId;
+	}
+
+	public Question() {
+		super();
+	}
+
 	private int id;
 	private String text;
 	private int score;

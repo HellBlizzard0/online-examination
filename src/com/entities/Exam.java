@@ -36,6 +36,14 @@ public class Exam {
 		super();
 	}
 
+	public Exam(int id, int level, String title, String department) {
+		super();
+		this.id = id;
+		this.level = level;
+		this.title = title;
+		this.department = department;
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "EID")

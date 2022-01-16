@@ -16,8 +16,20 @@
 	<util:MainTemplate>
 
 		<b:form>
+			<h2 style="padding-top: 10%">#{answersByQuestion.question.text}</h2>
+		
 			<b:container style="padding-top: 5%">
-
+				<b:row>
+				<b:column span="3">
+					<b:inputText placeholder="Score"
+						value="#{answersByQuestion.question.score}" readonly="true">
+						<f:facet name="prepend">
+							<b:iconAwesome name="fa-star"/> 
+						</f:facet>
+					</b:inputText>
+				</b:column>
+				
+			</b:row>
 				<b:row>
 
 					<b:dataTable value="#{answersByQuestion.answers}" var="answer"

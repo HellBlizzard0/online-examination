@@ -64,6 +64,10 @@ public class AdminViewAnswersOfQuestion {
 		toggleFlag(Flags.EDIT);
 	}
 
+	/**
+	 * Should switch the isCorrect flag of an answer. 
+	 * @param answer
+	 */
 	public void toggleCorrect(Answer answer) {
 		answers
 				.get(answers.indexOf(answer))

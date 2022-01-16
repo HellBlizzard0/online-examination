@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import com.entities.Admin;
+import com.entities.Answer;
 import com.entities.Exam;
 import com.util.SessionManager;
 
@@ -66,6 +67,28 @@ public class ExamModel {
 			System.out.println(e);
 		}
 		return null;
+	}
+	
+	public static boolean update(Exam exam) {
+		// TODO Auto-generated method stub
+		boolean result = true;
+		Session session = null;
+		Transaction transaction = null;
+
+		try {
+			session = SessionManager.getSession();
+			transaction = session.beginTransaction();
+			session.update(exam);
+			transaction.commit();
+		} catch (Exception e) {
+			result = false;
+			if (transaction != null) {
+				transaction.rollback();
+			}
+		} finally {
+			session.close();
+		}
+		return result;
 	}
 
 }
