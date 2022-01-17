@@ -16,41 +16,89 @@
 	<util:MainTemplate>
 		<h1 style="padding-top: 5%">View Exams</h1>
 		<h:form>
-			<b:dataTable value="#{viewExamsBean.examsList}" var="exam"
-				caption="Exams List" style="padding-top:5%">
+			<b:dataTable value="#{viewExamsBean.exams}" var="exam"
+				caption="Exams List">
+				<f:facet name="header">
+					<tr>
+						<th>ID</th>
+						<th>Title</th>
+						<th>Dept</th>
+						<th>Level</th>
+						<th></th>
+					</tr>
+				</f:facet>
 				<b:dataTableColumn value="#{exam.id}" />
-				<b:dataTableColumn value="#{exam.title}" />
-				<b:dataTableColumn value="#{exam.department}" />
-				<b:dataTableColumn value="#{exam.level}" />
-				<b:dataTableColumn label="Checkbox">
-					<b:selectBooleanCheckbox onclick="ajax:viewExamsBean.onClick(exam)"
-						update="@form">Checkbox</b:selectBooleanCheckbox>
+				<b:dataTableColumn>
+					<b:inputText value="#{exam.title}"
+					rendered="#{viewExamsBean.render(exam)}" />
+					<h:outputText value="#{exam.title}"
+						rendered="#{not viewExamsBean.render(exam)}" />
+				</b:dataTableColumn>
+				<b:dataTableColumn>
+					<b:inputText value="#{exam.department}" size="3"
+						rendered="#{viewExamsBean.render(exam)}" />
+					<h:outputText value="#{exam.department}"
+						rendered="#{not viewExamsBean.render(exam)}" />
+				</b:dataTableColumn>
+				<b:dataTableColumn>
+					<b:inputText value="#{exam.level}" size="3"
+						rendered="#{viewExamsBean.render(exam)}" />
+					<h:outputText value="#{exam.level}"
+						rendered="#{not viewExamsBean.render(exam)}" />
+				</b:dataTableColumn>
+				<b:dataTableColumn>
+    			<b:commandButton value=""
+						action="#{viewExamDetailsBean.viewInformation(exam)}"
+						look="info"
+						disabled="#{viewExamsBean.render(exam)}">
+						<b:iconAwesome value="fa-info" size="lg" />
+					</b:commandButton>
 				</b:dataTableColumn>
 
 
 			</b:dataTable>
-			<b:container style="padding-top:10%">
-				<b:row>
-					<b:column span="4">
-						<b:inputText
-							placeholder="#{msgs.label_AdminCreateQuestionEnterTitle}"
-							value="#{viewExamsBean.question.text}">
-							<f:facet name="prepend">
-								<h:outputText value="Title" />
-							</f:facet>
-						</b:inputText>
-					</b:column>
-					<b:column offset="3" span="4">
-						<b:inputText
-							placeholder="#{msgs.label_AdminCreateQuestionAddScore}"
-							value="#{viewExamsBean.question.score}">
-							<f:facet name="prepend">
-								<h:outputText value="Title" />
-							</f:facet>
-						</b:inputText>
-					</b:column>
-				</b:row>
-			</b:container>
+			<b:row>
+				<!-- Left Button -->
+				<b:column span="3" offset="6">
+					<!-- Normal -->
+					<b:commandButton value="Add Exam" icon="edit" ajax="true"
+						update="@form" look="info"
+						onclick="ajax:viewExamsBean.newEnable()" auto-update="true"
+						rendered="#{viewExamsBean.normal}">
+					</b:commandButton>
+					<!-- Edit -->
+					<b:commandButton value="Update" icon="edit" ajax="true"
+						update="@form" look="success"
+						onclick="ajax:viewExamsBean.editConfirm(true)" auto-update="true"
+						rendered="#{viewExamsBean.edit}">
+					</b:commandButton>
+					<!-- New -->
+					<b:commandButton value="Save" icon="edit" ajax="true"
+						update="@form" look="success"
+						onclick="ajax:viewExamsBean.addNewConfirm(true)"
+						auto-update="true" rendered="#{viewExamsBean.addNew}">
+					</b:commandButton>
+				</b:column>
+				<!-- Right Button -->
+				<b:column span="3">
+					<!-- Normal -->
+					<b:commandButton value="Edit" icon="edit" ajax="true"
+						update="@form" look="success"
+						onclick="ajax:viewExamsBean.editEnable()" auto-update="true"
+						rendered="#{viewExamsBean.normal}">
+					</b:commandButton>
+					<!-- Edit -->
+					<b:commandButton value="Cancel" icon="edit" ajax="true"
+						update="@form" onclick="ajax:viewExamsBean.editConfirm(false)"
+						auto-update="true" rendered="#{viewExamsBean.edit}">
+					</b:commandButton>
+					<!-- New -->
+					<b:commandButton value="Cancel" icon="edit" ajax="true"
+						update="@form" onclick="ajax:viewExamsBean.addNewConfirm(false)"
+						auto-update="true" rendered="#{viewExamsBean.addNew}">
+					</b:commandButton>
+				</b:column>
+			</b:row>
 		</h:form>
 	</util:MainTemplate>
 </h:body>

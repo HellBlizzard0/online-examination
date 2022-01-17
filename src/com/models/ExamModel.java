@@ -7,13 +7,12 @@ import javax.persistence.TypedQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import com.entities.Admin;
 import com.entities.Exam;
 import com.util.SessionManager;
 
 public class ExamModel {
 
-	public boolean create(Exam exam) {
+	public static boolean create(Exam exam) {
 		
 		boolean result = true;
 		Session session = null;
@@ -63,9 +62,31 @@ public class ExamModel {
 				return query.getResultList();
 			}
 		} catch(Exception e) {
-			e.getStackTrace();
+			System.out.println(e);
 		}
 		return null;
+	}
+	
+	public static boolean update(Exam exam) {
+		// TODO Auto-generated method stub
+		boolean result = true;
+		Session session = null;
+		Transaction transaction = null;
+
+		try {
+			session = SessionManager.getSession();
+			transaction = session.beginTransaction();
+			session.update(exam);
+			transaction.commit();
+		} catch (Exception e) {
+			result = false;
+			if (transaction != null) {
+				transaction.rollback();
+			}
+		} finally {
+			session.close();
+		}
+		return result;
 	}
 
 }

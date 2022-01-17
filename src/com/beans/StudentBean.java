@@ -29,8 +29,8 @@ public class StudentBean {
 	private Student student;
 	private List<Student> studentsList;
 	private List<Result> resultList;
-	
-	
+
+
 	public Student getStudent() {
 		return student;
 	}
@@ -42,7 +42,7 @@ public class StudentBean {
 	public List<Student> getStudentsList() {
 		return studentsList;
 	}
-	
+
 	public void setStudentsList(List<Student> studentsList) {
 		this.studentsList = studentsList;
 	}
@@ -54,7 +54,7 @@ public class StudentBean {
 	public void setResultList(List<Result> resultList) {
 		this.resultList = resultList;
 	}
-	
+
 	public StudentBean() {
 		this.student = new Student();
 	}
@@ -67,18 +67,18 @@ public class StudentBean {
 		this.student=new Student();
 		return "success?faces-redirect=true";
 	}
-	
-	
+
+
 	/*public String ss() {
 		studentsList=StudentModel.getStudentList();
 		return "result";
 	}*/
-	
+
 	public String getStudentResult() {
 		//getStudent().setId(4);
 		resultList=ResultModel.getResultList(4);
 		return "result";
 	}
 
-	
+
 }

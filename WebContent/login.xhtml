@@ -18,23 +18,27 @@
 </h:head>
 <h:body style="padding-top: 60px; background-color: #add;">
 	<b:container>
-            <h:form styleClass="form-signin" prependId="false">
-                <h2 class="form-signin-heading">Please sign in</h2>
-                <b:inputText id="email" placeholder="Email address" value="#{login.username}" >
-                    <f:facet name="prepend">
-                        <b:icon name="user" />
-                    </f:facet>
-                </b:inputText>
-                <b:inputText id="password" placeholder="Password" type="password" value="#{login.password}">
-                    <f:facet name="prepend">
-                        <b:iconAwesome name="key" />
-                    </f:facet>
-                </b:inputText>
-                <b:selectBooleanCheckbox value="true" caption="remember me"/>
-                <b:commandButton look="primary btn-block" value="Sign In" icon="log-in" size="lg" action="#{login.login()}"/>
-                <b:commandButton look="primary btn-block" value="Sign In" icon="log-in" size="lg" action="#{login.loginStudint()}"/>
-       
-            </h:form>
-        </b:container>
+		<h:form styleClass="form-signin" prependId="false">
+			<h2 class="form-signin-heading">Please sign in</h2>
+			<b:inputText id="email" placeholder="Email address"
+				value="#{login.username}">
+				<f:facet name="prepend">
+					<b:icon name="user" />
+				</f:facet>
+			</b:inputText>
+			<b:inputText id="password" placeholder="Password" type="password"
+				value="#{login.password}">
+				<f:facet name="prepend">
+					<b:iconAwesome name="key" />
+				</f:facet>
+			</b:inputText>
+                    <b:switch value="#{login.studentLogin}"
+				offColor="success" onColor="info"
+				off-text="Admin" onText="Student" />
+
+			<b:commandButton look="primary btn-block" value="Sign In"
+				icon="log-in" size="lg" action="#{login.login()}" />
+		</h:form>
+	</b:container>
 </h:body>
 </html>
