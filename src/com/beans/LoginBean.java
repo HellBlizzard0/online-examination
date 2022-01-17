@@ -1,5 +1,7 @@
 package com.beans;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,6 +20,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 import com.entities.Student;
 import com.models.AdminModel;
+import com.models.StudentModel;
 import com.util.HibernateUtil;
 import com.util.SessionManager;
 
@@ -62,4 +65,43 @@ public class LoginBean {
 			return "failure";
 		}
 	}
+	
+	public String loginStudint() {
+		if (!studentLogin) {
+			if (StudentModel.loginStudent(username, password))
+				return "Student-main";
+			else
+				return "failure";
+		} else {
+			return "failure";
+		}
+	}
+	
+	public static String encrypt(String password) {
+        String encryptedpassword = null;  
+
+		try   
+	        {  
+	            MessageDigest m = MessageDigest.getInstance("MD5");  
+	              
+	            m.update(password.getBytes());  
+	              
+	            byte[] bytes = m.digest();  
+	              
+	            StringBuilder s = new StringBuilder();  
+	            for(int i=0; i< bytes.length ;i++)  
+	            {  
+	                s.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));  
+	            }  
+	              
+	            encryptedpassword = s.toString();  
+	        }   
+	        catch (NoSuchAlgorithmException e)   
+	        {  
+	            e.printStackTrace();  
+	        }
+		return encryptedpassword;  	
+		}
+
+
 }

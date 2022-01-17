@@ -11,6 +11,14 @@
    <from-outcome>zx</from-outcome>
    <to-view-id>/Register.xhtml</to-view-id>
   </navigation-case>
+  <navigation-case>
+   <from-outcome>result</from-outcome>
+   <to-view-id>/ViewResult.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>login</from-outcome>
+   <to-view-id>/login.xhtml</to-view-id>
+  </navigation-case>
  </navigation-rule>
  <navigation-rule>
   <from-view-id>/login.xhtml</from-view-id>
@@ -46,6 +54,17 @@
   <navigation-case>
    <from-outcome>admin-main</from-outcome>
    <to-view-id>/admin-main.xhtml</to-view-id>
+  </navigation-case>
+ </navigation-rule>
+ <navigation-rule>
+  <from-view-id>/login.xhtml</from-view-id>
+  <navigation-case>
+   <from-outcome>admin-main</from-outcome>
+   <to-view-id>/AdminLogin.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>Student-main</from-outcome>
+   <to-view-id>/StudentLogin.xhtml</to-view-id>
   </navigation-case>
  </navigation-rule>
  <application/>
