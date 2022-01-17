@@ -7,6 +7,8 @@ import javax.persistence.TypedQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import com.beans.LoginBean;
+import com.beans.StudentBean;
 import com.entities.Admin;
 import com.entities.Student;
 import com.util.SessionManager;
@@ -57,11 +59,14 @@ public class AdminModel {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static boolean login(String username, String password) {
 		Session session = null;
+		String encrypted=null;
 		try {
 			session = SessionManager.getSession();
+			encrypted=LoginBean.encrypt(password);
+			System.out.println(encrypted);
 			TypedQuery query = session.getNamedQuery("admin_fetchAdminByLoginCredintials");
 			query.setParameter("P_USERNAME", username);
-			query.setParameter("P_PASSWORD", password);
+			query.setParameter("P_PASSWORD", encrypted);
 			List<Admin> admin = query.getResultList();
 			
 			if (admin.size() != 0)
@@ -75,4 +80,9 @@ public class AdminModel {
 		
 		return false;
 	}
+	
+	
+	
+	
+	
 }

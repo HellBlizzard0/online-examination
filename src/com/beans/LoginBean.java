@@ -1,8 +1,14 @@
 package com.beans;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import com.models.AdminModel;
+import com.models.StudentModel;
+
 
 @SessionScoped
 @ManagedBean(name = "login")
@@ -42,14 +48,46 @@ public class LoginBean {
 			else
 				return "failure";
 		} else {
-			return "failure";
+			if (StudentModel.loginStudent(username, password))
+				return "Student-main";
+			else
+				return "failure";
 		}
 	}
-	
+
 	public String logout() {
 		this.setPassword("");
 		this.setPassword("");
 		this.setStudentLogin(false);
 		return "login";
 	}
+
+
+	public static String encrypt(String password) {
+        String encryptedpassword = null;
+
+		try
+	        {
+	            MessageDigest m = MessageDigest.getInstance("MD5");
+
+	            m.update(password.getBytes());
+
+	            byte[] bytes = m.digest();
+
+	            StringBuilder s = new StringBuilder();
+	            for(int i=0; i< bytes.length ;i++)
+	            {
+	                s.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+	            }
+
+	            encryptedpassword = s.toString();
+	        }
+	        catch (NoSuchAlgorithmException e)
+	        {
+	            e.printStackTrace();
+	        }
+		return encryptedpassword;
+		}
+
+
 }

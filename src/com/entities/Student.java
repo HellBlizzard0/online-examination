@@ -3,15 +3,9 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-//import javax.persistence.NamedQueries;
-//import javax.persistence.NamedQuery;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
 import javax.persistence.Table;
 import org.hibernate.annotations.NamedQuery;
 import org.hibernate.annotations.NamedQueries;
@@ -20,7 +14,7 @@ import org.hibernate.annotations.NamedQueries;
 @NamedQueries({
 	@NamedQuery(
 			name = "student_fetchAllStudents",
-			query = "from Student s"),
+			query =  "from Student s"),
 	@NamedQuery(
 			name = "student_fetchStudentByLoginCredintials",
 			query = "from Student s "
@@ -39,29 +33,29 @@ public class Student implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")
 	private int id;
-	
+
 	@Column(name = "name")
 	private String name;
-	
+
 	@Column(name = "username")
 	private String username;
-	
+
 	@Column(name = "password")
 	private String password;
-	
+
 	@Column(name = "email")
 	private String email;
-	
+
 	@Column(name = "department")
 	private String department;
-	
+
 	@Column(name = "level")
 	private int level;
-	
+
 	public Student() {
-		
+
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -105,6 +99,6 @@ public class Student implements Serializable {
 		this.level = level;
 	}
 
-	
+
 
 }
