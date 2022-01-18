@@ -6,7 +6,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
@@ -44,20 +43,33 @@ public class Exam {
 		this.department = department;
 	}
 
+	private int id;
+	private int level;
+	private String title;
+	private String department;
+	private int timer;
+	
+	@Column(name="Time")
+	public int getTimer() {
+		return timer;
+	}
+
+	public Exam(int id, int level, String title, String department, int timer) {
+		super();
+		this.id = id;
+		this.level = level;
+		this.title = title;
+		this.department = department;
+		this.timer = timer;
+	}
+
+	public void setTimer(int timer) {
+		this.timer = timer;
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "EID")
-	private int id;
-
-	@Column(name = "Level")
-	private int level;
-
-	@Column(name = "Title")
-	private String title;
-
-	@Column(name = "Department")
-	private String department;
-
 	public int getId() {
 		return id;
 	}
@@ -66,6 +78,7 @@ public class Exam {
 		this.id = id;
 	}
 
+	@Column(name = "Level")
 	public int getLevel() {
 		return level;
 	}
@@ -74,6 +87,7 @@ public class Exam {
 		this.level = level;
 	}
 
+	@Column(name = "Title")
 	public String getTitle() {
 		return title;
 	}
@@ -82,6 +96,7 @@ public class Exam {
 		this.title = title;
 	}
 
+	@Column(name = "Department")
 	public String getDepartment() {
 		return department;
 	}
