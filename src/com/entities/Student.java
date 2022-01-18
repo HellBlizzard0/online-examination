@@ -56,6 +56,17 @@ public class Student implements Serializable {
 
 	}
 
+	public Student(int id, String name, String username, String password, String email, String department, int level) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.username = username;
+		this.password = password;
+		this.email = email;
+		this.department = department;
+		this.level = level;
+	}
+
 	public String getName() {
 		return name;
 	}
