@@ -23,6 +23,10 @@
    <from-outcome>login</from-outcome>
    <to-view-id>/login.xhtml</to-view-id>
   </navigation-case>
+  <navigation-case>
+   <from-outcome>ToExams</from-outcome>
+   <to-view-id>/success.xhtml</to-view-id>
+  </navigation-case>
  </navigation-rule>
  <navigation-rule>
   <from-view-id>/WEB-INF/login.xhtml</from-view-id>
@@ -47,6 +51,17 @@
   <navigation-case>
    <from-outcome>Student-main</from-outcome>
    <to-view-id>/StudentLogin.xhtml</to-view-id>
+  </navigation-case>
+ </navigation-rule>
+ <navigation-rule>
+  <from-view-id>/resources/utils/StudentTamplate.xhtml</from-view-id>
+  <navigation-case>
+   <from-outcome>ToExams</from-outcome>
+   <to-view-id>/success.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>ToResult</from-outcome>
+   <to-view-id>/success.xhtml</to-view-id>
   </navigation-case>
  </navigation-rule>
  <application/>

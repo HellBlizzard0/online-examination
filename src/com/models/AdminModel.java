@@ -63,7 +63,6 @@ public class AdminModel {
 		try {
 			session = SessionManager.getSession();
 			encrypted=LoginBean.encrypt(password);
-			System.out.println(encrypted);
 			TypedQuery query = session.getNamedQuery("admin_fetchAdminByLoginCredintials");
 			query.setParameter("P_USERNAME", username);
 			query.setParameter("P_PASSWORD", encrypted);

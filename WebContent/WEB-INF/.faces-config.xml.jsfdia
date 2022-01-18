@@ -19,6 +19,8 @@
    <PROCESS-ITEM-OUTPUT ID="login::#login.xhtml" NAME="output4"
     PATH="/login.xhtml" SHAPE="73,160,88,160,88,472,223,472"
     TARGET="rules:#login.xhtml" TITLE="login" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="ToExams::#success.xhtml" NAME="output5"
+    PATH="/success.xhtml" TARGET="rules:#success.xhtml" TITLE="ToExams" model-entity="JSFProcessItemOutput"/>
   </PROCESS-ITEM>
  </PROCESS-ITEM>
  <PROCESS-ITEM NAME="rules:#WEB-INF#login.xhtml"
@@ -70,4 +72,17 @@
  </PROCESS-ITEM>
  <PROCESS-ITEM NAME="rules:#AdminLogin.xhtml" PATH="/AdminLogin.xhtml"
   SHAPE="384,424,50,25" model-entity="JSFProcessGroup" persistent="true"/>
+ <PROCESS-ITEM NAME="rules:#success.xhtml" PATH="/success.xhtml"
+  SHAPE="224,584,50,25" model-entity="JSFProcessGroup" persistent="true"/>
+ <PROCESS-ITEM NAME="rules:#resources#utils#StudentTamplate.xhtml"
+  PATH="/resources/utils/StudentTamplate.xhtml" SHAPE="16,520,50,25" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#resources#utils#StudentTamplate.xhtml:0"
+   NAME="item" PATH="/resources/utils/StudentTamplate.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="ToExams::#success.xhtml" NAME="output"
+    PATH="/success.xhtml" SHAPE="65,552,176,552,176,592,223,592"
+    TARGET="rules:#success.xhtml" TITLE="ToExams" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="ToResult::#success.xhtml" NAME="output1"
+    PATH="/success.xhtml" TARGET="rules:#success.xhtml" TITLE="ToResult" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
 </PROCESS>

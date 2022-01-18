@@ -14,11 +14,11 @@
 </h:head>
 <h:body>
 
-	<util:MainTemplate>
+	<util:StudentTamplate>
 
 		
 		<h:form>
-		<b:dataTable value="#{studentManagedBean.resultList}" var="z">
+		<b:dataTable value="#{studentManagedBean.resultList}" var="z" pdf="true" print="true">
 				<b:dataTableColumn value="#{z.uid}" />
 				<b:dataTableColumn value="#{z.eid}" />
 				<b:dataTableColumn value="#{z.rid}" />
@@ -28,7 +28,7 @@
 
 			</b:dataTable>
 		</h:form>
-	</util:MainTemplate>
+	</util:StudentTamplate>
 
 </h:body>
 </html>
