@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ng="http://mojarra.dev.java.net/mojarra_ext"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:co="http://xmlns.jcp.org/jsf/composite/com"
+	xmlns:util="http://java.sun.com/jsf/composite/utils">
+
+<h:head>
+	<title>TITLE</title>
+
+</h:head>
+<h:body>
+	<util:MainTemplate>
+
+		<b:form>
+			<h2 style="padding-top: 10%">#{answersByQuestion.question.text}</h2>
+		
+			<b:container style="padding-top: 5%">
+				<b:row>
+				<b:column span="3">
+					<b:inputText placeholder="Score"
+						value="#{answersByQuestion.question.score}" readonly="true">
+						<f:facet name="prepend">
+							<b:iconAwesome name="fa-star"/> 
+						</f:facet>
+					</b:inputText>
+				</b:column>
+				
+			</b:row>
+				<b:row>
+
+					<b:dataTable value="#{answersByQuestion.answers}" var="answer"
+						searching="false" lengthChange='false'>
+						<f:facet name="header">
+							<tr>
+								<th>ID</th>
+								<th>Answer</th>
+								<th>Correct</th>
+								<th></th>
+								<th></th>
+							</tr>
+						</f:facet>
+
+						<b:dataTableColumn value="#{answer.id}" />
+						<b:dataTableColumn>
+							<b:inputText value="#{answer.text}"
+								rendered="#{answersByQuestion.render(answer)}" />
+							<h:outputText value="#{answer.text}"
+								rendered="#{not answersByQuestion.render(answer)}" />
+
+						</b:dataTableColumn>
+						<b:dataTableColumn>
+							<b:selectBooleanCheckbox value="#{answer.correct}"
+								rendered="#{answersByQuestion.render(answer)}" 
+								immediate="true"
+								valueChangeListener="toggleCorrect(answer)" />
+							<h:outputText value="#{answer.correct}"
+								rendered="#{not answersByQuestion.render(answer)}" />
+
+						</b:dataTableColumn>
+
+
+
+						<b:dataTableColumn label="">
+							<!-- Delete Button -->
+							<b:commandButton value="" iconAwesome="trash" look="danger"
+								action="#{answersByQuestion.deleteAnswer(answer)}">
+								<f:ajax execute="@this" render="@form" />
+							</b:commandButton>
+						</b:dataTableColumn>
+
+					</b:dataTable>
+
+				</b:row>
+				<b:row>
+					<!-- Left Button -->
+					<b:column span="3" offset="6">
+						<!-- Normal -->
+						<b:commandButton value="Add Answer" icon="edit" ajax="true"
+							update="@form" look="info" onclick="ajax:answersByQuestion.newEnable()"
+							auto-update="true" rendered="#{answersByQuestion.normal}">
+						</b:commandButton>
+						<!-- Edit -->
+						<b:commandButton value="Update" icon="edit" ajax="true"
+							update="@form" look="success" onclick="ajax:answersByQuestion.editConfirm(true)"
+							auto-update="true" rendered="#{answersByQuestion.edit}">
+						</b:commandButton>
+						<!-- New -->
+						<b:commandButton value="Save" icon="edit" ajax="true"
+							update="@form" look="success"
+							onclick="ajax:answersByQuestion.addNewConfirm(true)"
+							auto-update="true" rendered="#{answersByQuestion.addNew}">
+						</b:commandButton>
+					</b:column>
+					<!-- Right Button -->
+					<b:column span="3">
+						<!-- Normal -->
+						<b:commandButton value="Edit" icon="edit" ajax="true"
+							update="@form" look="success" onclick="ajax:answersByQuestion.editEnable()"
+							auto-update="true" rendered="#{answersByQuestion.normal}">
+						</b:commandButton>
+						<!-- Edit -->
+						<b:commandButton value="Cancel" icon="edit" ajax="true"
+							update="@form" 
+							onclick="ajax:answersByQuestion.editConfirm(false)"
+							auto-update="true" rendered="#{answersByQuestion.edit}">
+						</b:commandButton>
+						<!-- New -->
+						<b:commandButton value="Cancel" icon="edit" ajax="true"
+							update="@form" 
+							onclick="ajax:answersByQuestion.addNewConfirm(false)"
+							auto-update="true" rendered="#{answersByQuestion.addNew}">
+						</b:commandButton>
+					</b:column>
+				</b:row>
+			</b:container>
+		</b:form>
+
+
+	</util:MainTemplate>
+</h:body>
+</html>

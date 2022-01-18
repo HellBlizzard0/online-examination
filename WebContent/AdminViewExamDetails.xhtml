@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ng="http://mojarra.dev.java.net/mojarra_ext"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:co="http://xmlns.jcp.org/jsf/composite/com"
+	xmlns:util="http://java.sun.com/jsf/composite/utils">
+
+<h:head>
+	<title>TITLE</title>
+
+</h:head>
+<h:body>
+	<util:MainTemplate>
+		<h2 style="padding-top: 10%">#{viewExamDetailsBean.exam.title}</h2>
+
+		<b:container style="padding-top: 5%">
+			<b:row>
+				<b:column span="3">
+					<b:inputText placeholder="Department"
+						value="#{viewExamDetailsBean.exam.department}" readonly="true">
+						<f:facet name="prepend">
+							<b:iconAwesome name="fa-institution"/> 
+						</f:facet>
+					</b:inputText>
+				</b:column>
+				<b:column offset="4" span="3">
+					<b:inputText placeholder="Level"
+						value="#{viewExamDetailsBean.exam.level}" readonly="true">
+						<f:facet name="prepend">
+							<b:iconAwesome name="fa-list-ol" />
+						</f:facet>
+					</b:inputText>
+				</b:column>
+			</b:row>
+			
+			<b:form>
+				<b:dataTable value="#{viewExamDetailsBean.questions}" var="question"
+					caption="Questions List"  print="true"
+					class="questionDataTable">
+
+
+					<b:dataTableColumn value="#{question.id}">
+						<!-- ID Column -->
+					</b:dataTableColumn>
+
+
+					<b:dataTableColumn label="Text">
+						<!-- Text Column -->
+						<b:inputText value="#{question.text}"
+							rendered="#{viewExamDetailsBean.render(question)}" />
+						<h:outputText value="#{question.text}"
+							rendered="#{not viewExamDetailsBean.render(question)}" />
+					</b:dataTableColumn>
+
+
+					<b:dataTableColumn label="Score" width="20%">
+						<!-- Score Column -->
+						<b:inputText value="#{question.score}" size="3"
+							rendered="#{viewExamDetailsBean.render(question)}" />
+						<h:outputText value="#{question.score}"
+							rendered="#{not viewExamDetailsBean.render(question)}" />
+					</b:dataTableColumn>
+
+
+					<b:dataTableColumn label="" >
+						<!-- Display Answers Button -->
+						<b:commandButton value=""
+							action="#{answersByQuestion.goTo(question)}"
+							disabled="#{viewExamDetailsBean.render(question)}">
+							<b:iconAwesome value="fa-info" size="lg" />
+
+						</b:commandButton>
+					</b:dataTableColumn>
+
+
+					<b:dataTableColumn label="" >
+						<!-- Delete Button -->
+						<b:commandButton value="" iconAwesome="trash"
+							action="#{viewExamDetailsBean.deleteQuestion(question)}"
+							disabled="#{viewExamDetailsBean.render(question)}">
+							<f:ajax execute="@this" render="@form" />
+						</b:commandButton>
+					</b:dataTableColumn>
+				</b:dataTable>
+				<b:row>
+					<!-- Left Button -->
+					<b:column span="3" offset="6">
+						<!-- Normal -->
+						<b:commandButton value="Add Question" icon="edit" ajax="true"
+							update="@form" look="info" onclick="ajax:viewExamDetailsBean.newEnable()"
+							auto-update="true" rendered="#{viewExamDetailsBean.normal}">
+						</b:commandButton>
+						<!-- Edit -->
+						<b:commandButton value="Update" icon="edit" ajax="true"
+							update="@form" look="success" onclick="ajax:viewExamDetailsBean.editConfirm(true)"
+							auto-update="true" rendered="#{viewExamDetailsBean.edit}">
+						</b:commandButton>
+						<!-- New -->
+						<b:commandButton value="Save" icon="edit" ajax="true"
+							update="@form" look="success"
+							onclick="ajax:viewExamDetailsBean.addNewConfirm(true)"
+							auto-update="true" rendered="#{viewExamDetailsBean.addNew}">
+						</b:commandButton>
+					</b:column>
+					<!-- Right Button -->
+					<b:column span="3">
+						<!-- Normal -->
+						<b:commandButton value="Edit" icon="edit" ajax="true"
+							update="@form" look="success" onclick="ajax:viewExamDetailsBean.editEnable()"
+							auto-update="true" rendered="#{viewExamDetailsBean.normal}">
+						</b:commandButton>
+						<!-- Edit -->
+						<b:commandButton value="Cancel" icon="edit" ajax="true"
+							update="@form" 
+							onclick="ajax:viewExamDetailsBean.editConfirm(false)"
+							auto-update="true" rendered="#{viewExamDetailsBean.edit}">
+						</b:commandButton>
+						<!-- New -->
+						<b:commandButton value="Cancel" icon="edit" ajax="true"
+							update="@form" 
+							onclick="ajax:viewExamDetailsBean.addNewConfirm(false)"
+							auto-update="true" rendered="#{viewExamDetailsBean.addNew}">
+						</b:commandButton>
+					</b:column>
+				</b:row>
+
+			</b:form>
+		</b:container>
+	</util:MainTemplate>
+</h:body>
+</html>
