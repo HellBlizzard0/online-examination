@@ -16,8 +16,8 @@
    <to-view-id>/ViewResult.xhtml</to-view-id>
   </navigation-case>
   <navigation-case>
-   <from-outcome>login</from-outcome>
-   <to-view-id>/login.xhtml</to-view-id>
+   <from-outcome>StudentViewExams</from-outcome>
+   <to-view-id>/StudentViewExams.xhtml</to-view-id>
   </navigation-case>
  </navigation-rule>
  <navigation-rule>
@@ -74,14 +74,8 @@
    <to-view-id>/AdminViewAnswersOfQuestion.xhtml</to-view-id>
   </navigation-case>
  </navigation-rule>
- <application>
-  <resource-bundle>
-   <base-name>com.resources.messages_en</base-name>
-   <var>msgs</var>
-  </resource-bundle>
- </application>
-<navigation-rule>
-<from-view-id>/login.xhtml</from-view-id>
+ <navigation-rule>
+  <from-view-id>/login.xhtml</from-view-id>
   <navigation-case>
    <from-outcome>admin-main</from-outcome>
    <to-view-id>/AdminLogin.xhtml</to-view-id>
@@ -91,5 +85,10 @@
    <to-view-id>/StudentLogin.xhtml</to-view-id>
   </navigation-case>
  </navigation-rule>
- <application/>
+ <application>
+  <resource-bundle>
+   <base-name>com.resources.messages_en</base-name>
+   <var>msgs</var>
+  </resource-bundle>
+ </application>
 </faces-config>
