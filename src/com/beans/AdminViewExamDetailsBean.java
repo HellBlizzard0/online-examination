@@ -171,7 +171,7 @@ public class AdminViewExamDetailsBean {
 		this.exam = exam;
 	}
 
-	public String viewInformation(Exam exam) {
+	public String goTo(Exam exam) {
 		this.exam = exam;
 		this.questions = QuestionModel.getQuestionList(exam);
 

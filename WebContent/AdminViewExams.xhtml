@@ -24,35 +24,48 @@
 						<th>Title</th>
 						<th>Dept</th>
 						<th>Level</th>
-						<th></th>
+						<th>Time</th>
+						<th></th><th></th>
 					</tr>
 				</f:facet>
 				<b:dataTableColumn value="#{exam.id}" />
 				<b:dataTableColumn>
 					<b:inputText value="#{exam.title}"
-					rendered="#{viewExamsBean.render(exam)}" />
+						rendered="#{viewExamsBean.render(exam)}" />
 					<h:outputText value="#{exam.title}"
 						rendered="#{not viewExamsBean.render(exam)}" />
 				</b:dataTableColumn>
 				<b:dataTableColumn>
-					<b:inputText value="#{exam.department}" size="3"
+					<b:inputText value="#{exam.department}" size="2"
 						rendered="#{viewExamsBean.render(exam)}" />
 					<h:outputText value="#{exam.department}"
 						rendered="#{not viewExamsBean.render(exam)}" />
 				</b:dataTableColumn>
 				<b:dataTableColumn>
-					<b:inputText value="#{exam.level}" size="3"
+					<b:inputText value="#{exam.level}" size="1"
 						rendered="#{viewExamsBean.render(exam)}" />
 					<h:outputText value="#{exam.level}"
 						rendered="#{not viewExamsBean.render(exam)}" />
 				</b:dataTableColumn>
 				<b:dataTableColumn>
+					<b:inputText value="#{exam.timer}" size="3"
+						rendered="#{viewExamsBean.render(exam)}" />
+					<h:outputText value="#{exam.timer}"
+						rendered="#{not viewExamsBean.render(exam)}" />
+				</b:dataTableColumn>
+				<b:dataTableColumn orderable="false">
     			<b:commandButton value=""
-						action="#{viewExamDetailsBean.viewInformation(exam)}"
-						look="info"
+						action="#{viewExamDetailsBean.goTo(exam)}" look="info"
 						disabled="#{viewExamsBean.render(exam)}">
 						<b:iconAwesome value="fa-info" size="lg" />
 					</b:commandButton>
+				</b:dataTableColumn>
+				<b:dataTableColumn orderable="false">
+				<b:commandButton value="" iconAwesome="trash"
+							action="#{viewExamsBean.deleteExam(exam)}"
+							disabled="#{viewExamsBean.render(exam)}" look="danger">
+							<f:ajax execute="@this" render="@form" />
+						</b:commandButton>
 				</b:dataTableColumn>
 
 

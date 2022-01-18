@@ -168,7 +168,7 @@ public class AdminViewAnswersOfQuestion {
 		this.answers = answers;
 	}
 
-	public String displayAnswers(Question question) {
+	public String goTo(Question question) {
 
 		this.answers = AnswerModel.getAnswerByQuestionId(question);
 		this.question = question;
