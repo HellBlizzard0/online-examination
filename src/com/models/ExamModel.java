@@ -8,16 +8,17 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import com.entities.Exam;
+import com.entities.Student;
 import com.util.SessionManager;
 
 public class ExamModel {
 
 	public static boolean create(Exam exam) {
-		
+
 		boolean result = true;
 		Session session = null;
 		Transaction transaction = null;
-		
+
 		try {
 			session = SessionManager.getSession();
 			transaction = session.beginTransaction();
@@ -33,40 +34,38 @@ public class ExamModel {
 		}
 		return result;
 	}
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static List<Exam> getExamsList(String dept, int level){
+	public static List<Exam> getExamsList(String dept, int level) {
 		Session session = null;
 		try {
 			session = SessionManager.getSession();
-			
-			if(dept != null && level == -1) {
-				
+
+			if (dept != null && level == -1) {
+
 				TypedQuery query = session.getNamedQuery("exam_fetchExamByDepartmentAndLevel");
 				query.setParameter("P_DEPARTMENT", dept);
 				query.setParameter("P_LEVEL", level);
 				return query.getResultList();
-			}
-			else if(dept != null) {
+			} else if (dept != null) {
 				TypedQuery query = session.getNamedQuery("exam_fetchExamByLevel");
 				query.setParameter("P_LEVEL", level);
 				return query.getResultList();
-				
-			}
-			else if(level != -1 ) {
+
+			} else if (level != -1) {
 				TypedQuery query = session.getNamedQuery("exam_fetchExamByDepartment");
 				query.setParameter("P_DEPARTMENT", dept);
 				return query.getResultList();
-			}
-			else {
+			} else {
 				TypedQuery query = session.getNamedQuery("exam_fetchAllExams");
 				return query.getResultList();
 			}
-		} catch(Exception e) {
+		} catch (Exception e) {
 			System.out.println(e);
 		}
 		return null;
 	}
-	
+
 	public static boolean update(Exam exam) {
 		// TODO Auto-generated method stub
 		boolean result = true;
@@ -88,6 +87,7 @@ public class ExamModel {
 		}
 		return result;
 	}
+
 	public static boolean delete(Exam exam) {
 
 		boolean result = true;
@@ -108,6 +108,24 @@ public class ExamModel {
 			session.close();
 		}
 		return result;
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static List<Exam> getExamByStudent(Student student) {
+		Session session = null;
+		try {
+			session = SessionManager.getSession();
+
+			TypedQuery query = session.getNamedQuery("exam_fetchExamByDepartmentAndLevel");
+			query.setParameter("P_DEPARTMENT", student.getDepartment());
+			query.setParameter("P_LEVEL", student.getLevel());
+			return query.getResultList();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return null;
+
 	}
 
 }
