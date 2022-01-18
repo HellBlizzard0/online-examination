@@ -106,6 +106,11 @@ public class AdminViewExamsBean {
 			return this.edit;
 		}
 	}
+	
+	public void deleteExam(Exam exam) {
+		exams.remove(exam);
+		ExamModel.delete(exam);
+	}
 
 	public Question getQuestion() {
 		return question;

@@ -25,7 +25,7 @@
 						<th>Dept</th>
 						<th>Level</th>
 						<th>Time</th>
-						<th></th>
+						<th></th><th></th>
 					</tr>
 				</f:facet>
 				<b:dataTableColumn value="#{exam.id}" />
@@ -53,12 +53,19 @@
 					<h:outputText value="#{exam.timer}"
 						rendered="#{not viewExamsBean.render(exam)}" />
 				</b:dataTableColumn>
-				<b:dataTableColumn>
+				<b:dataTableColumn orderable="false">
     			<b:commandButton value=""
-						action="#{viewExamDetailsBean.viewInformation(exam)}" look="info"
+						action="#{viewExamDetailsBean.goTo(exam)}" look="info"
 						disabled="#{viewExamsBean.render(exam)}">
 						<b:iconAwesome value="fa-info" size="lg" />
 					</b:commandButton>
+				</b:dataTableColumn>
+				<b:dataTableColumn orderable="false">
+				<b:commandButton value="" iconAwesome="trash"
+							action="#{viewExamsBean.deleteExam(exam)}"
+							disabled="#{viewExamsBean.render(exam)}" look="danger">
+							<f:ajax execute="@this" render="@form" />
+						</b:commandButton>
 				</b:dataTableColumn>
 
 

@@ -88,5 +88,26 @@ public class ExamModel {
 		}
 		return result;
 	}
+	public static boolean delete(Exam exam) {
+
+		boolean result = true;
+		Session session = null;
+		Transaction transaction = null;
+
+		try {
+			session = SessionManager.getSession();
+			transaction = session.beginTransaction();
+			session.remove(exam);
+			transaction.commit();
+		} catch (Exception e) {
+			result = false;
+			if (transaction != null) {
+				transaction.rollback();
+			}
+		} finally {
+			session.close();
+		}
+		return result;
+	}
 
 }
