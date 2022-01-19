@@ -1,18 +1,42 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-xmlns:ui="http://java.sun.com/jsf/facelets"
-xmlns:f="http://java.sun.com/jsf/core"
-xmlns:h="http://java.sun.com/jsf/html"
-xmlns:ng="http://mojarra.dev.java.net/mojarra_ext"
-xmlns:b="http://bootsfaces.net/ui"
-xmlns:co="http://xmlns.jcp.org/jsf/composite/com"
-xmlns:util="http://java.sun.com/jsf/composite/utils">
-
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
 <h:head>
-<title>Admin Page</title>
-
+	<title>Sign In Template for BootsFaces</title>
+	<meta name="author" content="Riccardo Massera"></meta>
+	<style type="text/css">
+.form-signin {
+	margin: 0 auto;
+	max-width: 330px;
+	padding: 15px;
+}
+</style>
 </h:head>
-<h:body>
-<h1>Admin Page</h1>
+<h:body style="padding-top: 60px; background-color: #add;">
+	<b:container>
+		<h:form styleClass="form-signin" prependId="false">
+			<h2 class="form-signin-heading">Please sign in</h2>
+			<b:inputText id="email" placeholder="Email address"
+				value="#{login.username}">
+				<f:facet name="prepend">
+					<b:icon name="user" />
+				</f:facet>
+			</b:inputText>
+			<b:inputText id="password" placeholder="Password" type="password"
+				value="#{login.password}">
+				<f:facet name="prepend">
+					<b:iconAwesome name="key" />
+				</f:facet>
+			</b:inputText>
+                  
+
+			<b:commandButton look="primary btn-block" value="Sign In"
+				icon="log-in" size="lg" action="#{login.loginAdmin()}" />
+		</h:form>
+	</b:container>
 </h:body>
 </html>

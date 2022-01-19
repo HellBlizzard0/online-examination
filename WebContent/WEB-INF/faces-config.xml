@@ -34,10 +34,6 @@
  <navigation-rule>
   <from-view-id>/resources/utils/MainTemplate.xhtml</from-view-id>
   <navigation-case>
-   <from-outcome>AdminCreateQuestion</from-outcome>
-   <to-view-id>/AdminCreateQuestion.xhtml</to-view-id>
-  </navigation-case>
-  <navigation-case>
    <from-outcome>AdminCreateExam</from-outcome>
    <to-view-id>/AdminCreateExam.xhtml</to-view-id>
   </navigation-case>
@@ -47,7 +43,11 @@
   </navigation-case>
   <navigation-case>
    <from-outcome>login</from-outcome>
-   <to-view-id>/login.xhtml</to-view-id>
+   <to-view-id>/index.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>register</from-outcome>
+   <to-view-id>/Register.xhtml</to-view-id>
   </navigation-case>
  </navigation-rule>
  <navigation-rule>
@@ -55,13 +55,6 @@
   <navigation-case>
    <from-outcome>success</from-outcome>
    <to-view-id>/success.xhtml</to-view-id>
-  </navigation-case>
- </navigation-rule>
- <navigation-rule>
-  <from-view-id>/success.xhtml</from-view-id>
-  <navigation-case>
-   <from-outcome>admin-main</from-outcome>
-   <to-view-id>/admin-main.xhtml</to-view-id>
   </navigation-case>
  </navigation-rule>
  <navigation-rule>
@@ -81,19 +74,41 @@
  <navigation-rule>
   <from-view-id>/login.xhtml</from-view-id>
   <navigation-case>
-   <from-outcome>admin-main</from-outcome>
+   <from-outcome>loginAdmin</from-outcome>
    <to-view-id>/AdminLogin.xhtml</to-view-id>
   </navigation-case>
   <navigation-case>
-   <from-outcome>Student-main</from-outcome>
+   <from-outcome>loginStudent</from-outcome>
    <to-view-id>/StudentLogin.xhtml</to-view-id>
   </navigation-case>
  </navigation-rule>
  <navigation-rule>
-  <from-view-id>/StudentViewExams.xhtml</from-view-id>
+  <from-view-id>/AdminLogin.xhtml</from-view-id>
   <navigation-case>
-   <from-outcome>StudentSolveExam</from-outcome>
-   <to-view-id>/StudentSolveExam.xhtml</to-view-id>
+   <from-outcome>admin-main</from-outcome>
+   <to-view-id>/admin-main.xhtml</to-view-id>
+  </navigation-case>
+ </navigation-rule>
+ <navigation-rule>
+  <from-view-id>/StudentLogin.xhtml</from-view-id>
+  <navigation-case>
+   <from-outcome>student-main</from-outcome>
+   <to-view-id>/student-main.xhtml</to-view-id>
+  </navigation-case>
+ </navigation-rule>
+ <navigation-rule>
+  <from-view-id>/resources/utils/TemplateOfStudent.xhtml</from-view-id>
+  <navigation-case>
+   <from-outcome>result</from-outcome>
+   <to-view-id>/ViewResult.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>login</from-outcome>
+   <to-view-id>/index.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>ToExams</from-outcome>
+   <to-view-id>/solveExam.xhtml</to-view-id>
   </navigation-case>
  </navigation-rule>
  <application>
@@ -102,4 +117,5 @@
    <var>msgs</var>
   </resource-bundle>
  </application>
+ <application/>
 </faces-config>

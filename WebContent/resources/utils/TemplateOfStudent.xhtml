@@ -31,12 +31,10 @@
 							value="Bootstrap" icon="link"></b:navCommandLink>
 						<b:navCommandLink></b:navCommandLink>
 						<b:navCommandLink header="Preview" />
-						<b:navCommandLink value="View Exams"
-							action="#{viewExamsBean.fetchExams()}" icon="tag"
+						<b:navCommandLink value="Exams"
+							action="ToExams" icon="pencil"
 							iconAlign="right" />
-						<b:navCommandLink value="Create Exam" action="AdminCreateExam"
-							icon="tag" iconAlign="right" />
-							<b:navCommandLink value="Register" action="register"
+						<b:navCommandLink value="View Result" action="#{studentManagedBean.getStudentResult()}"
 							icon="tag" iconAlign="right" />
 						<b:navCommandLink value="Logout"
 							action="#{login.logout()}" icon="tag"
