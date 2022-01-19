@@ -41,18 +41,22 @@ public class LoginBean {
 		this.password = password;
 	}
 
-	public String login() {
-		if (!studentLogin) {
+	public String loginAdmin() {
+		
 			if (AdminModel.login(username, password))
 				return "admin-main";
 			else
 				return "failure";
-		} else {
+		} 
+	
+
+
+		public String loginStudents() {
+			
 			if (StudentModel.loginStudent(username, password))
-				return "Student-main";
+				return "student-main";
 			else
 				return "failure";
-		}
 	}
 
 	public String logout() {

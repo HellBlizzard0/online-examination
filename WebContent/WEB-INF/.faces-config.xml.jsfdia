@@ -1,76 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PROCESS model-entity="JSFProcess">
  <PROCESS-ITEM NAME="rules:#index.xhtml" PATH="/index.xhtml"
-  SHAPE="56,24,50,41" model-entity="JSFProcessGroup">
+  SHAPE="24,64,50,41" model-entity="JSFProcessGroup">
   <PROCESS-ITEM ID="rules:#index.xhtml:0" NAME="item"
    PATH="/index.xhtml" model-entity="JSFProcessItem">
-   <PROCESS-ITEM-OUTPUT ID="login::#login.xhtml" NAME="output4"
-    PATH="/login.xhtml" TARGET="rules:#login.xhtml" TITLE="login" model-entity="JSFProcessItemOutput"/>
-   <PROCESS-ITEM-OUTPUT ID="zx::#Register.xhtml" NAME="output2"
-    PATH="/Register.xhtml" TARGET="rules:#Register.xhtml" TITLE="zx" model-entity="JSFProcessItemOutput"/>
-   <PROCESS-ITEM-OUTPUT ID="result::#ViewResult.xhtml" NAME="output3"
-    PATH="/ViewResult.xhtml" TARGET="rules:#ViewResult.xhtml"
-    TITLE="result" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="loginAdmin::#AdminLogin.xhtml" NAME="output"
+    PATH="/AdminLogin.xhtml" TARGET="rules:#AdminLogin.xhtml"
+    TITLE="loginAdmin" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="loginStudent::#StudentLogin.xhtml"
+    NAME="output1" PATH="/StudentLogin.xhtml"
+    SHAPE="73,112,176,112,176,136,319,136"
+    TARGET="rules:#StudentLogin.xhtml" TITLE="loginStudent" model-entity="JSFProcessItemOutput"/>
   </PROCESS-ITEM>
  </PROCESS-ITEM>
  <PROCESS-ITEM NAME="rules:#resources#utils#MainTemplate.xhtml"
-  PATH="/resources/utils/MainTemplate.xhtml" SHAPE="208,224,50,41" model-entity="JSFProcessGroup">
+  PATH="/resources/utils/MainTemplate.xhtml" SHAPE="24,240,50,89" model-entity="JSFProcessGroup">
   <PROCESS-ITEM ID="rules:#resources#utils#MainTemplate.xhtml:0"
    NAME="item" PATH="/resources/utils/MainTemplate.xhtml" model-entity="JSFProcessItem">
-   <PROCESS-ITEM-OUTPUT
-    ID="AdminCreateQuestion::#AdminCreateQuestion.xhtml" NAME="output"
-    PATH="/AdminCreateQuestion.xhtml"
-    TARGET="rules:#AdminCreateQuestion.xhtml"
-    TITLE="AdminCreateQuestion" model-entity="JSFProcessItemOutput"/>
    <PROCESS-ITEM-OUTPUT ID="AdminCreateExam::#AdminCreateExam.xhtml"
     NAME="output1" PATH="/AdminCreateExam.xhtml"
+    SHAPE="73,272,264,272,264,232,543,232"
     TARGET="rules:#AdminCreateExam.xhtml" TITLE="AdminCreateExam" model-entity="JSFProcessItemOutput"/>
    <PROCESS-ITEM-OUTPUT ID="AdminViewExams::#AdminViewExams.xhtml"
     NAME="output2" PATH="/AdminViewExams.xhtml"
+    SHAPE="73,288,208,288,208,520,223,520"
     TARGET="rules:#AdminViewExams.xhtml" TITLE="AdminViewExams" model-entity="JSFProcessItemOutput"/>
-   <PROCESS-ITEM-OUTPUT ID="login::#login.xhtml" NAME="output3"
-    PATH="/login.xhtml" TARGET="rules:#login.xhtml" TITLE="login" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="login::#index.xhtml" NAME="output"
+    PATH="/index.xhtml" SHAPE="73,304,312,304,312,184,8,184,8,72,23,72"
+    TARGET="rules:#index.xhtml" TITLE="login" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="register::#Register.xhtml" NAME="output3"
+    PATH="/Register.xhtml" TARGET="rules:#Register.xhtml"
+    TITLE="register" model-entity="JSFProcessItemOutput"/>
   </PROCESS-ITEM>
  </PROCESS-ITEM>
- <PROCESS-ITEM NAME="rules:#login.xhtml" PATH="/login.xhtml"
-  SHAPE="224,464,50,25" model-entity="JSFProcessGroup">
-  <PROCESS-ITEM ID="rules:#login.xhtml:0" NAME="item"
-   PATH="/login.xhtml" model-entity="JSFProcessItem">
+ <PROCESS-ITEM NAME="rules:#Register.xhtml" PATH="/Register.xhtml"
+  SHAPE="632,320,50,25" model-entity="JSFProcessGroup" persistent="true"/>
+ <PROCESS-ITEM NAME="rules:#ViewResult.xhtml" PATH="/ViewResult.xhtml"
+  SHAPE="432,376,50,25" model-entity="JSFProcessGroup" persistent="true"/>
+ <PROCESS-ITEM NAME="rules:#AdminLogin.xhtml" PATH="/AdminLogin.xhtml"
+  SHAPE="320,32,50,41" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#AdminLogin.xhtml:0" NAME="item"
+   PATH="/AdminLogin.xhtml" model-entity="JSFProcessItem">
    <PROCESS-ITEM-OUTPUT ID="admin-main::#admin-main.xhtml" NAME="output"
     PATH="/admin-main.xhtml" TARGET="rules:#admin-main.xhtml"
     TITLE="admin-main" model-entity="JSFProcessItemOutput"/>
-  </PROCESS-ITEM>
-  <PROCESS-ITEM ID="rules:#login.xhtml:1" NAME="item1"
-   PATH="/login.xhtml" model-entity="JSFProcessItem">
-   <PROCESS-ITEM-OUTPUT ID="admin-main::#AdminLogin.xhtml" NAME="output"
-    PATH="/AdminLogin.xhtml" TARGET="rules:#AdminLogin.xhtml"
-    TITLE="admin-main" model-entity="JSFProcessItemOutput"/>
-   <PROCESS-ITEM-OUTPUT ID="Student-main::#StudentLogin.xhtml"
-    NAME="output1" PATH="/StudentLogin.xhtml"
-    TARGET="rules:#StudentLogin.xhtml" TITLE="Student-main" model-entity="JSFProcessItemOutput"/>
-  </PROCESS-ITEM>
- </PROCESS-ITEM>
- <PROCESS-ITEM NAME="rules:#admin-main.xhtml" PATH="/admin-main.xhtml"
-  SHAPE="640,56,50,25" model-entity="JSFProcessGroup"/>
- <PROCESS-ITEM NAME="rules:#AdminCreateExam.xhtml"
-  PATH="/AdminCreateExam.xhtml" SHAPE="312,232,50,41" model-entity="JSFProcessGroup">
-  <PROCESS-ITEM ID="rules:#AdminCreateExam.xhtml:0" NAME="item"
-   PATH="/AdminCreateExam.xhtml" model-entity="JSFProcessItem">
-   <PROCESS-ITEM-OUTPUT ID="success::#success.xhtml" NAME="output"
-    PATH="/success.xhtml" TARGET="rules:#success.xhtml" TITLE="success" model-entity="JSFProcessItemOutput"/>
   </PROCESS-ITEM>
  </PROCESS-ITEM>
  <PROCESS-ITEM NAME="rules:#success.xhtml" PATH="/success.xhtml"
-  SHAPE="480,256,50,41" model-entity="JSFProcessGroup">
-  <PROCESS-ITEM ID="rules:#success.xhtml:0" NAME="item"
-   PATH="/success.xhtml" model-entity="JSFProcessItem">
-   <PROCESS-ITEM-OUTPUT ID="admin-main::#admin-main.xhtml" NAME="output"
-    PATH="/admin-main.xhtml" TARGET="rules:#admin-main.xhtml"
-    TITLE="admin-main" model-entity="JSFProcessItemOutput"/>
+  SHAPE="784,272,50,25" model-entity="JSFProcessGroup" persistent="true"/>
+ <PROCESS-ITEM NAME="rules:#AdminCreateExam.xhtml"
+  PATH="/AdminCreateExam.xhtml" SHAPE="544,225,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#AdminCreateExam.xhtml:0" NAME="item"
+   PATH="/AdminCreateExam.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="success::#success.xhtml" NAME="output"
+    PATH="/success.xhtml" SHAPE="593,256,712,256,712,280,783,280"
+    TARGET="rules:#success.xhtml" TITLE="success" model-entity="JSFProcessItemOutput"/>
   </PROCESS-ITEM>
  </PROCESS-ITEM>
  <PROCESS-ITEM NAME="rules:#AdminViewExams.xhtml"
-  PATH="/AdminViewExams.xhtml" SHAPE="232,304,50,25" model-entity="JSFProcessGroup">
+  PATH="/AdminViewExams.xhtml" SHAPE="224,512,50,41" model-entity="JSFProcessGroup">
   <PROCESS-ITEM ID="rules:#AdminViewExams.xhtml:0" NAME="item"
    PATH="/AdminViewExams.xhtml" model-entity="JSFProcessItem">
    <PROCESS-ITEM-OUTPUT
@@ -81,44 +69,48 @@
   </PROCESS-ITEM>
  </PROCESS-ITEM>
  <PROCESS-ITEM NAME="rules:#AdminViewExamDetails.xhtml"
-  PATH="/AdminViewExamDetails.xhtml" SHAPE="304,360,50,25" model-entity="JSFProcessGroup">
+  PATH="/AdminViewExamDetails.xhtml" SHAPE="504,560,50,41" model-entity="JSFProcessGroup">
   <PROCESS-ITEM ID="rules:#AdminViewExamDetails.xhtml:0" NAME="item"
    PATH="/AdminViewExamDetails.xhtml" model-entity="JSFProcessItem">
    <PROCESS-ITEM-OUTPUT
     ID="AdminViewAnswersOfQuestion::#AdminViewAnswersOfQuestion.xhtml"
     NAME="output" PATH="/AdminViewAnswersOfQuestion.xhtml"
+    SHAPE="553,592,768,592,768,568,927,568"
     TARGET="rules:#AdminViewAnswersOfQuestion.xhtml"
     TITLE="AdminViewAnswersOfQuestion" model-entity="JSFProcessItemOutput"/>
   </PROCESS-ITEM>
  </PROCESS-ITEM>
  <PROCESS-ITEM NAME="rules:#AdminViewAnswersOfQuestion.xhtml"
-  PATH="/AdminViewAnswersOfQuestion.xhtml" SHAPE="368,416,50,25"
+  PATH="/AdminViewAnswersOfQuestion.xhtml" SHAPE="928,560,50,25" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#student-main.xhtml"
+  PATH="/student-main.xhtml" SHAPE="544,152,50,25"
   model-entity="JSFProcessGroup" persistent="true"/>
- <PROCESS-ITEM NAME="rules:#Register.xhtml" PATH="/Register.xhtml"
-  SHAPE="144,320,50,25" model-entity="JSFProcessGroup" persistent="true"/>
- <PROCESS-ITEM NAME="rules:#ViewResult.xhtml" PATH="/ViewResult.xhtml"
-  SHAPE="224,384,50,25" model-entity="JSFProcessGroup" persistent="true"/>
  <PROCESS-ITEM NAME="rules:#StudentLogin.xhtml"
-  PATH="/StudentLogin.xhtml" SHAPE="384,552,50,25"
-  model-entity="JSFProcessGroup" persistent="true"/>
- <PROCESS-ITEM NAME="rules:#AdminLogin.xhtml" PATH="/AdminLogin.xhtml"
-  SHAPE="384,424,50,25" model-entity="JSFProcessGroup" persistent="true"/>
-<<<<<<< HEAD
- <PROCESS-ITEM NAME="rules:#success.xhtml" PATH="/success.xhtml"
-  SHAPE="224,584,50,25" model-entity="JSFProcessGroup" persistent="true"/>
- <PROCESS-ITEM NAME="rules:#resources#utils#StudentTamplate.xhtml"
-  PATH="/resources/utils/StudentTamplate.xhtml" SHAPE="16,520,50,25" model-entity="JSFProcessGroup">
-  <PROCESS-ITEM ID="rules:#resources#utils#StudentTamplate.xhtml:0"
-   NAME="item" PATH="/resources/utils/StudentTamplate.xhtml" model-entity="JSFProcessItem">
-   <PROCESS-ITEM-OUTPUT ID="ToExams::#success.xhtml" NAME="output"
-    PATH="/success.xhtml" SHAPE="65,552,176,552,176,592,223,592"
-    TARGET="rules:#success.xhtml" TITLE="ToExams" model-entity="JSFProcessItemOutput"/>
-   <PROCESS-ITEM-OUTPUT ID="ToResult::#success.xhtml" NAME="output1"
-    PATH="/success.xhtml" TARGET="rules:#success.xhtml" TITLE="ToResult" model-entity="JSFProcessItemOutput"/>
+  PATH="/StudentLogin.xhtml" SHAPE="320,128,50,41" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#StudentLogin.xhtml:0" NAME="item"
+   PATH="/StudentLogin.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="student-main::#student-main.xhtml"
+    NAME="output" PATH="/student-main.xhtml"
+    TARGET="rules:#student-main.xhtml" TITLE="student-main" model-entity="JSFProcessItemOutput"/>
   </PROCESS-ITEM>
  </PROCESS-ITEM>
-=======
- <PROCESS-ITEM NAME="rules:#AdminCreateQuestion.xhtml"
-  PATH="/AdminCreateQuestion.xhtml" SHAPE="528,513,0,0" model-entity="JSFProcessGroup"/>
->>>>>>> bcc653dc99b9aa7515044f5b560bd2feb5c8a1cd
+ <PROCESS-ITEM NAME="rules:#admin-main.xhtml" PATH="/admin-main.xhtml"
+  SHAPE="544,56,50,25" model-entity="JSFProcessGroup" persistent="true"/>
+ <PROCESS-ITEM NAME="rules:#resources#utils#TemplateOfStudent.xhtml"
+  PATH="/resources/utils/TemplateOfStudent.xhtml" SHAPE="24,368,50,25" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#resources#utils#TemplateOfStudent.xhtml:0"
+   NAME="item" PATH="/resources/utils/TemplateOfStudent.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="result::#ViewResult.xhtml" NAME="output"
+    PATH="/ViewResult.xhtml" TARGET="rules:#ViewResult.xhtml"
+    TITLE="result" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="login::#index.xhtml" NAME="output1"
+    PATH="/index.xhtml" SHAPE="73,416,288,416,288,240,8,240,8,72,23,72"
+    TARGET="rules:#index.xhtml" TITLE="login" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="ToExams::#solveExam.xhtml" NAME="output2"
+    PATH="/solveExam.xhtml" TARGET="rules:#solveExam.xhtml"
+    TITLE="ToExams" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#solveExam.xhtml" PATH="/solveExam.xhtml"
+  SHAPE="432,424,50,25" model-entity="JSFProcessGroup" persistent="true"/>
 </PROCESS>
