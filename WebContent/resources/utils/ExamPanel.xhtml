@@ -16,6 +16,7 @@
 		<composite:attribute name="solved" />
 		<composite:attribute name="totalMarks" />
 		<composite:attribute name="time" />
+		
 	</composite:interface>
 	<composite:implementation>
 		<b:form>
@@ -25,10 +26,10 @@
 					<h:outputText style="padding-left:20px" value="#{cc.attrs.name}" />
 
 					<b:badge value="Unsolved"
-						style="margin-left:10px; align:right; background-color:red"
+						style="margin-left:10px; background-color:red"
 						rendered="#{not cc.attrs.solved}" />
 					<b:badge value="Solved"
-						style="margin-left:10px; align:right; background-color:green"
+						style="margin-left:10px; background-color:green"
 						rendered="#{cc.attrs.solved}" />
 				</f:facet>
 				<b:container>
@@ -41,14 +42,17 @@
 							</b:inputText>
 						</b:column>
 						<b:column offset="3" span="3">
-							<b:inputText value="#{cc.attrs.timer}" readonly="true">
+							<b:inputText value="#{cc.attrs.time}" readonly="true">
 								<f:facet name="prepend">
 									<b:iconAwesome name="fa-clock-o" />
+								</f:facet>
+								<f:facet name="append">
+									min
 								</f:facet>
 							</b:inputText>
 						</b:column>
 						<b:column offset="1" span="2">
-							<b:commandButton value="#{msgs.button_StudentEnterExam}" />
+							<b:commandButton  value="#{msgs.button_StudentEnterExam}" />
 						</b:column>
 					</b:row>
 				</b:container>

@@ -42,6 +42,7 @@ public class Question {
 	private int score;
 	private int examId;
 
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")

@@ -34,7 +34,7 @@ public class QuestionModel {
 		}
 		return result;
 	}
-	
+
 	public static boolean update(Question question) {
 		// TODO Auto-generated method stub
 		boolean result = true;
@@ -56,7 +56,7 @@ public class QuestionModel {
 		}
 		return result;
 	}
-	
+
 	public static boolean delete(Question question) {
 		// TODO Auto-generated method stub
 		boolean result = true;
@@ -79,14 +79,14 @@ public class QuestionModel {
 		return result;
 	}
 
-	@SuppressWarnings({"unchecked","rawtypes"})
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static List<Question> getQuestionList(Exam exam) {
 		Session session = null;
 		try {
 			session = SessionManager.getSession();
 
 			if (exam == null) {
-				
+
 				TypedQuery query = session.getNamedQuery("question_fetchAllQuestions");
 				return query.getResultList();
 			} else {
@@ -99,5 +99,4 @@ public class QuestionModel {
 		}
 		return null;
 	}
-
 }

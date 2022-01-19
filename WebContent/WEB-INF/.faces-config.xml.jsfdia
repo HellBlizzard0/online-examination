@@ -108,6 +108,15 @@
  <PROCESS-ITEM NAME="rules:#AdminCreateQuestion.xhtml"
   PATH="/AdminCreateQuestion.xhtml" SHAPE="504,432,50,25" model-entity="JSFProcessGroup"/>
  <PROCESS-ITEM NAME="rules:#StudentViewExams.xhtml"
-  PATH="/StudentViewExams.xhtml" SHAPE="248,120,50,25"
+  PATH="/StudentViewExams.xhtml" SHAPE="216,112,50,41" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#StudentViewExams.xhtml:0" NAME="item"
+   PATH="/StudentViewExams.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="StudentSolveExam::#StudentSolveExam.xhtml"
+    NAME="output" PATH="/StudentSolveExam.xhtml"
+    TARGET="rules:#StudentSolveExam.xhtml" TITLE="StudentSolveExam" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#StudentSolveExam.xhtml"
+  PATH="/StudentSolveExam.xhtml" SHAPE="288,168,50,25"
   model-entity="JSFProcessGroup" persistent="true"/>
 </PROCESS>
