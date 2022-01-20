@@ -17,8 +17,8 @@ import com.models.QuestionModel;
 @ManagedBean(name = "studentSolveExam")
 public class StudentSolveExamBean {
 	private Exam exam;
-	ArrayList<QuestionAnswers> questions = new ArrayList<QuestionAnswers>();
-	Answer selectedAnswers;
+	private ArrayList<QuestionAnswers> questions = new ArrayList<QuestionAnswers>();
+	private Answer selectedAnswers;
 	public Answer getSelectedAnswers() {
 		return selectedAnswers;
 	}
@@ -62,6 +62,7 @@ public class StudentSolveExamBean {
 			this.questions
 					.add(q);
 		}
+		
 		return "StudentSolveExam";
 	}
 }

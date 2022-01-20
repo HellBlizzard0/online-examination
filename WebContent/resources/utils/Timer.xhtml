@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+	xmlns:b="http://bootsfaces.net/ui" xmlns:p="http://primefaces.org/ui">
+<head>
+<title>Timer Progress Bar Used for Exams</title>
+</head>
+<body>
+	<composite:interface>
+		<composite:attribute name="stop"></composite:attribute>
+	</composite:interface>
+	<composite:implementation><b:form>
+		<b:progressBar autoUpdate="true" id="progressBarID" animated="true"
+			caption="#{timerBean.caption}" look="#{timerBean.look}"
+			value="#{timerBean.percentage}">
+		</b:progressBar>
+		<b:panelGrid columns="1" rendered="#{timerBean.stop}"></b:panelGrid>
+		<p:poll id="pollID" widgetVar="poll" interval="1"
+			listener="#{timerBean.decrement()}" update="progressBarID" />
+	</b:form></composite:implementation>
+</body>
+</html>
