@@ -25,12 +25,12 @@
     NAME="output2" PATH="/AdminViewExams.xhtml"
     SHAPE="73,288,208,288,208,520,223,520"
     TARGET="rules:#AdminViewExams.xhtml" TITLE="AdminViewExams" model-entity="JSFProcessItemOutput"/>
-   <PROCESS-ITEM-OUTPUT ID="login::#index.xhtml" NAME="output"
+   <PROCESS-ITEM-OUTPUT ID="index::#index.xhtml" NAME="output"
     PATH="/index.xhtml" SHAPE="73,304,312,304,312,184,8,184,8,72,23,72"
-    TARGET="rules:#index.xhtml" TITLE="login" model-entity="JSFProcessItemOutput"/>
-   <PROCESS-ITEM-OUTPUT ID="register::#Register.xhtml" NAME="output3"
+    TARGET="rules:#index.xhtml" TITLE="index" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="Register::#Register.xhtml" NAME="output3"
     PATH="/Register.xhtml" TARGET="rules:#Register.xhtml"
-    TITLE="register" model-entity="JSFProcessItemOutput"/>
+    TITLE="Register" model-entity="JSFProcessItemOutput"/>
   </PROCESS-ITEM>
  </PROCESS-ITEM>
  <PROCESS-ITEM NAME="rules:#Register.xhtml" PATH="/Register.xhtml"
@@ -100,15 +100,15 @@
   PATH="/resources/utils/TemplateOfStudent.xhtml" SHAPE="24,368,50,25" model-entity="JSFProcessGroup">
   <PROCESS-ITEM ID="rules:#resources#utils#TemplateOfStudent.xhtml:0"
    NAME="item" PATH="/resources/utils/TemplateOfStudent.xhtml" model-entity="JSFProcessItem">
-   <PROCESS-ITEM-OUTPUT ID="result::#ViewResult.xhtml" NAME="output"
+   <PROCESS-ITEM-OUTPUT ID="ViewResult::#ViewResult.xhtml" NAME="output"
     PATH="/ViewResult.xhtml" TARGET="rules:#ViewResult.xhtml"
-    TITLE="result" model-entity="JSFProcessItemOutput"/>
-   <PROCESS-ITEM-OUTPUT ID="login::#index.xhtml" NAME="output1"
+    TITLE="ViewResult" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="index::#index.xhtml" NAME="output1"
     PATH="/index.xhtml" SHAPE="73,416,288,416,288,240,8,240,8,72,23,72"
-    TARGET="rules:#index.xhtml" TITLE="login" model-entity="JSFProcessItemOutput"/>
-   <PROCESS-ITEM-OUTPUT ID="ToExams::#solveExam.xhtml" NAME="output2"
+    TARGET="rules:#index.xhtml" TITLE="index" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="solveExam::#solveExam.xhtml" NAME="output2"
     PATH="/solveExam.xhtml" TARGET="rules:#solveExam.xhtml"
-    TITLE="ToExams" model-entity="JSFProcessItemOutput"/>
+    TITLE="solveExam" model-entity="JSFProcessItemOutput"/>
   </PROCESS-ITEM>
  </PROCESS-ITEM>
  <PROCESS-ITEM NAME="rules:#solveExam.xhtml" PATH="/solveExam.xhtml"

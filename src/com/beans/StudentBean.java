@@ -77,7 +77,7 @@ public class StudentBean {
 	public String getStudentResult() {
 		//getStudent().setId(4);
 		resultList=ResultModel.getResultList(4);
-		return "result";
+		return "ViewResult";
 	}
 
 
