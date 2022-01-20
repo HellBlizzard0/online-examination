@@ -110,12 +110,17 @@
    <from-outcome>ToExams</from-outcome>
    <to-view-id>/solveExam.xhtml</to-view-id>
   </navigation-case>
+  <navigation-case>
+   <from-outcome>StudentViewExams</from-outcome>
+   <to-view-id>/StudentViewExams.xhtml</to-view-id>
+  </navigation-case>
  </navigation-rule>
- <application>
-  <resource-bundle>
-   <base-name>com.resources.messages_en</base-name>
-   <var>msgs</var>
-  </resource-bundle>
- </application>
+ <navigation-rule>
+  <from-view-id>/StudentViewExams.xhtml</from-view-id>
+  <navigation-case>
+   <from-outcome>StudentSolveExam</from-outcome>
+   <to-view-id>/StudentSolveExam.xhtml</to-view-id>
+  </navigation-case>
+ </navigation-rule>
  <application/>
 </faces-config>

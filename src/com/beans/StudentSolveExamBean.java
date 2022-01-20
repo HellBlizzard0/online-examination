@@ -43,17 +43,10 @@ public class StudentSolveExamBean {
 		this.exam = exam;
 	}
 
-	public void debug(QuestionAnswers question) {
-		System.out.println(question.getText());
-		System.out.println(question.getSelectedAnswer().getText());
-		for (Answer answer : question.getAnswers()) {
-			if (answer.isCorrect()) {
-				if (answer.getId() == question.getSelectedAnswer().getId())
-					System.out.println("Right Answer");
-				else
-					System.out.println("Wrong Answer");
-			}
-		}
+	public void debug() {
+		ArrayList<QuestionAnswers> d = this.questions;
+		System.out.println("Debug method Accessed");
+
 	}
 
 	public String goTo(Exam exam) {

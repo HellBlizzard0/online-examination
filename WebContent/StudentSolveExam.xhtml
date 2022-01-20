@@ -13,17 +13,16 @@
 
 </h:head>
 <h:body>
-	<b:form>
-		<ui:repeat value="#{studentSolveExam.questions}" var="question">
+	<ui:repeat value="#{studentSolveExam.questions}" var="question">
+		<b:form>
 			<b:panel title="#{question.text}" look="primary">
-				<b:radiobutton value="#{question.selectedAnswer}">
-					<f:converter converterId="answerConverter" />
-					<f:selectItems value="#{question.answers}" var="answer"
-						itemValue="#{answer}" />
+				<b:radiobutton value="#{question.selectedAnswer}"  update="@form" >
+				<f:converter converterId="answerConverter" for="answerId"/>
+					<f:selectItems id="answerId" value="#{question.answers}" var="answer" 
+					itemValue="#{answer}" itemLabel="#{answer.text}"/>
 				</b:radiobutton>
-				<b:commandButton action="#{studentSolveExam.debug(question)}">Debug</b:commandButton>
 			</b:panel>
-		</ui:repeat>
-	</b:form>
+		</b:form>
+	</ui:repeat>
 </h:body>
 </html>
