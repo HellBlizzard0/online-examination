@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
 
 import com.entities.Answer;
 import com.entities.Exam;
@@ -22,6 +23,15 @@ public class StudentSolveExamBean {
 	private Exam exam;
 	private ArrayList<QuestionAnswers> questions = new ArrayList<QuestionAnswers>();
 	private Answer selectedAnswers;
+	private Student student;
+	public Student getStudent() {
+		return student;
+	}
+
+	public void setStudent(Student student) {
+		this.student = student;
+	}
+
 	private int score = 0;
 
 	public int getTotalScore() {
@@ -62,7 +72,7 @@ public class StudentSolveExamBean {
 
 	}
 
-	public String submit(Student student) {
+	public String submit() {
 		for (QuestionAnswers questionAnswer : questions) {
 			if(questionAnswer.getSelectedAnswer()==null)
 				continue;
@@ -86,7 +96,7 @@ public class StudentSolveExamBean {
 		return score;
 	}
 
-	public String goTo(Exam exam) {
+	public String goTo(Exam exam, Student student) {
 		this.exam = exam;
 		List<Question> list = QuestionModel.getQuestionList(exam);
 
