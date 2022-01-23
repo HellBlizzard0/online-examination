@@ -99,6 +99,7 @@ public class StudentSolveExamBean {
 	public String goTo(Exam exam, Student student) {
 		this.exam = exam;
 		List<Question> list = QuestionModel.getQuestionList(exam);
+		this.student = student;
 
 		for (Question question : list) {
 			QuestionAnswers q = new QuestionAnswers(
