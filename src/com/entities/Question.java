@@ -19,7 +19,19 @@ import org.hibernate.annotations.NamedQuery;
 		@NamedQuery(
 				name = "question_fetchQuestionsByExamId",
 				query = "from Question q "
-						+ "where q.examId=:P_ID")
+						+ "where q.examId=:P_ID"),
+		@NamedQuery(
+				name = "question_fetchQAllScores",
+				query = "SELECT sum(score)" + 
+						"from Question"
+				),
+		@NamedQuery(
+				name = "question_fetchScoreByExamId",
+				query = "SELECT sum(score) "
+						+ "from Question "
+						+ "where examId = :P_EXAMID"
+				),
+		
 })
 
 @Entity
@@ -41,6 +53,7 @@ public class Question {
 	private String text;
 	private int score;
 	private int examId;
+
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

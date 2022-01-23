@@ -9,26 +9,17 @@
 	xmlns:util="http://java.sun.com/jsf/composite/utils">
 
 <h:head>
-	<title>View Result</title>
+	<title>Result</title>
 
 </h:head>
 <h:body>
-
-	<util:StudentTamplate7>
-
-		
-		<h:form>
-		<b:dataTable value="#{studentManagedBean.resultList}" var="z" pdf="true" print="true">
-				<b:dataTableColumn value="#{z.uid}" />
-				<b:dataTableColumn value="#{z.eid}" />
-				<b:dataTableColumn value="#{z.rid}" />
-				<b:dataTableColumn value="#{z.score}" />
-
-
-
-			</b:dataTable>
-		</h:form>
-	</util:StudentTamplate7>
-
+	<util:TemplateOfStudent>
+	<b:panel>
+		<h1 style="padding-top:5%">
+			Result
+		</h1>
+		#{studentSolveExam.score} / #{studentSolveExam.totalScore}
+		</b:panel>
+	</util:TemplateOfStudent>
 </h:body>
 </html>

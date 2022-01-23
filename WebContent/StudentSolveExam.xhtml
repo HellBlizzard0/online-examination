@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ng="http://mojarra.dev.java.net/mojarra_ext"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:co="http://xmlns.jcp.org/jsf/composite/com"
+	xmlns:util="http://java.sun.com/jsf/composite/utils">
+
+<h:head>
+	<title>#{studentSolveExam.exam.title}</title>
+
+</h:head>
+<h:body>
+	<util:TemplateOfStudent showSideBar="false" span="12">
+		<b:panel style="position: sticky; top: 0;">
+			<util:Timer></util:Timer>
+		</b:panel>
+		<ui:repeat value="#{studentSolveExam.questions}" var="question">
+			<b:form>
+				<b:panel title="#{question.text}" look="primary">
+					<b:radiobutton value="#{question.selectedAnswer}" update="@form">
+						<f:converter converterId="answerConverter" for="answerId" />
+						<f:selectItems id="answerId" value="#{question.answers}"
+							var="answer" itemValue="#{answer}" itemLabel="#{answer.text}" />
+					</b:radiobutton>
+				</b:panel>
+			</b:form>
+		</ui:repeat>
+		<b:form>
+		<b:container>
+			<b:row>
+				<b:column span="3" offset="9">
+					<b:commandButton  value="#{msgs.button_StudentSubmitExam}" action="#{studentSolveExam.submit(login.student)}" look="primary"/>
+				</b:column>
+			</b:row>
+		</b:container></b:form>
+	</util:TemplateOfStudent>
+</h:body>
+</html>

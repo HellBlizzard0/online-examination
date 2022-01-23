@@ -4,23 +4,24 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:util="http://java.sun.com/jsf/composite/utils">
+	xmlns:util="http://java.sun.com/jsf/composite/utils"
+      xmlns:b="http://java.sun.com/jsf/html">
 
 <h:head>
 	<title>JSF On Eclipse</title>
 
 </h:head>
 <h:body>
-	<util:MainTemplate>
+	<util:TemplateOfStudent>
 		<h3>Index</h3>
-		<h:form>
-		<h:commandButton label="Login" value="Login" action="login?faces-redirect=true" />
-		<h:commandButton label="Register" action="register" />
-		<h:commandButton value="Register" action="zx" />
-		<h:commandButton value="View Result" action="result" />
-		<h:commandButton action="#{studentManagedBean.getStudentResult()}" value="Search"/>
+		<b:form>
+		<b:commandButton label="Login" value="Login as admin" action="AdminLogin" />
+		<br></br>
+		<br></br>
+		<b:commandButton label="Login" value="Login as student" action="StudentLogin" />
 
-		</h:form>
-	</util:MainTemplate>
+
+		</b:form>
+	</util:TemplateOfStudent>
 </h:body>
 </html>

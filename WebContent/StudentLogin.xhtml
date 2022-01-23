@@ -21,10 +21,11 @@
 		<h:form styleClass="form-signin" prependId="false">
 			<h2 class="form-signin-heading">Please sign in</h2>
 			<b:inputText id="email" placeholder="Email address"
-				value="#{login.username}">
+				value="#{login.username}" >
 				<f:facet name="prepend">
 					<b:icon name="user" />
 				</f:facet>
+				<b:focus rendered="true"/>
 			</b:inputText>
 			<b:inputText id="password" placeholder="Password" type="password"
 				value="#{login.password}">
@@ -32,12 +33,9 @@
 					<b:iconAwesome name="key" />
 				</f:facet>
 			</b:inputText>
-                    <b:switch value="#{login.studentLogin}"
-				offColor="success" onColor="info"
-				off-text="Admin" onText="Student" />
-
+			
 			<b:commandButton look="primary btn-block" value="Sign In"
-				icon="log-in" size="lg" action="#{login.login()}" />
+				icon="log-in" size="lg" action="#{login.loginStudents()}" />
 		</h:form>
 	</b:container>
 </h:body>
