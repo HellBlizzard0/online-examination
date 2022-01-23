@@ -16,6 +16,8 @@
 		<mapping class="com.entities.Exam" />
 		<mapping class="com.entities.Question" />
 		<mapping class="com.entities.Answer"/>
+		<mapping class="com.entities.ExamResult"/>
+		
 		<mapping resource="named-queries.hbm.xml" />
 	</session-factory>
 </hibernate-configuration>

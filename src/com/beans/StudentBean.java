@@ -15,6 +15,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.security.MessageDigest;
 
+import com.entities.ExamResult;
 import com.entities.Result;
 import com.entities.Student;
 import com.models.ResultModel;
@@ -29,6 +30,8 @@ public class StudentBean {
 	private Student student;
 	private List<Student> studentsList;
 	private List<Result> resultList;
+	private ExamResult Examresult;
+
 
 
 	public Student getStudent() {
@@ -55,6 +58,14 @@ public class StudentBean {
 		this.resultList = resultList;
 	}
 
+	public ExamResult getExamresult() {
+		return Examresult;
+	}
+	
+	public void setExamresult(ExamResult Examresult) {
+		this.Examresult = Examresult;
+	}
+	
 	public StudentBean() {
 		this.student = new Student();
 	}
@@ -74,11 +85,25 @@ public class StudentBean {
 		return "result";
 	}*/
 
-	public String getStudentResult() {
+	public String getStudentResult(int id) {
 		//getStudent().setId(4);
-		resultList=ResultModel.getResultList(4);
+		resultList=ResultModel.getResultList(id);
 		return "ViewResult";
 	}
+	
+	public int  getExamTotalScore(int id) {
+		//getStudent().setId(4);
+		 Examresult= ResultModel.getExamTitleAndTotalScore(id);
+		 return Examresult.getScore();
 
+	}
+	
+	public String  getExamTitle(int id) {
+		//getStudent().setId(4);
+		 Examresult= ResultModel.getExamTitleAndTotalScore(id);
+		 return Examresult.getTitle();
+	}
+	
+	
 
 }

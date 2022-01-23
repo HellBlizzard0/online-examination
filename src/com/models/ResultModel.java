@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import com.entities.Exam;
+import com.entities.ExamResult;
 import com.entities.Question;
 import com.entities.Result;
 import com.entities.Student;
@@ -61,6 +62,51 @@ public class ResultModel {
 		query.setParameter("P_UID", student.getId());
 		query.setParameter("P_EID", exam.getId());
 		return (Result) query.getSingleResult();
+		
+		} catch (Exception e) {
+		System.out.println(e);
+		}
+		return null;
+	}
+	
+	/*public static ExamResult getExamTotalScore(int id) {
+		Session session = null;
+		try {
+		session = SessionManager.getSession();
+		
+		TypedQuery<ExamResult> query = session.getNamedQuery("examScore_fetchExameScoreAndTitle");
+		query.setParameter("P_EID", id);
+		return  query.getSingleResult();
+		
+		} catch (Exception e) {
+		System.out.println(e);
+		}
+		return null;
+	}*/
+	
+	public static ExamResult getExamTitleAndTotalScore(int id) {
+		Session session = null;
+		try {
+		session = SessionManager.getSession();
+		
+		TypedQuery<ExamResult> query = session.getNamedQuery("examScore_fetchAll");
+		query.setParameter("P_EID", id);
+		return query.getSingleResult();
+		
+		} catch (Exception e) {
+		System.out.println(e);
+		}
+		return null;
+	}
+	
+	public static ExamResult getExamTotalScore(int id) {
+		Session session = null;
+		try {
+		session = SessionManager.getSession();
+		
+		TypedQuery<ExamResult> query = session.getNamedQuery("examScore_fetchExameScore");
+		query.setParameter("P_EID", id);
+		return query.getSingleResult();
 		
 		} catch (Exception e) {
 		System.out.println(e);
