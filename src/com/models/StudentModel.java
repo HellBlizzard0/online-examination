@@ -8,14 +8,12 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import com.beans.LoginBean;
-import com.beans.StudentBean;
-import com.entities.Admin;
 import com.entities.Student;
 import com.util.SessionManager;
 
 public class StudentModel {
 
-	public boolean create(Student student) {
+	public static boolean create(Student student) {
 		boolean result = true;
 		Session session = null;
 		Transaction transaction = null;
@@ -74,6 +72,52 @@ public class StudentModel {
 		}
 		
 		return null;
+	}
+
+
+
+	public static boolean update(Student student) {
+		boolean result = true;
+		Session session = null;
+		Transaction transaction = null;
+		
+		try {
+			session = SessionManager.getSession();
+			transaction = session.beginTransaction();
+			session.update(student);
+			transaction.commit();
+		} catch (Exception e) {
+			result = false;
+			if (transaction != null) {
+				transaction.rollback();
+			}
+		} finally {
+			session.close();
+		}
+		return result;
+	}
+
+
+
+	public static boolean delete(Student student) {
+		boolean result = true;
+		Session session = null;
+		Transaction transaction = null;
+		
+		try {
+			session = SessionManager.getSession();
+			transaction = session.beginTransaction();
+			session.remove(student);
+			transaction.commit();
+		} catch (Exception e) {
+			result = false;
+			if (transaction != null) {
+				transaction.rollback();
+			}
+		} finally {
+			session.close();
+		}
+		return result;
 	}
 	
 	

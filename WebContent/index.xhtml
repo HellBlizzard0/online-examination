@@ -5,7 +5,7 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:util="http://java.sun.com/jsf/composite/utils"
-      xmlns:b="http://java.sun.com/jsf/html">
+    xmlns:b="http://bootsfaces.net/ui">
 
 <h:head>
 	<title>JSF On Eclipse</title>
@@ -13,14 +13,34 @@
 </h:head>
 <h:body>
 	<util:IndexTamplet>
-		<h3>Index</h3>
-		<h:form>
-		<b:commandButton label="Login" value="Login as admin" action="AdminLogin" />
-		<br></br>
-		<br></br>
-		<b:commandButton label="Login" value="Login as student" action="StudentLogin" />
-
-		</h:form>
+	<b:form>
+	<b:container style="padding-top:5%">
+		<b:row>
+  <b:column span="5">
+    <b:thumbnail>
+      <f:facet name="caption">
+        <h2>Administrator</h2>
+        <p style="font-size: 11px;">An Administrator can manage students and exams</p>
+        <p>
+        <b:commandButton look="primary" value="Login as Admin" action="AdminLogin" />
+        </p>
+      </f:facet>
+    </b:thumbnail>
+  </b:column>
+   <b:column offset="2" span="5">
+    <b:thumbnail>
+      <f:facet name="caption">
+        <h3>Student</h3>
+        <p style="font-size: 11px;">A student can view and solve exams. </p>
+        <p>
+        <b:commandButton look="primary" value="Login as Student" action="StudentLogin" />
+        </p>
+      </f:facet>
+    </b:thumbnail>
+  </b:column>
+  </b:row></b:container>
+		</b:form>
+		
 	</util:IndexTamplet>
 </h:body>
 </html>

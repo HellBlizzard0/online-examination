@@ -14,7 +14,41 @@
 </h:head>
 <h:body>
 	<utils:TemplateOfStudent>
-		Student main Template
+
+		<b:container>
+			<b:row>
+				<b:column span="12">
+					<h1>#{login.student.name}</h1>
+				</b:column>
+			</b:row>
+			<b:row>
+				<b:column span="4">
+					<b:inputText label="Username" value="#{login.student.username}"
+						readonly="true" />
+				</b:column>
+				<b:column span="4" offset="4">
+					<b:inputSecret label="password" value="#{login.student.password}"
+						readonly="true" />
+				</b:column>
+
+			</b:row>
+			<b:row>
+				<b:column span="6">
+					<b:inputText label="Email" value="#{login.student.email}"
+						readonly="true" />
+				</b:column>
+			</b:row>
+			<b:row>
+				<b:column span="3">
+					<b:inputText label="Deptartment"
+						value="#{login.student.department}" readonly="true" />
+				</b:column>
+				<b:column offset="6" span="3">
+					<b:inputText label="Level" value="#{login.student.level}"
+						readonly="true" />
+				</b:column>
+			</b:row>
+		</b:container>
 	</utils:TemplateOfStudent>
 </h:body>
 </html>
