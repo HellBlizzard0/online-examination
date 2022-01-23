@@ -5,6 +5,8 @@ import java.security.NoSuchAlgorithmException;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 
 import com.entities.Student;
 import com.models.AdminModel;
@@ -70,8 +72,12 @@ public class LoginBean {
 		this.setPassword("");
 		this.setPassword("");
 		this.setStudentLogin(false);
+		this.student = null;
+	    ((HttpSession) FacesContext.getCurrentInstance().getExternalContext()
+		         .getSession(false)).invalidate();		
 		return "index";
 	}
+
 
 	public static String encrypt(String password) {
 		String encryptedpassword = null;

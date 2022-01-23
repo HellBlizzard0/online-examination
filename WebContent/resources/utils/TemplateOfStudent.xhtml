@@ -34,14 +34,13 @@
 						<b:navCommandLink></b:navCommandLink>
 						<b:navCommandLink header="Preview" />
 						<b:navCommandLink value="Exams"
-							action="solveExam" icon="pencil"
+							action="#{studentViewExams.goTo(login.student)}" icon="pencil"
 							iconAlign="right" />
 						<b:navCommandLink value="View Result" action="#{studentManagedBean.getStudentResult()}"
 							icon="tag" iconAlign="right" />
 						<b:navCommandLink value="Logout"
 							action="#{login.logout()}" icon="tag"
 							iconAlign="right" />
-							<b:navCommandLink value="View Exams" action="#{studentViewExams.goTo(null)}"></b:navCommandLink>
 						<b:messages />
 					</b:listLinks>
 				</b:panel>

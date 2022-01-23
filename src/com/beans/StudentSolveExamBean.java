@@ -66,12 +66,6 @@ public class StudentSolveExamBean {
 		this.exam = exam;
 	}
 
-	public void debug() {
-		ArrayList<QuestionAnswers> d = this.questions;
-		System.out.println("Debug method Accessed");
-
-	}
-
 	public String submit() {
 		for (QuestionAnswers questionAnswer : questions) {
 			if(questionAnswer.getSelectedAnswer()==null)

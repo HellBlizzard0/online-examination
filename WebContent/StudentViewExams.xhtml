@@ -15,8 +15,9 @@
 <h:body>
 <util:TemplateOfStudent>
 	<b:form>
-		<ui:repeat value="#{studentViewExams.exams}" var="exam">
-			<b:panel>
+			<p style="padding-top: 5%"></p>
+			<ui:repeat value="#{studentViewExams.exams}" var="exam">
+			<b:panel look="info">
 				<f:facet name="heading">
 		    <b:iconAwesome name="fa-bookmark-o" style="padding-right: 20px" />
 					<h:outputText style="padding-left:20px" value="#{exam.title}" />
@@ -47,7 +48,9 @@
 						</b:column>
 						<b:column offset="1" span="2">
 							<b:commandButton action="#{studentSolveExam.goTo(exam,login.student)}"
-								value="#{msgs.button_StudentEnterExam}" />
+								value="#{msgs.button_StudentEnterExam}" 
+								rendered="#{not studentViewExams.isSolved(exam,login.student)}"
+								look="primary"/>
 						</b:column>
 					</b:row>
 				</b:container>
