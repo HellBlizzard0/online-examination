@@ -6,9 +6,11 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import com.entities.Exam;
+import com.entities.Result;
 import com.entities.Student;
 import com.models.ExamModel;
 import com.models.QuestionModel;
+import com.models.ResultModel;
 
 @SessionScoped
 @ManagedBean(name = "studentViewExams")
@@ -18,6 +20,17 @@ public class StudentViewExamsBean {
 
 	public Long getTotalMarks(Exam exam) {
 		return QuestionModel.getTotalMarks(exam);
+	}
+	
+	public boolean isSolved(Exam exam, Student student) {
+		Result result = ResultModel.getExamResult(exam, student);
+		if(result != null) {
+			return true;
+		}
+		else {
+			return false;
+		}
+			
 	}
 
 	public List<Exam> getExams() {

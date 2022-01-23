@@ -21,10 +21,11 @@
 		<h:form styleClass="form-signin" prependId="false">
 			<h2 class="form-signin-heading">Please sign in</h2>
 			<b:inputText id="email" placeholder="Email address"
-				value="#{login.username}">
+				value="#{login.username}" >
 				<f:facet name="prepend">
 					<b:icon name="user" />
 				</f:facet>
+				<b:focus rendered="true"/>
 			</b:inputText>
 			<b:inputText id="password" placeholder="Password" type="password"
 				value="#{login.password}">

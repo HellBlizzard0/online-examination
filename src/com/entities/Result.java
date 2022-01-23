@@ -18,6 +18,11 @@ import org.hibernate.annotations.NamedQuery;
 			name = "student_fetchAllStudentResult",
 			query =  "from Result s "
 					+ "where s.uid = :P_UID"),
+	@NamedQuery(
+			name = "result_getResultByStudentIdAndExamId",
+			query = "from Result s "
+					+ "where s.uid = :P_UID "
+					+ "and s.eid = :P_EID"),
 })
 
 @Entity

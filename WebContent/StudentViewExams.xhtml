@@ -22,9 +22,9 @@
 					<h:outputText style="padding-left:20px" value="#{exam.title}" />
 
 					<b:badge value="Unsolved"
-						style="margin-left:10px; background-color:red" rendered="true" />
+						style="margin-left:10px; background-color:red" rendered="#{not studentViewExams.isSolved(exam,login.student)}" />
 					<b:badge value="Solved"
-						style="margin-left:10px; background-color:green" rendered="false" />
+						style="margin-left:10px; background-color:green" rendered="#{studentViewExams.isSolved(exam,login.student)}" />
 				</f:facet>
 				<b:container>
 					<b:row>
