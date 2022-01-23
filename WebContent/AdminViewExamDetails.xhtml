@@ -9,12 +9,12 @@
 	xmlns:util="http://java.sun.com/jsf/composite/utils">
 
 <h:head>
-	<title>TITLE</title>
+	<title>#{msgs.label_AdminViewExamDetails}</title>
 
 </h:head>
 <h:body>
 	<util:MainTemplate>
-		<h2 style="padding-top: 10%">#{viewExamDetailsBean.exam.title}</h2>
+		<h2 style="padding-top: 10%">#{msgs.label_AdminViewExamDetails}</h2>
 
 		<b:container style="padding-top: 5%">
 			<b:row>
@@ -68,7 +68,7 @@
 					<b:dataTableColumn label="" >
 						<!-- Display Answers Button -->
 						<b:commandButton value=""
-							action="#{answersByQuestion.goTo(question)}"
+							action="#{answersByQuestion.goTo(question)}" look="info"
 							disabled="#{viewExamDetailsBean.render(question)}">
 							<b:iconAwesome value="fa-info" size="lg" />
 
@@ -78,7 +78,7 @@
 
 					<b:dataTableColumn label="" >
 						<!-- Delete Button -->
-						<b:commandButton value="" iconAwesome="trash"
+						<b:commandButton value="" iconAwesome="trash" look="danger"
 							action="#{viewExamDetailsBean.deleteQuestion(question)}"
 							disabled="#{viewExamDetailsBean.render(question)}">
 							<f:ajax execute="@this" render="@form" />
