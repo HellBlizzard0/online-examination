@@ -13,7 +13,7 @@
 
 </h:head>
 <h:body>
-	<util:TemplateOfStudent>
+	<util:TemplateOfStudent showSideBar="false" span="12">
 		<b:panel style="position: sticky; top: 0;">
 			<util:Timer></util:Timer>
 		</b:panel>
@@ -32,7 +32,7 @@
 		<b:container>
 			<b:row>
 				<b:column span="3" offset="9">
-					<b:commandButton action="#{studentSolveExam.submit(login.student)}"></b:commandButton>
+					<b:commandButton value="#{msgs.button_StudentSubmitExam}" action="#{studentSolveExam.submit(login.student)}"></b:commandButton>
 				</b:column>
 			</b:row>
 		</b:container></b:form>
