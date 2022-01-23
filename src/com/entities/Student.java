@@ -29,6 +29,7 @@ import org.hibernate.annotations.NamedQueries;
 @Entity
 @Table(name = "student")
 public class Student implements Serializable {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")

@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ng="http://mojarra.dev.java.net/mojarra_ext"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:co="http://xmlns.jcp.org/jsf/composite/com"
+	xmlns:util="http://java.sun.com/jsf/composite/utils">
+
+<h:head>
+	<title>View Students</title>
+
+</h:head>
+<h:body>
+	<util:MainTemplate>
+	<b:form>
+	<h1 style="padding-top:5%">Students List</h1>
+		<b:dataTable value="#{adminViewStudentsBean.students}" var="student"
+			caption="Exams List">
+			<f:facet name="header">
+				<tr>
+					<th>Name</th>
+					<th>Email</th>
+					<th>Dept</th>
+					<th>Level</th>
+					<th></th>
+				</tr>
+			</f:facet>
+			<b:dataTableColumn>
+				<b:inputText value="#{student.name}"
+					rendered="#{adminViewStudentsBean.render(student)}" />
+				<h:outputText value="#{student.name}"
+					rendered="#{not adminViewStudentsBean.render(student)}" />
+			</b:dataTableColumn>
+			<b:dataTableColumn>
+				<b:inputText value="#{student.email}"
+					rendered="#{adminViewStudentsBean.render(student)}" />
+				<h:outputText value="#{student.email}"
+					rendered="#{not adminViewStudentsBean.render(student)}" />
+			</b:dataTableColumn>
+			<b:dataTableColumn>
+				<b:inputText value="#{student.department}"
+					rendered="#{adminViewStudentsBean.render(student)}" />
+				<h:outputText value="#{student.department}"
+					rendered="#{not adminViewStudentsBean.render(student)}" />
+			</b:dataTableColumn>
+			<b:dataTableColumn>
+				<b:inputText value="#{student.level}"
+					rendered="#{adminViewStudentsBean.render(student)}" />
+				<h:outputText value="#{student.level}"
+					rendered="#{not adminViewStudentsBean.render(student)}" />
+			</b:dataTableColumn>
+			<b:dataTableColumn orderable="false">
+				<b:commandButton value="" iconAwesome="trash"
+					action="#{adminViewStudentsBean.deleteStudent(student)}"
+					disabled="#{adminViewStudentsBean.render(student)}" look="danger">
+					<f:ajax execute="@this" render="@form" />
+				</b:commandButton>
+			</b:dataTableColumn>
+
+
+		</b:dataTable>
+		
+	</b:form>
+	</util:MainTemplate>
+</h:body>
+</html>
