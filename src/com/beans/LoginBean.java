@@ -70,7 +70,7 @@ public class LoginBean {
 		this.setPassword("");
 		this.setPassword("");
 		this.setStudentLogin(false);
-		return "login";
+		return "index";
 	}
 
 	public static String encrypt(String password) {
