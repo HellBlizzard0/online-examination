@@ -60,7 +60,7 @@ public class LoginBean {
 
 	public String loginStudents() {
 		student = StudentModel.loginStudent(username, password);
-		if (student == null)
+		if (student != null)
 			return "student-main";
 		else
 			return "failure";
