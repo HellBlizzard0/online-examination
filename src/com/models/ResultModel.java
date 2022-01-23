@@ -63,7 +63,7 @@ public class ResultModel {
 		return (Result) query.getSingleResult();
 		
 		} catch (Exception e) {
-		System.out.println(e);
+			//System.out.println(e);
 		}
 		return null;
 	}
