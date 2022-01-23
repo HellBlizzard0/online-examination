@@ -64,7 +64,9 @@ public class StudentSolveExamBean {
 
 	public String submit(Student student) {
 		for (QuestionAnswers questionAnswer : questions) {
-			for (Answer answer : questionAnswer.getAnswers()) {
+			if(questionAnswer.getSelectedAnswer()==null)
+				continue;
+			for (Answer answer : questionAnswer.getAnswers()) {	
 				if (answer.getId() == questionAnswer.getSelectedAnswer().getId()
 						&& answer.isCorrect()) {
 					this.score += questionAnswer.getScore();
