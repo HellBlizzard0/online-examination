@@ -9,6 +9,8 @@
 
 <!-- INTERFACE -->
 <composite:interface>
+	<composite:attribute name="showSideBar" default="true"  />
+	<composite:attribute name="span" default="9" />
 </composite:interface>
 
 <!-- IMPLEMENTATION -->
@@ -17,7 +19,7 @@
 		<b:navBar brand="#{msgs.label_NavBarTitle}" brandHref="#" fixed="top"
 			inverse="true">
 		</b:navBar>
-		<b:column span="3">
+		<b:column span="3" rendered="#{cc.attrs.showSideBar}">
 			<h:form>
 				<b:panel look="primary" title="Static sidebar">
 					<b:listLinks>
@@ -39,17 +41,19 @@
 						<b:navCommandLink value="Logout"
 							action="#{login.logout()}" icon="tag"
 							iconAlign="right" />
+							<b:navCommandLink value="View Exams" action="#{studentViewExams.goTo(null)}"></b:navCommandLink>
 						<b:messages />
 					</b:listLinks>
 				</b:panel>
 			</h:form>
 		</b:column>
 		<b:container>
-			<b:column span="9">
+			<b:column  span="#{cc.attrs.span}" >
 				<b:jumbotron>
 					<composite:insertChildren />
 				</b:jumbotron>
 			</b:column>
+			
 		</b:container>
 		<!-- <b:container>
 			<b:jumbotron>

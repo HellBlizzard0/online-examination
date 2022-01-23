@@ -3,12 +3,12 @@ package com.beans;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+
+import com.entities.Student;
 import com.models.AdminModel;
 import com.models.StudentModel;
-
 
 @SessionScoped
 @ManagedBean(name = "login")
@@ -16,6 +16,15 @@ public class LoginBean {
 	private String username;
 	private String password;
 	private boolean studentLogin;
+	private Student student; 
+
+	public Student getStudent() {
+		return student;
+	}
+
+	public void setStudent(Student student) {
+		this.student = student;
+	}
 
 	public boolean isStudentLogin() {
 		return studentLogin;
@@ -42,21 +51,19 @@ public class LoginBean {
 	}
 
 	public String loginAdmin() {
-		
-			if (AdminModel.login(username, password))
-				return "admin-main";
-			else
-				return "failure";
-		} 
-	
 
+		if (AdminModel.login(username, password))
+			return "admin-main";
+		else
+			return "failure";
+	}
 
-		public String loginStudents() {
-			
-			if (StudentModel.loginStudent(username, password))
-				return "student-main";
-			else
-				return "failure";
+	public String loginStudents() {
+		student = StudentModel.loginStudent(username, password);
+		if (student != null)
+			return "student-main";
+		else
+			return "failure";
 	}
 
 	public String logout() {
@@ -66,32 +73,26 @@ public class LoginBean {
 		return "index";
 	}
 
-
 	public static String encrypt(String password) {
-        String encryptedpassword = null;
+		String encryptedpassword = null;
 
-		try
-	        {
-	            MessageDigest m = MessageDigest.getInstance("MD5");
+		try {
+			MessageDigest m = MessageDigest.getInstance("MD5");
 
-	            m.update(password.getBytes());
+			m.update(password.getBytes());
 
-	            byte[] bytes = m.digest();
+			byte[] bytes = m.digest();
 
-	            StringBuilder s = new StringBuilder();
-	            for(int i=0; i< bytes.length ;i++)
-	            {
-	                s.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
-	            }
+			StringBuilder s = new StringBuilder();
+			for (int i = 0; i < bytes.length; i++) {
+				s.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+			}
 
-	            encryptedpassword = s.toString();
-	        }
-	        catch (NoSuchAlgorithmException e)
-	        {
-	            e.printStackTrace();
-	        }
-		return encryptedpassword;
+			encryptedpassword = s.toString();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
 		}
-
+		return encryptedpassword;
+	}
 
 }

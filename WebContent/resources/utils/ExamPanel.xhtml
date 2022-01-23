@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+	xmlns:b="http://bootsfaces.net/ui">
+<head>
+<title>Not present in rendered output</title>
+</head>
+<body>
+	<composite:interface>
+		<composite:attribute name="name" />
+		<composite:attribute name="solved" />
+		<composite:attribute name="totalMarks" />
+		<composite:attribute name="time" />
+		
+	</composite:interface>
+	<composite:implementation>
+		<b:form>
+			<b:panel>
+				<f:facet name="heading">
+		    <b:iconAwesome name="fa-bookmark-o" style="padding-right: 20px" />
+					<h:outputText style="padding-left:20px" value="#{cc.attrs.name}" />
+
+					<b:badge value="Unsolved"
+						style="margin-left:10px; background-color:red"
+						rendered="#{not cc.attrs.solved}" />
+					<b:badge value="Solved"
+						style="margin-left:10px; background-color:green"
+						rendered="#{cc.attrs.solved}" />
+				</f:facet>
+				<b:container>
+					<b:row>
+						<b:column span="3">
+							<b:inputText value="#{cc.attrs.totalMarks}" readonly="true">
+								<f:facet name="prepend">
+									<b:iconAwesome name="fa-star-half-full" />
+								</f:facet>
+							</b:inputText>
+						</b:column>
+						<b:column offset="3" span="3">
+							<b:inputText value="#{cc.attrs.time}" readonly="true">
+								<f:facet name="prepend">
+									<b:iconAwesome name="fa-clock-o" />
+								</f:facet>
+								<f:facet name="append">
+									min
+								</f:facet>
+							</b:inputText>
+						</b:column>
+						<b:column offset="1" span="2">
+							<b:commandButton  value="#{msgs.button_StudentEnterExam}" />
+						</b:column>
+					</b:row>
+				</b:container>
+			</b:panel>
+		</b:form>
+	</composite:implementation>
+</body>
+</html>
