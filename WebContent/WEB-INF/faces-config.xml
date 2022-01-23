@@ -5,12 +5,12 @@
   <converter-id>answerConverter</converter-id>
   <converter-class>com.converters.AnswerConverter</converter-class>
  </converter>
+ <converter>
+  <converter-id>longConverter</converter-id>
+  <converter-class>com.converters.LongConverter</converter-class>
+ </converter>
  <navigation-rule>
   <from-view-id>/index.xhtml</from-view-id>
-  <navigation-case>
-   <from-outcome>login</from-outcome>
-   <to-view-id>/login.xhtml</to-view-id>
-  </navigation-case>
   <navigation-case>
    <from-outcome>zx</from-outcome>
    <to-view-id>/Register.xhtml</to-view-id>
@@ -23,12 +23,13 @@
    <from-outcome>StudentViewExams</from-outcome>
    <to-view-id>/StudentViewExams.xhtml</to-view-id>
   </navigation-case>
- </navigation-rule>
- <navigation-rule>
-  <from-view-id>/login.xhtml</from-view-id>
   <navigation-case>
-   <from-outcome>admin-main</from-outcome>
-   <to-view-id>/admin-main.xhtml</to-view-id>
+   <from-outcome>AdminLogin</from-outcome>
+   <to-view-id>/AdminLogin.xhtml</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>StudentLogin</from-outcome>
+   <to-view-id>/StudentLogin.xhtml</to-view-id>
   </navigation-case>
  </navigation-rule>
  <navigation-rule>
@@ -72,17 +73,6 @@
   </navigation-case>
  </navigation-rule>
  <navigation-rule>
-  <from-view-id>/login.xhtml</from-view-id>
-  <navigation-case>
-   <from-outcome>loginAdmin</from-outcome>
-   <to-view-id>/AdminLogin.xhtml</to-view-id>
-  </navigation-case>
-  <navigation-case>
-   <from-outcome>loginStudent</from-outcome>
-   <to-view-id>/StudentLogin.xhtml</to-view-id>
-  </navigation-case>
- </navigation-rule>
- <navigation-rule>
   <from-view-id>/AdminLogin.xhtml</from-view-id>
   <navigation-case>
    <from-outcome>admin-main</from-outcome>
@@ -107,10 +97,6 @@
    <to-view-id>/index.xhtml</to-view-id>
   </navigation-case>
   <navigation-case>
-   <from-outcome>ToExams</from-outcome>
-   <to-view-id>/solveExam.xhtml</to-view-id>
-  </navigation-case>
-  <navigation-case>
    <from-outcome>StudentViewExams</from-outcome>
    <to-view-id>/StudentViewExams.xhtml</to-view-id>
   </navigation-case>
@@ -122,5 +108,11 @@
    <to-view-id>/StudentSolveExam.xhtml</to-view-id>
   </navigation-case>
  </navigation-rule>
- <application/>
+ <application>
+  <resource-bundle>
+   <base-name>com.resources.messages_en</base-name>
+   <var>msgs</var>
+  </resource-bundle>
+  <message-bundle>com.resources.messages_en</message-bundle>
+ </application>
 </faces-config>

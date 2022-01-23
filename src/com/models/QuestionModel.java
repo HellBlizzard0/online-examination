@@ -99,4 +99,26 @@ public class QuestionModel {
 		}
 		return null;
 	}
+
+	public static long getTotalMarks(Exam exam) {
+		// TODO Auto-generated method stub
+		Session session = null;
+		try {
+			session = SessionManager.getSession();
+
+			if (exam == null) {
+
+				TypedQuery query = session.getNamedQuery("question_fetchQAllScores");
+				return (Long) query.getSingleResult();
+			} else {
+				TypedQuery query = session.getNamedQuery("question_fetchScoreByExamId");
+				query.setParameter("P_EXAMID", exam.getId());
+				return (Long) query.getSingleResult();
+			}
+		} catch (Exception e) {
+			e.getStackTrace();
+		}
+		return -1;
+	
+	}
 }

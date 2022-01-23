@@ -10,8 +10,11 @@ import com.entities.Answer;
 import com.entities.Exam;
 import com.entities.Question;
 import com.entities.QuestionAnswers;
+import com.entities.Result;
+import com.entities.Student;
 import com.models.AnswerModel;
 import com.models.QuestionModel;
+import com.models.ResultModel;
 
 @SessionScoped
 @ManagedBean(name = "studentSolveExam")
@@ -19,6 +22,16 @@ public class StudentSolveExamBean {
 	private Exam exam;
 	private ArrayList<QuestionAnswers> questions = new ArrayList<QuestionAnswers>();
 	private Answer selectedAnswers;
+	private int score = 0;
+
+	public int getTotalScore() {
+		int res = 0;
+		for (QuestionAnswers questionAnswers : questions) {
+			res += questionAnswers.getScore();
+		}
+		return res;
+	}
+
 	public Answer getSelectedAnswers() {
 		return selectedAnswers;
 	}
@@ -49,6 +62,28 @@ public class StudentSolveExamBean {
 
 	}
 
+	public String submit(Student student) {
+		for (QuestionAnswers questionAnswer : questions) {
+			for (Answer answer : questionAnswer.getAnswers()) {
+				if (answer.getId() == questionAnswer.getSelectedAnswer().getId()
+						&& answer.isCorrect()) {
+					this.score += questionAnswer.getScore();
+				}
+			}
+
+		}
+		ResultModel.create(new Result(
+				0,
+				exam.getId(),
+				student.getId(),
+				this.getScore()));
+		return "StudentExamSubmitResult";
+	}
+
+	public int getScore() {
+		return score;
+	}
+
 	public String goTo(Exam exam) {
 		this.exam = exam;
 		List<Question> list = QuestionModel.getQuestionList(exam);
@@ -58,11 +93,11 @@ public class StudentSolveExamBean {
 					question,
 					AnswerModel
 							.getAnswerByQuestionId(question));
-			//q.setSelectedAnswer(new Answer(0, "", 0, false));
+			// q.setSelectedAnswer(new Answer(0, "", 0, false));
 			this.questions
 					.add(q);
 		}
-		
+
 		return "StudentSolveExam";
 	}
 }

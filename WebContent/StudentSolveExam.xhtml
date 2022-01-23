@@ -28,6 +28,14 @@
 				</b:panel>
 			</b:form>
 		</ui:repeat>
+		<b:form>
+		<b:container>
+			<b:row>
+				<b:column span="3" offset="9">
+					<b:commandButton action="#{studentSolveExam.submit(login.student)}"></b:commandButton>
+				</b:column>
+			</b:row>
+		</b:container></b:form>
 	</util:TemplateOfStudent>
 </h:body>
 </html>

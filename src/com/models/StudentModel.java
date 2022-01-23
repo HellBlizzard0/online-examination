@@ -53,7 +53,7 @@ public class StudentModel {
 		}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static boolean loginStudent(String username, String password) {
+	public static Student loginStudent(String username, String password) {
 		Session session = null;
 		String encrypted =null;
 		try {
@@ -65,15 +65,15 @@ public class StudentModel {
 			List<Student> student = query.getResultList();
 			
 			if (student.size() != 0)
-				return true;
+				return student.get(0);
 			else
-				return false;
+				return null;
 			
 		} catch(Exception e) {
 			e.getStackTrace();
 		}
 		
-		return false;
+		return null;
 	}
 	
 	

@@ -25,6 +25,16 @@ import org.hibernate.annotations.NamedQuery;
 
 
 public class Result implements Serializable {
+	public Result(int rid, int eid, int uid, int score) {
+		super();
+		this.rid = rid;
+		this.eid = eid;
+		this.uid = uid;
+		this.score = score;
+	}
+
+
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "RID")

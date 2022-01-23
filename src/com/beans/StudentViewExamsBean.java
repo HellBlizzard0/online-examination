@@ -8,12 +8,17 @@ import javax.faces.bean.SessionScoped;
 import com.entities.Exam;
 import com.entities.Student;
 import com.models.ExamModel;
+import com.models.QuestionModel;
 
 @SessionScoped
 @ManagedBean(name = "studentViewExams")
 public class StudentViewExamsBean {
 	List<Exam> exams;
 	List<Integer> totalMarks;
+
+	public Long getTotalMarks(Exam exam) {
+		return QuestionModel.getTotalMarks(exam);
+	}
 
 	public List<Exam> getExams() {
 		return exams;
@@ -35,7 +40,7 @@ public class StudentViewExamsBean {
 	 *
 	 * @author aalsaqqa
 	 * @return outcome String [StudentViewExams]
-	 * */
+	 */
 	public String goTo(Student student) {
 		if (student == null) {
 			student = new Student(0, "stdName", "stdUsername", "stdPassword", "std@mail.com", "ICS", 3);
