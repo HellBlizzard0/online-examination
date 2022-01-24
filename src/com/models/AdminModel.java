@@ -12,8 +12,11 @@ import com.beans.StudentBean;
 import com.entities.Admin;
 import com.entities.Student;
 import com.util.SessionManager;
+import com.util.Exceptions.SessionException;
 
+@SuppressWarnings("unused")
 public class AdminModel {
+	
 	public static boolean create(Student student) {
 		boolean result = true;
 		Session session = null;
@@ -24,7 +27,13 @@ public class AdminModel {
 			transaction = session.beginTransaction();
 			session.save(student);
 			transaction.commit();
-		} catch (Exception e) {
+		} catch(SessionException e) {
+			result = false;
+			if (transaction != null) {
+				transaction.rollback();
+			}
+		}
+		catch (Exception e) {
 			result = false;
 			if (transaction != null) {
 				transaction.rollback();
@@ -45,7 +54,13 @@ public class AdminModel {
 			transaction = session.beginTransaction();
 			session.update(student);
 			transaction.commit();
-		} catch (Exception e) {
+		}  catch(SessionException e) {
+			result = false;
+			if (transaction != null) {
+				transaction.rollback();
+			}
+		}
+		catch (Exception e) {
 			result = false;
 			if (transaction != null) {
 				transaction.rollback();
@@ -73,7 +88,10 @@ public class AdminModel {
 			else
 				return false;
 			
-		} catch(Exception e) {
+		}  catch(SessionException e) {
+			System.out.println(e);
+		}
+		catch(Exception e) {
 			System.out.println(e);
 		}
 		

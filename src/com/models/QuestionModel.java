@@ -10,6 +10,7 @@ import org.hibernate.Transaction;
 import com.entities.Exam;
 import com.entities.Question;
 import com.util.SessionManager;
+import com.util.Exceptions.SessionException;
 
 public class QuestionModel {
 
@@ -24,6 +25,8 @@ public class QuestionModel {
 			transaction = session.beginTransaction();
 			session.save(question);
 			transaction.commit();
+		} catch(SessionException e) {
+			result = false;
 		} catch (Exception e) {
 			result = false;
 			if (transaction != null) {
@@ -46,6 +49,8 @@ public class QuestionModel {
 			transaction = session.beginTransaction();
 			session.update(question);
 			transaction.commit();
+		} catch(SessionException e) {
+			result = false;
 		} catch (Exception e) {
 			result = false;
 			if (transaction != null) {
@@ -68,6 +73,8 @@ public class QuestionModel {
 			transaction = session.beginTransaction();
 			session.delete(question);
 			transaction.commit();
+		}catch(SessionException e) {
+			result = false;
 		} catch (Exception e) {
 			result = false;
 			if (transaction != null) {
@@ -94,7 +101,8 @@ public class QuestionModel {
 				query.setParameter("P_ID", exam.getId());
 				return query.getResultList();
 			}
-		} catch (Exception e) {
+		}catch(SessionException e) {
+System.out.println(e);		} catch (Exception e) {
 			e.getStackTrace();
 		}
 		return null;
@@ -115,7 +123,8 @@ public class QuestionModel {
 				query.setParameter("P_EXAMID", exam.getId());
 				return (Long) query.getSingleResult();
 			}
-		} catch (Exception e) {
+		}catch(SessionException e) {
+System.out.println(e);		} catch (Exception e) {
 			e.getStackTrace();
 		}
 		return -1;
