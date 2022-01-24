@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ng="http://mojarra.dev.java.net/mojarra_ext"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:co="http://xmlns.jcp.org/jsf/composite/com"
+	xmlns:util="http://java.sun.com/jsf/composite/utils">
+
+<h:head>
+	<title>View Results</title>
+
+</h:head>
+<h:body>
+	<util:MainTemplate>
+	<h1 style="padding-top:5%">Exam Results</h1>
+		<b:dataTable value="#{adminViewResultsBean.resultsDetailed}"
+			var="result">
+			<b:dataTableColumn value="#{result.exam.title}" label="Exam"/>
+			<b:dataTableColumn value="#{result.exam.department}" label="Dept"/>
+			<b:dataTableColumn value="#{result.student.name}" />
+			<b:dataTableColumn value="#{result.result.score}" />
+			<b:dataTableColumn value="#{studentManagedBean.getExamTotalScore(result.exam.id)}" label="Out of"/>
+		</b:dataTable>
+	</util:MainTemplate>
+</h:body>
+</html>
