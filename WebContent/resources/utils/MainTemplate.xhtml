@@ -26,17 +26,20 @@
 							action="#{viewExamsBean.fetchExams()}" icon="tag"
 							iconAlign="left" />
 						<b:navCommandLink header="Students" />
-													<b:navCommandLink value="Register" action="Register"
-							icon="tag" iconAlign="left" />
-						<b:navCommandLink value="View Students" action="#{adminViewStudentsBean.goTo()}"
-							icon="tag" iconAlign="left" />
-						<b:navCommandLink header="Results" />
-						<b:navCommandLink value="View Results" action="#{adminViewResultsBean.goTo()}"
-							icon="tag" iconAlign="left" />	
-						<b:navCommandLink value="Logout"
-							action="#{login.logout()}" icon="tag"
+						<b:navCommandLink value="Register" action="Register" icon="tag"
 							iconAlign="left" />
-							
+						<b:navCommandLink value="View Students"
+							action="#{adminViewStudentsBean.goTo()}" icon="tag"
+							iconAlign="left" />
+						<b:navCommandLink header="Results" />
+						<b:navCommandLink value="View Results"
+							action="#{adminViewResultsBean.goTo()}" icon="tag"
+							iconAlign="left" />
+						<b:navCommandLink header="" />
+
+						<b:navCommandLink value="Logout" action="#{login.logout()}"
+							icon="tag" iconAlign="left" />
+
 						<b:messages />
 					</b:listLinks>
 				</b:panel>
