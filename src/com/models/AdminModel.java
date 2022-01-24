@@ -74,7 +74,7 @@ public class AdminModel {
 				return false;
 			
 		} catch(Exception e) {
-			e.getStackTrace();
+			System.out.println(e);
 		}
 		
 		return false;

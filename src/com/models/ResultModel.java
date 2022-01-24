@@ -1,5 +1,6 @@
 package com.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.TypedQuery;
@@ -11,6 +12,7 @@ import com.entities.Exam;
 import com.entities.ExamResult;
 import com.entities.Question;
 import com.entities.Result;
+import com.entities.ResultDetailed;
 import com.entities.Student;
 import com.util.SessionManager;
 
@@ -19,18 +21,18 @@ public class ResultModel {
 	public static List<Result> getResultList(int id) {
 		Session session = null;
 		try {
-		session = SessionManager.getSession();
-		
-		TypedQuery<Result> query = session.getNamedQuery("student_fetchAllStudentResult");
-		query.setParameter("P_UID", id);
-		return query.getResultList();
-		
+			session = SessionManager.getSession();
+
+			TypedQuery<Result> query = session.getNamedQuery("student_fetchAllStudentResult");
+			query.setParameter("P_UID", id);
+			return query.getResultList();
+
 		} catch (Exception e) {
-		System.out.println(e);
+			System.out.println(e);
 		}
 		return null;
-		}
-	
+	}
+
 	public static boolean create(Result newResult) {
 		// TODO Auto-generated method stub
 		boolean result = true;
@@ -56,62 +58,95 @@ public class ResultModel {
 	public static Result getExamResult(Exam exam, Student student) {
 		Session session = null;
 		try {
-		session = SessionManager.getSession();
-		
-		TypedQuery<Result> query = session.getNamedQuery("result_getResultByStudentIdAndExamId");
-		query.setParameter("P_UID", student.getId());
-		query.setParameter("P_EID", exam.getId());
-		return (Result) query.getSingleResult();
-		
+			session = SessionManager.getSession();
+
+			TypedQuery<Result> query = session.getNamedQuery("result_getResultByStudentIdAndExamId");
+			query.setParameter("P_UID", student.getId());
+			query.setParameter("P_EID", exam.getId());
+			return (Result) query.getSingleResult();
+
 		} catch (Exception e) {
-			//System.out.println(e);
+			// System.out.println(e);
 		}
 		return null;
 	}
-	
-	/*public static ExamResult getExamTotalScore(int id) {
-		Session session = null;
-		try {
-		session = SessionManager.getSession();
-		
-		TypedQuery<ExamResult> query = session.getNamedQuery("examScore_fetchExameScoreAndTitle");
-		query.setParameter("P_EID", id);
-		return  query.getSingleResult();
-		
-		} catch (Exception e) {
-		System.out.println(e);
-		}
-		return null;
-	}*/
-	
+
+	/*
+	 * public static ExamResult getExamTotalScore(int id) { Session session = null; try { session = SessionManager.getSession();
+	 * 
+	 * TypedQuery<ExamResult> query = session.getNamedQuery("examScore_fetchExameScoreAndTitle"); query.setParameter("P_EID", id); return query.getSingleResult();
+	 * 
+	 * } catch (Exception e) { System.out.println(e); } return null; }
+	 */
+
 	public static ExamResult getExamTitleAndTotalScore(int id) {
 		Session session = null;
 		try {
-		session = SessionManager.getSession();
-		
-		TypedQuery<ExamResult> query = session.getNamedQuery("examScore_fetchAll");
-		query.setParameter("P_EID", id);
-		return query.getSingleResult();
-		
+			session = SessionManager.getSession();
+
+			TypedQuery<ExamResult> query = session.getNamedQuery("examScore_fetchAll");
+			query.setParameter("P_EID", id);
+			return query.getSingleResult();
+
 		} catch (Exception e) {
-		System.out.println(e);
+			System.out.println(e);
 		}
 		return null;
 	}
-	
+
+	@SuppressWarnings({ "unchecked" })
+	public static List<ResultDetailed> getAllDetailed() {
+		Session session = null;
+		List<Result> results;
+		Exam exam;
+		Student student;
+		ExamResult examResult;
+		ArrayList<ResultDetailed> resultsDetailed = new ArrayList<ResultDetailed>();
+		;
+		try {
+			session = SessionManager.getSession();
+
+			results = session
+					.getNamedQuery("result_fetchAllResult")
+					.getResultList();
+			for (Result result : results) {
+				try {
+					exam = (Exam) session
+							.getNamedQuery("exam_fetchExamById")
+							.setParameter("P_ID", result.getEid())
+							.getSingleResult();
+					student = (Student) session
+							.getNamedQuery("student_fetchStudentById")
+							.setParameter("P_ID", result.getUid())
+							.getSingleResult();
+					
+					resultsDetailed.add(new ResultDetailed(result, exam, student));
+				} catch (Exception e) {
+					// TODO: handle exception
+					System.out.println(e);
+				}
+			}
+			return resultsDetailed;
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return null;
+	}
+
 	public static ExamResult getExamTotalScore(int id) {
 		Session session = null;
 		try {
-		session = SessionManager.getSession();
-		
-		TypedQuery<ExamResult> query = session.getNamedQuery("examScore_fetchExameScore");
-		query.setParameter("P_EID", id);
-		return query.getSingleResult();
-		
+			session = SessionManager.getSession();
+
+			TypedQuery<ExamResult> query = session.getNamedQuery("examScore_fetchExameScore");
+			query.setParameter("P_EID", id);
+			return query.getSingleResult();
+
 		} catch (Exception e) {
-		System.out.println(e);
+			System.out.println(e);
 		}
 		return null;
 	}
-	
+
 }
