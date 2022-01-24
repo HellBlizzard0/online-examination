@@ -36,7 +36,7 @@
 						<b:navCommandLink value="Exams"
 							action="#{studentViewExams.goTo(login.student)}" icon="pencil"
 							iconAlign="right" />
-						<b:navCommandLink value="View Result" action="#{studentManagedBean.getStudentResult()}"
+						<b:navCommandLink value="View Result" action="#{studentManagedBean.getStudentResult(login.student.id)}"
 							icon="tag" iconAlign="right" />
 						<b:navCommandLink value="Logout"
 							action="#{login.logout()}" icon="tag"
