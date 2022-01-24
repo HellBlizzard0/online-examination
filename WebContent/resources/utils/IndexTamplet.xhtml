@@ -17,27 +17,9 @@
 		<b:navBar brand="#{msgs.label_NavBarTitle}" brandHref="#" fixed="top"
 			inverse="true">
 		</b:navBar>
-		<b:column span="3">
-			<h:form>
-				<b:panel look="primary" title="Static sidebar">
-					<b:listLinks>
-						<b:navCommandLink header="BootsFaces" />
-						<b:navCommandLink href="http://www.bootsfaces.net"
-							value="BootsFaces" icon="globe" iconAlign="right" />
-						<b:navCommandLink></b:navCommandLink>
-						<b:navCommandLink header="Bootstrap" />
-						<b:navCommandLink
-							href="http://getbootstrap.com/components/#navbar"
-							value="Bootstrap" icon="link"></b:navCommandLink>
-						<b:navCommandLink></b:navCommandLink>
-					
-						<b:messages />
-					</b:listLinks>
-				</b:panel>
-			</h:form>
-		</b:column>
+		
 		<b:container>
-			<b:column span="9">
+			<b:column span="12">
 				<b:jumbotron>
 					<composite:insertChildren />
 				</b:jumbotron>

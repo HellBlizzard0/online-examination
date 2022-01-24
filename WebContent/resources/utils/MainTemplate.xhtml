@@ -21,30 +21,21 @@
 			<h:form>
 				<b:panel look="primary" title="Static sidebar">
 					<b:listLinks>
-						<b:navCommandLink header="BootsFaces" />
-						<b:navCommandLink href="http://www.bootsfaces.net"
-							value="BootsFaces" icon="globe" iconAlign="right" />
-						<b:navCommandLink></b:navCommandLink>
-						<b:navCommandLink header="Bootstrap" />
-						<b:navCommandLink
-							href="http://getbootstrap.com/components/#navbar"
-							value="Bootstrap" icon="link"></b:navCommandLink>
-						<b:navCommandLink></b:navCommandLink>
-						<b:navCommandLink header="Preview" />
+						<b:navCommandLink header="Exams" />
 						<b:navCommandLink value="View Exams"
 							action="#{viewExamsBean.fetchExams()}" icon="tag"
-							iconAlign="right" />
-							<b:navCommandLink value="Register" action="Register"
-							icon="tag" iconAlign="right" />
-						<b:navCommandLink value="Create Exam" action="AdminCreateExam"
-							icon="tag" iconAlign="right" />
+							iconAlign="left" />
+						<b:navCommandLink header="Students" />
+													<b:navCommandLink value="Register" action="Register"
+							icon="tag" iconAlign="left" />
 						<b:navCommandLink value="View Students" action="#{adminViewStudentsBean.goTo()}"
-							icon="tag" iconAlign="right" />
+							icon="tag" iconAlign="left" />
+						<b:navCommandLink header="Results" />
 						<b:navCommandLink value="View Results" action="#{adminViewResultsBean.goTo()}"
-							icon="tag" iconAlign="right" />	
+							icon="tag" iconAlign="left" />	
 						<b:navCommandLink value="Logout"
 							action="#{login.logout()}" icon="tag"
-							iconAlign="right" />
+							iconAlign="left" />
 							
 						<b:messages />
 					</b:listLinks>

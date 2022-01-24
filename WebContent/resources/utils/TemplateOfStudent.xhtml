@@ -23,24 +23,19 @@
 			<h:form>
 				<b:panel look="primary" title="Static sidebar">
 					<b:listLinks>
-						<b:navCommandLink header="BootsFaces" />
-						<b:navCommandLink href="http://www.bootsfaces.net"
-							value="BootsFaces" icon="globe" iconAlign="right" />
-						<b:navCommandLink></b:navCommandLink>
-						<b:navCommandLink header="Bootstrap" />
-						<b:navCommandLink
-							href="http://getbootstrap.com/components/#navbar"
-							value="Bootstrap" icon="link"></b:navCommandLink>
-						<b:navCommandLink></b:navCommandLink>
-						<b:navCommandLink header="Preview" />
+						<b:navCommandLink header="Exams" />
 						<b:navCommandLink value="Exams"
 							action="#{studentViewExams.goTo(login.student)}" icon="pencil"
-							iconAlign="right" />
+							iconAlign="left" />
+						<b:navCommandLink header="Exams" />
 						<b:navCommandLink value="View Result" action="#{studentManagedBean.getStudentResult(login.student.id)}"
-							icon="tag" iconAlign="right" />
+							icon="tag" iconAlign="left" />
+						<b:navCommandLink value="Profile"
+							action="student-main" icon="tag"
+							iconAlign="left" />
 						<b:navCommandLink value="Logout"
 							action="#{login.logout()}" icon="tag"
-							iconAlign="right" />
+							iconAlign="left" />
 						<b:messages />
 					</b:listLinks>
 				</b:panel>

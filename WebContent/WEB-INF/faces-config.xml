@@ -108,6 +108,10 @@
    <from-outcome>StudentViewExams</from-outcome>
    <to-view-id>/StudentViewExams.xhtml</to-view-id>
   </navigation-case>
+  <navigation-case>
+   <from-outcome>student-main</from-outcome>
+   <to-view-id>/student-main.xhtml</to-view-id>
+  </navigation-case>
  </navigation-rule>
  <navigation-rule>
   <from-view-id>/StudentViewExams.xhtml</from-view-id>
