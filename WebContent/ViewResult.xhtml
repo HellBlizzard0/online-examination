@@ -16,14 +16,19 @@
 
 	<util:TemplateOfStudent>
 
-		
-		<h:form>
-		<b:dataTable value="#{studentManagedBean.resultList}" var="z" pdf="true" print="true">
+		<h1 style="padding-top: 5%">View Results</h1>
 
-				
-				<b:dataTableColumn value="#{studentManagedBean.getExamTitle(z.eid)}" label="Title"/>
-				<b:dataTableColumn value="#{z.score}" label="Your Score"/>
-				<b:dataTableColumn value="#{studentManagedBean.getExamTotalScore(z.eid)}" label="Out of"/>
+		<h:form>
+			<b:dataTable value="#{studentManagedBean.resultList}" var="z"
+				pdf="true" print="true">
+
+
+				<b:dataTableColumn value="#{studentManagedBean.getExamTitle(z.eid)}"
+					label="Title" />
+				<b:dataTableColumn value="#{z.score}" label="Your Score" />
+				<b:dataTableColumn
+					value="#{studentManagedBean.getExamTotalScore(z.eid)}"
+					label="Out of" />
 
 
 
