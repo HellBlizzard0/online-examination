@@ -24,7 +24,7 @@ public class AdminViewExamsBean {
 	private boolean edit = false;
 	private boolean addNew = false;
 	private List<Exam> backupExams;
-	private String[] departments= {"ICS","SWE","COE","MATH"};
+	private String[] departments= {"ICS","SWE","COE","MATH","ISE"};
 	private List<Departments> department;
 	
 	private enum Flags {
