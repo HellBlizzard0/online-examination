@@ -36,8 +36,15 @@
 						rendered="#{not viewExamsBean.render(exam)}" />
 				</b:dataTableColumn>
 				<b:dataTableColumn>
-					<b:inputText value="#{exam.department}" size="2"
-						rendered="#{viewExamsBean.render(exam)}" />
+					<!--  <b:inputText value="#{exam.department}" size="2"
+						rendered="#{viewExamsBean.render(exam)}" /> -->
+						<b:formGroup>
+    <b:selectOneMenu value="#{viewExamsBean.departments}" col-lg="3"   rendered="#{viewExamsBean.render(exam)}" select2="true">
+                    <f:selectItem itemLabel="(Please select)" itemValue="" />
+                   <f:selectItems value="#{viewExamsBean.department}" var="c" itemValue="#{c}" itemLabel="#{c}" />
+                  
+                    </b:selectOneMenu> 
+                     </b:formGroup>
 					<h:outputText value="#{exam.department}"
 						rendered="#{not viewExamsBean.render(exam)}" />
 				</b:dataTableColumn>
@@ -77,7 +84,7 @@
 					<b:commandButton value="Add Exam" icon="edit" ajax="true"
 						update="@form" look="info"
 						onclick="ajax:viewExamsBean.newEnable()" auto-update="true"
-						rendered="#{viewExamsBean.normal}">
+						rendered="#{viewExamsBean.normal}" >
 					</b:commandButton>
 					<!-- Edit -->
 					<b:commandButton value="Update" icon="edit" ajax="true"

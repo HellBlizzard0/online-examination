@@ -8,6 +8,7 @@ import javax.persistence.TypedQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import com.entities.Departments;
 import com.entities.Exam;
 import com.entities.ExamResult;
 import com.entities.Question;
@@ -142,6 +143,20 @@ public class ResultModel {
 			TypedQuery<ExamResult> query = session.getNamedQuery("examScore_fetchExameScore");
 			query.setParameter("P_EID", id);
 			return query.getSingleResult();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return null;
+	}
+	
+	public static List<Departments> getDepartments() {
+		Session session = null;
+		try {
+			session = SessionManager.getSession();
+
+			TypedQuery<Departments> query = session.getNamedQuery("departments_fetchAll");
+			return query.getResultList();
 
 		} catch (Exception e) {
 			System.out.println(e);
