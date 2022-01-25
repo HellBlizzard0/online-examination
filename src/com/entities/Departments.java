@@ -23,6 +23,11 @@ import org.hibernate.annotations.NamedQuery;
 @Entity
 @Table(name = "departments")
 public class Departments implements Serializable {
+
+	public Departments() {
+		
+	}
+	
 	public Departments(int did, String department) {
 		super();
 		this.did = did;

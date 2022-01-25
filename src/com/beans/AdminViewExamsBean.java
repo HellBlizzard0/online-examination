@@ -25,7 +25,7 @@ public class AdminViewExamsBean {
 	private boolean addNew = false;
 	private List<Exam> backupExams;
 	private String[] departments= {"ICS","SWE","COE","MATH","ISE"};
-	private List<Departments> department;
+//	private List<Departments> department;
 	
 	private enum Flags {
 		NORMAL,
@@ -142,7 +142,7 @@ public class AdminViewExamsBean {
 
 	public String fetchExams() {
 		this.exams = ExamModel.getExamsList(null, -1);
-		getDepartmentss();
+		//getDepartmentss();
 		return "AdminViewExams";
 	}
 
@@ -182,7 +182,7 @@ public class AdminViewExamsBean {
 		this.departments = departments;
 	}
 
-	public List<Departments> getDepartment() {
+/*	public List<Departments> getDepartment() {
 		return department;
 	}
 
@@ -194,5 +194,5 @@ public class AdminViewExamsBean {
 		//getStudent().setId(4);
 		 department= ResultModel.getDepartments();
 	}
-
+*/
 }
