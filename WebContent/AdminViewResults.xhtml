@@ -9,19 +9,19 @@
 	xmlns:util="http://java.sun.com/jsf/composite/utils">
 
 <h:head>
-	<title>View Results</title>
+	<title>#{msgs.label_ViewResults}</title>
 
 </h:head>
 <h:body>
 	<util:MainTemplate>
-	<h1 style="padding-top:5%">Exam Results</h1>
+	<h1 style="padding-top:5%">#{msgs.label_ViewResults}</h1>
 		<b:dataTable value="#{adminViewResultsBean.resultsDetailed}"
 			var="result">
-			<b:dataTableColumn value="#{result.exam.title}" label="Exam"/>
-			<b:dataTableColumn value="#{result.exam.department}" label="Dept"/>
-			<b:dataTableColumn value="#{result.student.name}" />
-			<b:dataTableColumn value="#{result.result.score}" />
-			<b:dataTableColumn value="#{studentManagedBean.getExamTotalScore(result.exam.id)}" label="Out of"/>
+			<b:dataTableColumn value="#{result.exam.title}" label="#{msgs.tableHeader_Exam}"/>
+			<b:dataTableColumn value="#{result.exam.department}" label="#{msgs.tableHeader_Department}"/>
+			<b:dataTableColumn value="#{result.student.name}" label="#{msgs.tableHeader_Name}"/>
+			<b:dataTableColumn value="#{result.result.score}" label="#{msgs.tableHeader_Score}"/>
+			<b:dataTableColumn value="#{studentManagedBean.getExamTotalScore(result.exam.id)}" label="#{msgs.tableHeader_OutOf}"/>
 		</b:dataTable>
 	</util:MainTemplate>
 </h:body>

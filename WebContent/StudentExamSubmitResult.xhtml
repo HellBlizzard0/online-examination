@@ -9,16 +9,14 @@
 	xmlns:util="http://java.sun.com/jsf/composite/utils">
 
 <h:head>
-	<title>Result</title>
+	<title>#{msgs.label_StudentExamResult}</title>
 
 </h:head>
 <h:body>
 	<util:TemplateOfStudent>
-	<b:panel>
-		<h1 style="padding-top:5%">
-			Result
-		</h1>
-		#{studentSolveExam.score} / #{studentSolveExam.totalScore}
+		<b:panel>
+			<h1 style="padding-top: 5%">#{msgs.label_StudentExamResult}</h1>
+			<h2>#{studentSolveExam.score} / #{studentSolveExam.totalScore}</h2>
 		</b:panel>
 	</util:TemplateOfStudent>
 </h:body>

@@ -10,6 +10,7 @@ import org.hibernate.Transaction;
 import com.entities.Exam;
 import com.entities.Student;
 import com.util.SessionManager;
+import com.util.Exceptions.SessionException;
 
 public class ExamModel {
 
@@ -24,6 +25,8 @@ public class ExamModel {
 			transaction = session.beginTransaction();
 			session.save(exam);
 			transaction.commit();
+		} catch (SessionException e) {
+			result = false;
 		} catch (Exception e) {
 			result = false;
 			if (transaction != null) {
@@ -60,6 +63,8 @@ public class ExamModel {
 				TypedQuery query = session.getNamedQuery("exam_fetchAllExams");
 				return query.getResultList();
 			}
+		} catch (SessionException e) {
+			System.out.println(e);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -77,6 +82,8 @@ public class ExamModel {
 			transaction = session.beginTransaction();
 			session.update(exam);
 			transaction.commit();
+		} catch (SessionException e) {
+			result = false;
 		} catch (Exception e) {
 			result = false;
 			if (transaction != null) {
@@ -99,6 +106,8 @@ public class ExamModel {
 			transaction = session.beginTransaction();
 			session.remove(exam);
 			transaction.commit();
+		} catch (SessionException e) {
+			result = false;
 		} catch (Exception e) {
 			result = false;
 			if (transaction != null) {
@@ -121,6 +130,8 @@ public class ExamModel {
 			query.setParameter("P_LEVEL", student.getLevel());
 			return query.getResultList();
 
+		} catch (SessionException e) {
+			System.out.println(e);
 		} catch (Exception e) {
 			System.out.println(e);
 		}

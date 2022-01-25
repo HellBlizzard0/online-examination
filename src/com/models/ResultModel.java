@@ -11,12 +11,13 @@ import org.hibernate.Transaction;
 import com.entities.Departments;
 import com.entities.Exam;
 import com.entities.ExamResult;
-import com.entities.Question;
 import com.entities.Result;
 import com.entities.ResultDetailed;
 import com.entities.Student;
 import com.util.SessionManager;
+import com.util.Exceptions.SessionException;
 
+@SuppressWarnings({"unchecked"})
 public class ResultModel {
 
 	public static List<Result> getResultList(int id) {
@@ -28,6 +29,8 @@ public class ResultModel {
 			query.setParameter("P_UID", id);
 			return query.getResultList();
 
+		} catch (SessionException e) {
+			System.out.println(e);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -35,7 +38,6 @@ public class ResultModel {
 	}
 
 	public static boolean create(Result newResult) {
-		// TODO Auto-generated method stub
 		boolean result = true;
 		Session session = null;
 		Transaction transaction = null;
@@ -45,6 +47,8 @@ public class ResultModel {
 			transaction = session.beginTransaction();
 			session.save(newResult);
 			transaction.commit();
+		} catch (SessionException e) {
+			result = false;
 		} catch (Exception e) {
 			result = false;
 			if (transaction != null) {
@@ -66,6 +70,8 @@ public class ResultModel {
 			query.setParameter("P_EID", exam.getId());
 			return (Result) query.getSingleResult();
 
+		} catch (SessionException e) {
+			System.out.println(e);
 		} catch (Exception e) {
 			// System.out.println(e);
 		}
@@ -89,19 +95,19 @@ public class ResultModel {
 			query.setParameter("P_EID", id);
 			return query.getSingleResult();
 
+		} catch (SessionException e) {
+			System.out.println(e);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 		return null;
 	}
 
-	@SuppressWarnings({ "unchecked" })
 	public static List<ResultDetailed> getAllDetailed() {
 		Session session = null;
 		List<Result> results;
 		Exam exam;
 		Student student;
-		ExamResult examResult;
 		ArrayList<ResultDetailed> resultsDetailed = new ArrayList<ResultDetailed>();
 		;
 		try {
@@ -120,15 +126,16 @@ public class ResultModel {
 							.getNamedQuery("student_fetchStudentById")
 							.setParameter("P_ID", result.getUid())
 							.getSingleResult();
-					
+
 					resultsDetailed.add(new ResultDetailed(result, exam, student));
 				} catch (Exception e) {
-					// TODO: handle exception
 					System.out.println(e);
 				}
 			}
 			return resultsDetailed;
 
+		} catch (SessionException e) {
+			System.out.println(e);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -140,10 +147,13 @@ public class ResultModel {
 		try {
 			session = SessionManager.getSession();
 
+			
 			TypedQuery<ExamResult> query = session.getNamedQuery("examScore_fetchExameScore");
 			query.setParameter("P_EID", id);
 			return query.getSingleResult();
 
+		} catch (SessionException e) {
+			System.out.println(e);
 		} catch (Exception e) {
 			System.out.println(e);
 		}

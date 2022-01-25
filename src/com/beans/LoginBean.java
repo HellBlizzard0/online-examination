@@ -2,6 +2,7 @@ package com.beans;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Locale;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -18,7 +19,18 @@ public class LoginBean {
 	private String username;
 	private String password;
 	private boolean studentLogin;
-	private Student student; 
+	private Student student;
+
+	public String debug() {
+		if (Locale.getDefault().getDisplayLanguage().equals("ar"))
+			FacesContext.getCurrentInstance().getViewRoot()
+					.setLocale(new Locale("en"));
+		else
+			FacesContext.getCurrentInstance().getViewRoot()
+					.setLocale(new Locale("ar"));
+
+		return "index";
+	}
 
 	public Student getStudent() {
 		return student;
@@ -73,11 +85,10 @@ public class LoginBean {
 		this.setPassword("");
 		this.setStudentLogin(false);
 		this.student = null;
-	    ((HttpSession) FacesContext.getCurrentInstance().getExternalContext()
-		         .getSession(false)).invalidate();		
+		((HttpSession) FacesContext.getCurrentInstance().getExternalContext()
+				.getSession(false)).invalidate();
 		return "index";
 	}
-
 
 	public static String encrypt(String password) {
 		String encryptedpassword = null;
@@ -91,7 +102,8 @@ public class LoginBean {
 
 			StringBuilder s = new StringBuilder();
 			for (int i = 0; i < bytes.length; i++) {
-				s.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+				s.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16)
+						.substring(1));
 			}
 
 			encryptedpassword = s.toString();

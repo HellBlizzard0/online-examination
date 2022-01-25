@@ -17,24 +17,35 @@
 <composite:implementation>
 	<div>
 		<b:navBar brand="#{msgs.label_NavBarTitle}" brandHref="#" fixed="top"
-			inverse="true">
+			inverse="true" dir="#{msgs.dir}">
+			<b:container dir="#{msgs.dir}">
+			<b:row>
+			<b:column offset="6" span="2">
+				<b:navbarLinks>
+					<b:navCommandLink action="#{languageBean.toggleLanguage()}"
+						value="#{msgs.button_toggleLanguage}" />
+				</b:navbarLinks>
+			</b:column>
+			</b:row>
+			</b:container>
 		</b:navBar>
+		<b:container rendered="#{languageBean.LTR}">
 		<b:column span="3" rendered="#{cc.attrs.showSideBar}">
 			<h:form>
 				<b:panel look="primary" title="Static sidebar">
 					<b:listLinks>
-						<b:navCommandLink header="Exams" />
-						<b:navCommandLink value="Exams"
+						<b:navCommandLink header="#{msgs.label_Exams}" />
+						<b:navCommandLink value="#{msgs.label_AdminViewExamsHeader}"
 							action="#{studentViewExams.goTo(login.student)}" icon="pencil"
 							iconAlign="left" />
-						<b:navCommandLink header="Exams" />
-						<b:navCommandLink value="View Result" action="#{studentManagedBean.getStudentResult(login.student.id)}"
+						<b:navCommandLink header="#{msgs.label_Results}" />
+						<b:navCommandLink value="#{msgs.label_ViewResults}" action="#{studentManagedBean.getStudentResult(login.student.id)}"
 							icon="tag" iconAlign="left" />
-						<b:navCommandLink header="Profile" />
-						<b:navCommandLink value="Profile"
+						<b:navCommandLink header="#{msgs.label_profile}" />
+						<b:navCommandLink value="#{msgs.label_profile}"
 							action="student-main" icon="tag"
 							iconAlign="left" />
-						<b:navCommandLink value="Logout"
+						<b:navCommandLink value="#{msgs.button_logout}"
 							action="#{login.logout()}" icon="tag"
 							iconAlign="left" />
 						<b:messages />
@@ -48,7 +59,7 @@
 					<composite:insertChildren />
 				</b:jumbotron>
 			</b:column>
-			
+			</b:container>
 		</b:container>
 		<!-- <b:container>
 			<b:jumbotron>

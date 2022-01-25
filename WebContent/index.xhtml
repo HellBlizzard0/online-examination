@@ -8,21 +8,22 @@
     xmlns:b="http://bootsfaces.net/ui">
 
 <h:head>
-	<title>JSF On Eclipse</title>
+	<title>#{msgs.label_HomePage}</title>
 
 </h:head>
-<h:body>
+<h:body dir="#{msgs.dir}">
 	<util:IndexTamplet>
 	<b:form>
-	<b:container style="padding-top:5%">
+	<b:container style="padding-top:5%" dir="#{msgs.dir}">
+	<b:row><h1>#{msgs.label_HomePage}</h1></b:row>
 		<b:row>
   <b:column span="5">
     <b:thumbnail>
       <f:facet name="caption">
-        <h2>Administrator</h2>
-        <p style="font-size: 11px;">An Administrator can manage students and exams</p>
+        <h2>#{msgs.label_Adminitrator}</h2>
+        <p style="font-size: 11px;">#{msgs.label_AdminitratorDescription}</p>
         <p>
-        <b:commandButton look="primary" value="Login as Admin" action="AdminLogin" />
+        <b:commandButton look="primary" value="#{msgs.button_LoginAsAdmin}" action="AdminLogin" />
         </p>
       </f:facet>
     </b:thumbnail>
@@ -30,16 +31,16 @@
    <b:column offset="2" span="5">
     <b:thumbnail>
       <f:facet name="caption">
-        <h3>Student</h3>
-        <p style="font-size: 11px;">A student can view and solve exams. </p>
+        <h3>#{msgs.label_Student}</h3>
+        <p style="font-size: 11px;">#{msgs.label_StudentDescription}</p>
         <p>
-        <b:commandButton look="primary" value="Login as Student" action="StudentLogin" />
+        <b:commandButton look="primary" value="#{msgs.button_LoginAsStudent}" action="StudentLogin" />
         </p>
       </f:facet>
     </b:thumbnail>
   </b:column>
   </b:row></b:container>
-		</b:form>
+  		</b:form>
 		
 	</util:IndexTamplet>
 </h:body>

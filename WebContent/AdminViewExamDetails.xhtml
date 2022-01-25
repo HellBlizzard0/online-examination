@@ -19,7 +19,7 @@
 		<b:container style="padding-top: 5%">
 			<b:row>
 				<b:column span="3">
-					<b:inputText placeholder="Department"
+					<b:inputText placeholder="#{msgs.placeHolder_Department}"
 						value="#{viewExamDetailsBean.exam.department}" readonly="true">
 						<f:facet name="prepend">
 							<b:iconAwesome name="fa-institution"/> 
@@ -27,7 +27,7 @@
 					</b:inputText>
 				</b:column>
 				<b:column offset="4" span="3">
-					<b:inputText placeholder="Level"
+					<b:inputText placeholder="#{msgs.placeHolder_Level}"
 						value="#{viewExamDetailsBean.exam.level}" readonly="true">
 						<f:facet name="prepend">
 							<b:iconAwesome name="fa-list-ol" />
@@ -38,27 +38,27 @@
 			
 			<b:form>
 				<b:dataTable value="#{viewExamDetailsBean.questions}" var="question"
-					caption="Questions List"  print="true"
+					print="true" pdf="rue"
 					class="questionDataTable">
 
 
-					<b:dataTableColumn value="#{question.id}">
+					<b:dataTableColumn value="#{question.id}" label="#{msgs.tableHeader_Id}">
 						<!-- ID Column -->
 					</b:dataTableColumn>
 
 
-					<b:dataTableColumn label="Text">
+					<b:dataTableColumn label="#{msgs.tableHeader_Question}">
 						<!-- Text Column -->
-						<b:inputText value="#{question.text}"
+						<b:inputText value="#{question.text}" placeholder="#{msgs.placeHolder_QuestionText}"
 							rendered="#{viewExamDetailsBean.render(question)}" />
 						<h:outputText value="#{question.text}"
 							rendered="#{not viewExamDetailsBean.render(question)}" />
 					</b:dataTableColumn>
 
 
-					<b:dataTableColumn label="Score" width="20%">
+					<b:dataTableColumn label="#{msgs.tableHeader_Score}" width="20%">
 						<!-- Score Column -->
-						<b:inputText value="#{question.score}" size="3"
+						<b:inputText value="#{question.score}" size="3" placeholder="#{msgs.placeHolder_Score}"
 							rendered="#{viewExamDetailsBean.render(question)}" />
 						<h:outputText value="#{question.score}"
 							rendered="#{not viewExamDetailsBean.render(question)}" />
@@ -89,17 +89,17 @@
 					<!-- Left Button -->
 					<b:column span="3" offset="6">
 						<!-- Normal -->
-						<b:commandButton value="Add Question" icon="edit" ajax="true"
+						<b:commandButton value="#{msgs.button_AddQuestion}" icon="edit" ajax="true"
 							update="@form" look="info" onclick="ajax:viewExamDetailsBean.newEnable()"
 							auto-update="true" rendered="#{viewExamDetailsBean.normal}">
 						</b:commandButton>
 						<!-- Edit -->
-						<b:commandButton value="Update" icon="edit" ajax="true"
+						<b:commandButton value="#{msgs.button_update}" icon="edit" ajax="true"
 							update="@form" look="success" onclick="ajax:viewExamDetailsBean.editConfirm(true)"
 							auto-update="true" rendered="#{viewExamDetailsBean.edit}">
 						</b:commandButton>
 						<!-- New -->
-						<b:commandButton value="Save" icon="edit" ajax="true"
+						<b:commandButton value="#{msgs.button_save}" icon="edit" ajax="true"
 							update="@form" look="success"
 							onclick="ajax:viewExamDetailsBean.addNewConfirm(true)"
 							auto-update="true" rendered="#{viewExamDetailsBean.addNew}">
@@ -108,18 +108,18 @@
 					<!-- Right Button -->
 					<b:column span="3">
 						<!-- Normal -->
-						<b:commandButton value="Edit" icon="edit" ajax="true"
+						<b:commandButton value="#{msgs.button_Edit}" icon="edit" ajax="true"
 							update="@form" look="success" onclick="ajax:viewExamDetailsBean.editEnable()"
 							auto-update="true" rendered="#{viewExamDetailsBean.normal}">
 						</b:commandButton>
 						<!-- Edit -->
-						<b:commandButton value="Cancel" icon="edit" ajax="true"
+						<b:commandButton value="#{msgs.button_Cancel}" icon="edit" ajax="true"
 							update="@form" 
 							onclick="ajax:viewExamDetailsBean.editConfirm(false)"
 							auto-update="true" rendered="#{viewExamDetailsBean.edit}">
 						</b:commandButton>
 						<!-- New -->
-						<b:commandButton value="Cancel" icon="edit" ajax="true"
+						<b:commandButton value="#{msgs.button_Cancel}" icon="edit" ajax="true"
 							update="@form" 
 							onclick="ajax:viewExamDetailsBean.addNewConfirm(false)"
 							auto-update="true" rendered="#{viewExamDetailsBean.addNew}">

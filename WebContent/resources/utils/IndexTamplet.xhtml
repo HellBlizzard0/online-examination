@@ -14,10 +14,21 @@
 <!-- IMPLEMENTATION -->
 <composite:implementation>
 	<div>
+	<b:form>
 		<b:navBar brand="#{msgs.label_NavBarTitle}" brandHref="#" fixed="top"
-			inverse="true">
+			inverse="true" >
+			<b:container>
+			<b:row>
+			<b:column offset="6" span="2">
+				<b:navbarLinks>
+					<b:navCommandLink action="#{languageBean.toggleLanguage()}"
+						value="#{msgs.button_toggleLanguage}" />
+				</b:navbarLinks>
+			</b:column>
+			</b:row>
+			</b:container>
 		</b:navBar>
-		
+		</b:form>
 		<b:container>
 			<b:column span="12">
 				<b:jumbotron>

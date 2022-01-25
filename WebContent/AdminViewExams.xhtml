@@ -20,17 +20,17 @@
 				caption="Exams List">
 				<f:facet name="header">
 					<tr>
-						<th>ID</th>
-						<th>Title</th>
-						<th>Dept</th>
-						<th>Level</th>
-						<th>Time</th>
+						<th>#{msgs.tableHeader_Id}</th>
+						<th>#{msgs.tableHeader_title}</th>
+						<th>#{msgs.tableHeader_Department}</th>
+						<th>#{msgs.tableHeader_Level}</th>
+						<th>#{msgs.tableHeader_Time}</th>
 						<th></th><th></th>
 					</tr>
 				</f:facet>
 				<b:dataTableColumn value="#{exam.id}" />
 				<b:dataTableColumn>
-					<b:inputText value="#{exam.title}"
+					<b:inputText value="#{exam.title}" placeholder="#{msgs.placeHolder_ExamText}"
 						rendered="#{viewExamsBean.render(exam)}" />
 					<h:outputText value="#{exam.title}"
 						rendered="#{not viewExamsBean.render(exam)}" />
@@ -49,14 +49,14 @@
 						rendered="#{not viewExamsBean.render(exam)}" />
 				</b:dataTableColumn>
 				<b:dataTableColumn>
-					<b:inputText value="#{exam.level}" size="1"
+					<b:inputText value="#{exam.level}" size="1" placeholder="#{msgs.placeHolder_Level}"
 						rendered="#{viewExamsBean.render(exam)}" />
 					<h:outputText value="#{exam.level}"
 						rendered="#{not viewExamsBean.render(exam)}" />
 				</b:dataTableColumn>
 				<b:dataTableColumn>
-					<b:inputText value="#{exam.timer}" size="3"
-						rendered="#{viewExamsBean.render(exam)}" />
+					<b:inputText value="#{exam.timer}" placeholder="#{msgs.placeHolder_time}" size="3"
+						rendered="#{viewExamsBean.render(exam)}" ><f:facet name="appened">min</f:facet></b:inputText>
 					<h:outputText value="#{exam.timer}"
 						rendered="#{not viewExamsBean.render(exam)}" />
 				</b:dataTableColumn>
@@ -81,19 +81,19 @@
 				<!-- Left Button -->
 				<b:column span="3" offset="6">
 					<!-- Normal -->
-					<b:commandButton value="Add Exam" icon="edit" ajax="true"
+					<b:commandButton value="#{msgs.button_AddExam}" icon="edit" ajax="true"
 						update="@form" look="info"
 						onclick="ajax:viewExamsBean.newEnable()" auto-update="true"
 						rendered="#{viewExamsBean.normal}" >
 					</b:commandButton>
 					<!-- Edit -->
-					<b:commandButton value="Update" icon="edit" ajax="true"
+					<b:commandButton value="#{msgs.button_update}" icon="edit" ajax="true"
 						update="@form" look="success"
 						onclick="ajax:viewExamsBean.editConfirm(true)" auto-update="true"
 						rendered="#{viewExamsBean.edit}">
 					</b:commandButton>
 					<!-- New -->
-					<b:commandButton value="Save" icon="edit" ajax="true"
+					<b:commandButton value="#{msgs.button_save}" icon="edit" ajax="true"
 						update="@form" look="success"
 						onclick="ajax:viewExamsBean.addNewConfirm(true)"
 						auto-update="true" rendered="#{viewExamsBean.addNew}">
@@ -102,18 +102,18 @@
 				<!-- Right Button -->
 				<b:column span="3">
 					<!-- Normal -->
-					<b:commandButton value="Edit" icon="edit" ajax="true"
+					<b:commandButton value="#{msgs.button_Edit}" icon="edit" ajax="true"
 						update="@form" look="success"
 						onclick="ajax:viewExamsBean.editEnable()" auto-update="true"
 						rendered="#{viewExamsBean.normal}">
 					</b:commandButton>
 					<!-- Edit -->
-					<b:commandButton value="Cancel" icon="edit" ajax="true"
+					<b:commandButton value="#{msgs.button_Cancel}" icon="edit" ajax="true"
 						update="@form" onclick="ajax:viewExamsBean.editConfirm(false)"
 						auto-update="true" rendered="#{viewExamsBean.edit}">
 					</b:commandButton>
 					<!-- New -->
-					<b:commandButton value="Cancel" icon="edit" ajax="true"
+					<b:commandButton value="#{msgs.button_Cancel}" icon="edit" ajax="true"
 						update="@form" onclick="ajax:viewExamsBean.addNewConfirm(false)"
 						auto-update="true" rendered="#{viewExamsBean.addNew}">
 					</b:commandButton>

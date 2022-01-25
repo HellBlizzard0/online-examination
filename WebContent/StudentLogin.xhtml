@@ -6,8 +6,7 @@
 	xmlns:b="http://bootsfaces.net/ui"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 <h:head>
-	<title>Sign In Template for BootsFaces</title>
-	<meta name="author" content="Riccardo Massera"></meta>
+	<title>#{msgs.label_StudentLogin}</title>
 	<style type="text/css">
 .form-signin {
 	margin: 0 auto;
@@ -19,22 +18,22 @@
 <h:body style="padding-top: 60px; background-color: #add;">
 	<b:container>
 		<h:form styleClass="form-signin" prependId="false">
-			<h2 class="form-signin-heading">Please sign in</h2>
-			<b:inputText id="email" placeholder="Email address"
+			<h2 class="form-signin-heading">#{msgs.label_PleaseLogIn}</h2>
+			<b:inputText id="email" placeholder="#{msgs.placeHolder_Username}"
 				value="#{login.username}" >
 				<f:facet name="prepend">
 					<b:icon name="user" />
 				</f:facet>
 				<b:focus rendered="true"/>
 			</b:inputText>
-			<b:inputText id="password" placeholder="Password" type="password"
+			<b:inputText id="password" placeholder="#{msgs.placeHolder_password}" type="password"
 				value="#{login.password}">
 				<f:facet name="prepend">
 					<b:iconAwesome name="key" />
 				</f:facet>
 			</b:inputText>
 			
-			<b:commandButton look="primary btn-block" value="Sign In"
+			<b:commandButton look="primary btn-block" value="#{msgs.button_signIn}"
 				icon="log-in" size="lg" action="#{login.loginStudents()}" />
 		</h:form>
 	</b:container>

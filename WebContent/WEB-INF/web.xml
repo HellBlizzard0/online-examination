@@ -4,6 +4,10 @@
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
  <display-name>OnEx</display-name>
  <context-param>
+  <param-name>BootsFaces_USETHEME</param-name>
+  <param-value>true</param-value>
+ </context-param>
+ <context-param>
   <description>State saving method: 'client' or 'server' (=default). See JSF Specification 2.5.2</description>
   <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
   <param-value>client</param-value>
@@ -12,10 +16,6 @@
   <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
   <param-value>resources.application</param-value>
  </context-param>
- <context-param>
-   <param-name>BootsFaces_USETHEME</param-name>
-   <param-value>true</param-value>
-</context-param>
  <listener>
   <listener-class>com.sun.faces.config.ConfigureListener</listener-class>
  </listener>
@@ -37,4 +37,12 @@
   <welcome-file>default.htm</welcome-file>
   <welcome-file>default.jsp</welcome-file>
  </welcome-file-list>
+ <error-page>
+  <exception-type>com.util.Exceptions.SessionException</exception-type>
+  <location>/ErrorNotLoggedIn.jsp</location>
+ </error-page>
+ <error-page>
+  <error-code>404</error-code>
+  <location>/Error404.jsp</location>
+ </error-page>
 </web-app>

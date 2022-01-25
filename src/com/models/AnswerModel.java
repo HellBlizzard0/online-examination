@@ -10,6 +10,7 @@ import org.hibernate.Transaction;
 import com.entities.Answer;
 import com.entities.Question;
 import com.util.SessionManager;
+import com.util.Exceptions.SessionException;
 
 public class AnswerModel {
 	public static boolean create(Answer answer) {
@@ -18,10 +19,13 @@ public class AnswerModel {
 		Transaction transaction = null;
 
 		try {
-			session = SessionManager.getSession();	
+			session = SessionManager.getSession();
 			transaction = session.beginTransaction();
 			session.save(answer);
 			transaction.commit();
+		} catch (SessionException e) {
+			result = false;
+
 		} catch (Exception e) {
 			result = false;
 			System.out.println(e);
@@ -48,23 +52,28 @@ public class AnswerModel {
 				query.setParameter("P_QUESTIONID", question.getId());
 				return query.getResultList();
 			}
+		} catch (SessionException e) {
+
 		} catch (Exception e) {
 			e.getStackTrace();
 		}
 		return null;
 	}
 
-	public static List<Answer> getAnswerByQuestionIdList(List<Question> questionList) {		Session session = null;
+	public static List<Answer> getAnswerByQuestionIdList(List<Question> questionList) {
+		Session session = null;
 		try {
 			session = SessionManager.getSession();
 
 			List<Integer> idList = new ArrayList<Integer>();
-			for(Question q: questionList)
+			for (Question q : questionList)
 				idList.add(q.getId());
 
 			TypedQuery query = session.getNamedQuery("answer_fetchAnswerByQuestionIdList");
 			query.setParameter("P_QUESTIONIDLIST", idList);
 			return query.getResultList();
+
+		} catch (SessionException e) {
 
 		} catch (Exception e) {
 			System.out.println(e);
@@ -83,6 +92,8 @@ public class AnswerModel {
 			transaction = session.beginTransaction();
 			session.remove(answer);
 			transaction.commit();
+		} catch (SessionException e) {
+			result = false;
 		} catch (Exception e) {
 			result = false;
 			if (transaction != null) {
@@ -105,6 +116,8 @@ public class AnswerModel {
 			transaction = session.beginTransaction();
 			session.update(answer);
 			transaction.commit();
+		} catch (SessionException e) {
+			result = false;
 		} catch (Exception e) {
 			result = false;
 			if (transaction != null) {
