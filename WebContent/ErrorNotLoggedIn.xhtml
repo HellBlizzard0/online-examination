@@ -9,7 +9,7 @@
 	xmlns:h="http://java.sun.com/jsf/html">
 
 <h:head>
-	<title>TITLE</title>
+	<title>#{msgs.label_ErrorNotLoggedIn}</title>
 
 </h:head>
 <h:body style="padding-top: 60px; background-color: #add;">
@@ -17,9 +17,9 @@
 		<b:row>
 			<b:column span="6" offset="3">
 				<h:form styleClass="form-signin" prependId="false">
-					<h2 class="form-signin-heading">Not Logged In</h2>
+					<h2 class="form-signin-heading">#{msgs.label_ErrorNotLoggedIn}</h2>
 
-					<b:commandButton look="primary btn-block" value="Home Page"
+					<b:commandButton look="primary btn-block" value="#{msgs.button_Error}"
 						iconAwesome="fa-home" size="lg" action="index" />
 				</h:form>
 			</b:column>

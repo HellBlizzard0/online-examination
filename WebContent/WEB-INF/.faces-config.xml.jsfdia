@@ -18,6 +18,9 @@
    <PROCESS-ITEM-OUTPUT ID="StudentLogin::#StudentLogin.xhtml"
     NAME="output4" PATH="/StudentLogin.xhtml"
     TARGET="rules:#StudentLogin.xhtml" TITLE="StudentLogin" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="index::#index.xhtml" NAME="output5"
+    PATH="/index.xhtml" SHAPE="73,176,88,176,88,208,8,208,8,72,23,72"
+    TARGET="rules:#index.xhtml" TITLE="index" model-entity="JSFProcessItemOutput"/>
   </PROCESS-ITEM>
  </PROCESS-ITEM>
  <PROCESS-ITEM NAME="rules:#resources#utils#MainTemplate.xhtml"

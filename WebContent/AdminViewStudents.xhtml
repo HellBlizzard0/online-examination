@@ -9,21 +9,21 @@
 	xmlns:util="http://java.sun.com/jsf/composite/utils">
 
 <h:head>
-	<title>View Students</title>
+	<title>#{msgs.label_ViewStudents}</title>
 
 </h:head>
 <h:body>
 	<util:MainTemplate>
 	<b:form>
-	<h1 style="padding-top:5%">Students List</h1>
+	<h1 style="padding-top:5%">#{msgs.label_ViewStudents}</h1>
 		<b:dataTable value="#{adminViewStudentsBean.students}" var="student"
 			caption="Exams List">
 			<f:facet name="header">
 				<tr>
-					<th>Name</th>
-					<th>Email</th>
-					<th>Dept</th>
-					<th>Level</th>
+					<th>#{msgs.tableHeader_Name}</th>
+					<th>#{msgs.tableHeader_Email}</th>
+					<th>#{msgs.tableHeader_Department}</th>
+					<th>#{msgs.tableHeader_Level}</th>
 					<th></th>
 				</tr>
 			</f:facet>
