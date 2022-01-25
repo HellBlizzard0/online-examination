@@ -120,6 +120,20 @@
    <to-view-id>/StudentSolveExam.xhtml</to-view-id>
   </navigation-case>
  </navigation-rule>
+ <navigation-rule>
+  <from-view-id>/ErrorNotLoggedIn.jsp</from-view-id>
+  <navigation-case>
+   <from-outcome>index</from-outcome>
+   <to-view-id>/index.xhtml</to-view-id>
+  </navigation-case>
+ </navigation-rule>
+ <navigation-rule>
+  <from-view-id>/Error404.jsp</from-view-id>
+  <navigation-case>
+   <from-outcome>index</from-outcome>
+   <to-view-id>/index.xhtml</to-view-id>
+  </navigation-case>
+ </navigation-rule>
  <application>
   <resource-bundle>
    <base-name>com.resources.messages_en</base-name>

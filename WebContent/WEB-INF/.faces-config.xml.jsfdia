@@ -26,7 +26,7 @@
    NAME="item" PATH="/resources/utils/MainTemplate.xhtml" model-entity="JSFProcessItem">
    <PROCESS-ITEM-OUTPUT ID="AdminCreateExam::#AdminCreateExam.xhtml"
     NAME="output1" PATH="/AdminCreateExam.xhtml"
-    SHAPE="73,272,264,272,264,280,287,280"
+    SHAPE="73,272,264,272,264,280,327,280"
     TARGET="rules:#AdminCreateExam.xhtml" TITLE="AdminCreateExam" model-entity="JSFProcessItemOutput"/>
    <PROCESS-ITEM-OUTPUT ID="AdminViewExams::#AdminViewExams.xhtml"
     NAME="output2" PATH="/AdminViewExams.xhtml"
@@ -35,8 +35,8 @@
    <PROCESS-ITEM-OUTPUT ID="index::#index.xhtml" NAME="output2"
     PATH="/index.xhtml" TARGET="rules:#index.xhtml" TITLE="index" model-entity="JSFProcessItemOutput"/>
    <PROCESS-ITEM-OUTPUT ID="Register::#Register.xhtml" NAME="output3"
-    PATH="/Register.xhtml" TARGET="rules:#Register.xhtml"
-    TITLE="Register" model-entity="JSFProcessItemOutput"/>
+    PATH="/Register.xhtml" SHAPE="73,320,192,320,192,24,559,24"
+    TARGET="rules:#Register.xhtml" TITLE="Register" model-entity="JSFProcessItemOutput"/>
    <PROCESS-ITEM-OUTPUT ID="AdminViewStudents::#AdminViewStudents.xhtml"
     NAME="output4" PATH="/AdminViewStudents.xhtml"
     TARGET="rules:#AdminViewStudents.xhtml" TITLE="AdminViewStudents" model-entity="JSFProcessItemOutput"/>
@@ -46,7 +46,7 @@
   </PROCESS-ITEM>
  </PROCESS-ITEM>
  <PROCESS-ITEM NAME="rules:#AdminCreateExam.xhtml"
-  PATH="/AdminCreateExam.xhtml" SHAPE="288,273,0,0" model-entity="JSFProcessGroup">
+  PATH="/AdminCreateExam.xhtml" SHAPE="328,272,50,41" model-entity="JSFProcessGroup">
   <PROCESS-ITEM ID="rules:#AdminCreateExam.xhtml:0" NAME="item"
    PATH="/AdminCreateExam.xhtml" model-entity="JSFProcessItem">
    <PROCESS-ITEM-OUTPUT ID="success::#success.xhtml" NAME="output"
@@ -85,7 +85,7 @@
   </PROCESS-ITEM>
  </PROCESS-ITEM>
  <PROCESS-ITEM NAME="rules:#StudentLogin.xhtml"
-  PATH="/StudentLogin.xhtml" SHAPE="560,881,0,0" model-entity="JSFProcessGroup">
+  PATH="/StudentLogin.xhtml" SHAPE="256,824,50,41" model-entity="JSFProcessGroup">
   <PROCESS-ITEM ID="rules:#StudentLogin.xhtml:0" NAME="item"
    PATH="/StudentLogin.xhtml" model-entity="JSFProcessItem">
    <PROCESS-ITEM-OUTPUT ID="student-main::#student-main.xhtml"
@@ -111,8 +111,6 @@
     TARGET="rules:#student-main.xhtml" TITLE="student-main" model-entity="JSFProcessItemOutput"/>
   </PROCESS-ITEM>
  </PROCESS-ITEM>
- <PROCESS-ITEM NAME="rules:#solveExam.xhtml" PATH="/solveExam.xhtml"
-  SHAPE="432,424,50,25" model-entity="JSFProcessGroup" persistent="true"/>
  <PROCESS-ITEM NAME="rules:#StudentViewExams.xhtml"
   PATH="/StudentViewExams.xhtml" SHAPE="320,593,0,0" model-entity="JSFProcessGroup">
   <PROCESS-ITEM ID="rules:#StudentViewExams.xhtml:0" NAME="item"
@@ -135,10 +133,26 @@
  <PROCESS-ITEM NAME="rules:#AdminViewStudents.xhtml"
   PATH="/AdminViewStudents.xhtml" SHAPE="312,672,50,25" model-entity="JSFProcessGroup"/>
  <PROCESS-ITEM NAME="rules:#student-main.xhtml"
-  PATH="/student-main.xhtml" SHAPE="752,1249,0,0" model-entity="JSFProcessGroup"/>
+  PATH="/student-main.xhtml" SHAPE="336,904,50,25" model-entity="JSFProcessGroup"/>
  <PROCESS-ITEM NAME="rules:#AdminViewAnswersOfQuestion.xhtml"
   PATH="/AdminViewAnswersOfQuestion.xhtml" SHAPE="752,625,0,0" model-entity="JSFProcessGroup"/>
  <PROCESS-ITEM NAME="rules:#AdminViewResults.xhtml"
   PATH="/AdminViewResults.xhtml" SHAPE="273,442,0,0"
   model-entity="JSFProcessGroup" persistent="true"/>
+ <PROCESS-ITEM NAME="rules:#ErrorNotLoggedIn.jsp"
+  PATH="/ErrorNotLoggedIn.jsp" SHAPE="8,-104,50,41" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#ErrorNotLoggedIn.jsp:0" NAME="item"
+   PATH="/ErrorNotLoggedIn.jsp" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="index::#index.xhtml" NAME="output"
+    PATH="/index.xhtml" TARGET="rules:#index.xhtml" TITLE="index" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#Error404.jsp" PATH="/Error404.jsp"
+  SHAPE="144,-104,50,41" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#Error404.jsp:0" NAME="item"
+   PATH="/Error404.jsp" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="index::#index.xhtml" NAME="output"
+    PATH="/index.xhtml" TARGET="rules:#index.xhtml" TITLE="index" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
 </PROCESS>

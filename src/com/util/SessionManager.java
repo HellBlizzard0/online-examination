@@ -1,5 +1,8 @@
 package com.util;
 
+import java.io.IOException;
+
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
 import org.hibernate.Session;
@@ -27,18 +30,12 @@ public class SessionManager {
 	private static SessionFactory sessfact;
 
 	public static Session getSession() throws SessionException {
-		LoginBean login = FacesContext
-				.getCurrentInstance()
-				.getApplication()
-				.evaluateExpressionGet(
-						FacesContext.getCurrentInstance(),
-						"#{login}",
-						LoginBean.class);
-		if(login.getUsername() == null 
-				|| login.getUsername().equals("")
-				|| login.getPassword() == null
-				|| login.getPassword().equals(""))
-			throw new SessionException("");
+		try {
+			verifyLoggedIn();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e);
+		}
 		
 		if (sessionInitiated) {
 			session = sessfact.openSession();
@@ -51,6 +48,26 @@ public class SessionManager {
 			sessionInitiated = true;
 
 			return session;
+		}
+	}
+
+	private static void verifyLoggedIn() throws SessionException, IOException {
+		// TODO Auto-generated method stub
+		LoginBean login = FacesContext
+				.getCurrentInstance()
+				.getApplication()
+				.evaluateExpressionGet(
+						FacesContext.getCurrentInstance(),
+						"#{login}",
+						LoginBean.class);
+		if(login.getUsername() == null 
+				|| login.getUsername().equals("")
+				|| login.getPassword() == null
+				|| login.getPassword().equals("")){
+			FacesContext context = FacesContext.getCurrentInstance();
+			ExternalContext extContext = context.getExternalContext();
+			String url = extContext.encodeActionURL(extContext.getRequestContextPath() + "/ErrorNotLoggedIn.jsp");
+			extContext.redirect(url);
 		}
 	}
 
