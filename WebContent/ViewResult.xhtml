@@ -9,14 +9,14 @@
 	xmlns:util="http://java.sun.com/jsf/composite/utils">
 
 <h:head>
-	<title>View Result</title>
+	<title>#{msgs.label_ViewResults}</title>
 
 </h:head>
-<h:body>
+<h:body >
 
 	<util:TemplateOfStudent>
 
-		<h1 style="padding-top: 5%">View Results</h1>
+		<h1 style="padding-top: 5%">#{msgs.label_ViewResults}</h1>
 
 		<h:form>
 			<b:dataTable value="#{studentManagedBean.resultList}" var="z"
@@ -24,11 +24,11 @@
 
 
 				<b:dataTableColumn value="#{studentManagedBean.getExamTitle(z.eid)}"
-					label="Title" />
-				<b:dataTableColumn value="#{z.score}" label="Your Score" />
+					label="#{msgs.tableHeader_title}" />
+				<b:dataTableColumn value="#{z.score}" label="#{msgs.tableHeader_Score}" />
 				<b:dataTableColumn
 					value="#{studentManagedBean.getExamTotalScore(z.eid)}"
-					label="Out of" />
+					label="#{msgs.tableHeader_OutOf}" />
 
 
 

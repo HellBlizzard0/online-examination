@@ -9,7 +9,7 @@
 	xmlns:util="http://java.sun.com/jsf/composite/utils">
 
 <h:head>
-	<title>TITLE</title>
+	<title>#{msgs.label_AdminViewAnswersOfQuestions}</title>
 
 </h:head>
 <h:body>
@@ -21,7 +21,7 @@
 			<b:container style="padding-top: 5%">
 				<b:row>
 				<b:column span="3">
-					<b:inputText placeholder="Score"
+					<b:inputText placeholder="#{msgs.placeHolder_score}"
 						value="#{answersByQuestion.question.score}" readonly="true">
 						<f:facet name="prepend">
 							<b:iconAwesome name="fa-star"/> 
@@ -36,9 +36,9 @@
 						searching="false" lengthChange='false'>
 						<f:facet name="header">
 							<tr>
-								<th>ID</th>
-								<th>Answer</th>
-								<th>Correct</th>
+								<th>#{msgs.tableHeader_Id}</th>
+								<th>#{msgs.tableHeader_Answer}</th>
+								<th>#{msgs.tableHeader_Correct}</th>
 								<th></th>
 								<th></th>
 							</tr>
@@ -47,7 +47,8 @@
 						<b:dataTableColumn value="#{answer.id}" />
 						<b:dataTableColumn>
 							<b:inputText value="#{answer.text}"
-								rendered="#{answersByQuestion.render(answer)}" />
+								rendered="#{answersByQuestion.render(answer)}" 
+								placeholder="#{msgs.placeHolder_AnswerText}"/>
 							<h:outputText value="#{answer.text}"
 								rendered="#{not answersByQuestion.render(answer)}" />
 
@@ -79,17 +80,17 @@
 					<!-- Left Button -->
 					<b:column span="3" offset="6">
 						<!-- Normal -->
-						<b:commandButton value="Add Answer" icon="edit" ajax="true"
+						<b:commandButton value="#{msgs.button_AddAnswer}" icon="edit" ajax="true"
 							update="@form" look="info" onclick="ajax:answersByQuestion.newEnable()"
 							auto-update="true" rendered="#{answersByQuestion.normal}">
 						</b:commandButton>
 						<!-- Edit -->
-						<b:commandButton value="Update" icon="edit" ajax="true"
+						<b:commandButton value="#{msgs.button_update}" icon="edit" ajax="true"
 							update="@form" look="success" onclick="ajax:answersByQuestion.editConfirm(true)"
 							auto-update="true" rendered="#{answersByQuestion.edit}">
 						</b:commandButton>
 						<!-- New -->
-						<b:commandButton value="Save" icon="edit" ajax="true"
+						<b:commandButton value="#{msgs.button_save}" icon="edit" ajax="true"
 							update="@form" look="success"
 							onclick="ajax:answersByQuestion.addNewConfirm(true)"
 							auto-update="true" rendered="#{answersByQuestion.addNew}">
@@ -98,18 +99,18 @@
 					<!-- Right Button -->
 					<b:column span="3">
 						<!-- Normal -->
-						<b:commandButton value="Edit" icon="edit" ajax="true"
+						<b:commandButton value="#{msgs.button_Edit}" icon="edit" ajax="true"
 							update="@form" look="success" onclick="ajax:answersByQuestion.editEnable()"
 							auto-update="true" rendered="#{answersByQuestion.normal}">
 						</b:commandButton>
 						<!-- Edit -->
-						<b:commandButton value="Cancel" icon="edit" ajax="true"
+						<b:commandButton value="#{msgs.button_Cancel}" icon="edit" ajax="true"
 							update="@form" 
 							onclick="ajax:answersByQuestion.editConfirm(false)"
 							auto-update="true" rendered="#{answersByQuestion.edit}">
 						</b:commandButton>
 						<!-- New -->
-						<b:commandButton value="Cancel" icon="edit" ajax="true"
+						<b:commandButton value="#{msgs.button_Cancel}" icon="edit" ajax="true"
 							update="@form" 
 							onclick="ajax:answersByQuestion.addNewConfirm(false)"
 							auto-update="true" rendered="#{answersByQuestion.addNew}">
