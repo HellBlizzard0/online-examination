@@ -56,12 +56,13 @@ public class AdminViewExamsBean {
 		}
 	}
 	
-	public void newEnable() {
+	public String newEnable() {
 		exams.add(new Exam(0,0,"",""));
 		toggleFlag(Flags.NEW);
+		return "faces-redirect=true";
 	}
 	
-	public void addNewConfirm(boolean save) {
+	public String addNewConfirm(boolean save) {
 		if (save) {
 			try {
 				if (!ExamModel.create(exams.get(exams.size() - 1)))
@@ -75,14 +76,17 @@ public class AdminViewExamsBean {
 			exams.remove(exams.size() - 1);
 		}
 		toggleFlag(Flags.NORMAL);
+		return "faces-redirect=true";
+
 	}
 	
-	public void editEnable() {
+	public String editEnable() {
 		this.backupExams = this.exams;
 		toggleFlag(Flags.EDIT);
+		return "faces-redirect=true";
 	}
 	
-	public void editConfirm(boolean update) {
+	public String editConfirm(boolean update) {
 		if (update) {
 			try {
 				for (Exam exam : exams) {
@@ -101,6 +105,8 @@ public class AdminViewExamsBean {
 			this.backupExams = null;
 		}
 		toggleFlag(Flags.NORMAL);
+		return "faces-redirect=true";
+
 	}
 
 	public boolean render(Exam exam) {
@@ -111,9 +117,10 @@ public class AdminViewExamsBean {
 		}
 	}
 	
-	public void deleteExam(Exam exam) {
+	public String deleteExam(Exam exam) {
 		exams.remove(exam);
 		ExamModel.delete(exam);
+		return "faces-redirect=true";
 	}
 
 	public Question getQuestion() {

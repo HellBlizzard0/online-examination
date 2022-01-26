@@ -51,12 +51,13 @@ public class AdminViewExamDetailsBean {
 		}
 	}
 	
-	public void newEnable() {
+	public String newEnable() {
 		questions.add(new Question(0,"",0,exam.getId()));
 		toggleFlag(Flags.NEW);
-	}
+		return "faces-redirect=true";
+}
 	
-	public void addNewConfirm(boolean save) {
+	public String addNewConfirm(boolean save) {
 		if (save) {
 			try {
 				if (!QuestionModel.create(questions.get(questions.size() - 1)))
@@ -71,14 +72,16 @@ public class AdminViewExamDetailsBean {
 			questions.remove(questions.size() - 1);
 		}
 		toggleFlag(Flags.NORMAL);
-	}
+		return "faces-redirect=true";
+}
 	
-	public void editEnable() {
+	public String editEnable() {
 		this.backupQuestions = this.questions;
 		toggleFlag(Flags.EDIT);
-	}
+		return "faces-redirect=true";
+}
 	
-	public void editConfirm(boolean update) {
+	public String editConfirm(boolean update) {
 		if (update) {
 			try {
 				for (Question question : questions) {
@@ -98,7 +101,8 @@ public class AdminViewExamDetailsBean {
 			this.backupQuestions = null;
 		}
 		toggleFlag(Flags.NORMAL);
-	}
+		return "faces-redirect=true";
+}
 
 	public boolean render(Question question) {
 		if (question.getText().equals("")) {
@@ -124,9 +128,10 @@ public class AdminViewExamDetailsBean {
 		this.addNew = addNew;
 	}
 
-	public void deleteQuestion(Question question) {
+	public String deleteQuestion(Question question) {
 		questions.remove(question);
 		QuestionModel.delete(question);
+		return "faces-redirect=true";
 	}
 
 	public void toggleEditQuestion(Question question) {
