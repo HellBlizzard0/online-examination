@@ -55,7 +55,6 @@
 				<b:commandButton value="" iconAwesome="trash"
 					action="#{adminViewStudentsBean.deleteStudent(student)}"
 					disabled="#{adminViewStudentsBean.render(student)}" look="danger">
-					<f:ajax execute="@this" render="@form" />
 				</b:commandButton>
 			</b:dataTableColumn>
 

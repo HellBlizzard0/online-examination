@@ -58,10 +58,11 @@ public class AdminViewAnswersOfQuestion {
 		}
 	}
 
-	public void editEnable() {
+	public String editEnable() {
 		this.backupAnswers = this.answers;
 		toggleFlag(Flags.EDIT);
-	}
+		return "faces-redirect=true";
+}
 
 	/**
 	 * Should switch the isCorrect flag of an answer. 
@@ -76,12 +77,13 @@ public class AdminViewAnswersOfQuestion {
 								.isCorrect());
 	}
 
-	public void newEnable() {
+	public String newEnable() {
 		answers.add(new Answer(0, "", this.question.getId(), false));
 		toggleFlag(Flags.NEW);
-	}
+		return "faces-redirect=true";
+}
 
-	public void editConfirm(boolean update) {
+	public String editConfirm(boolean update) {
 		if (update) {
 			try {
 				for (Answer answer : answers) {
@@ -101,9 +103,10 @@ public class AdminViewAnswersOfQuestion {
 			this.backupAnswers = null;
 		}
 		toggleFlag(Flags.NORMAL);
-	}
+		return "faces-redirect=true";
+}
 
-	public void addNewConfirm(boolean save) {
+	public String addNewConfirm(boolean save) {
 		if (save) {
 			try {
 				if (!AnswerModel.create(answers.get(answers.size() - 1)))
@@ -118,7 +121,8 @@ public class AdminViewAnswersOfQuestion {
 			answers.remove(answers.size() - 1);
 		}
 		toggleFlag(Flags.NORMAL);
-	}
+		return "faces-redirect=true";
+}
 
 	public boolean render(Answer answer) {
 		if (answer.getText().equals("")) {
@@ -175,8 +179,9 @@ public class AdminViewAnswersOfQuestion {
 		return "AdminViewAnswersOfQuestion";
 	}
 
-	public void deleteAnswer(Answer answer) {
+	public String deleteAnswer(Answer answer) {
 		answers.remove(answer);
 		AnswerModel.delete(answer);
+		return "faces-redirect=true";
 	}
 }

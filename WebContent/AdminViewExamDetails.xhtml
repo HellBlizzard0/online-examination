@@ -81,49 +81,50 @@
 						<b:commandButton value="" iconAwesome="trash" look="danger"
 							action="#{viewExamDetailsBean.deleteQuestion(question)}"
 							disabled="#{viewExamDetailsBean.render(question)}">
-							<f:ajax execute="@this" render="@form" />
+							
 						</b:commandButton>
 					</b:dataTableColumn>
 				</b:dataTable>
 				<b:row>
 					<!-- Left Button -->
 					<b:column span="3" offset="6">
-						<!-- Normal -->
-						<b:commandButton value="#{msgs.button_AddQuestion}" icon="edit" ajax="true"
-							update="@form" look="info" onclick="ajax:viewExamDetailsBean.newEnable()"
-							auto-update="true" rendered="#{viewExamDetailsBean.normal}">
-						</b:commandButton>
-						<!-- Edit -->
-						<b:commandButton value="#{msgs.button_update}" icon="edit" ajax="true"
-							update="@form" look="success" onclick="ajax:viewExamDetailsBean.editConfirm(true)"
-							auto-update="true" rendered="#{viewExamDetailsBean.edit}">
-						</b:commandButton>
-						<!-- New -->
-						<b:commandButton value="#{msgs.button_save}" icon="edit" ajax="true"
-							update="@form" look="success"
-							onclick="ajax:viewExamDetailsBean.addNewConfirm(true)"
-							auto-update="true" rendered="#{viewExamDetailsBean.addNew}">
-						</b:commandButton>
-					</b:column>
-					<!-- Right Button -->
-					<b:column span="3">
-						<!-- Normal -->
-						<b:commandButton value="#{msgs.button_Edit}" icon="edit" ajax="true"
-							update="@form" look="success" onclick="ajax:viewExamDetailsBean.editEnable()"
-							auto-update="true" rendered="#{viewExamDetailsBean.normal}">
-						</b:commandButton>
-						<!-- Edit -->
-						<b:commandButton value="#{msgs.button_Cancel}" icon="edit" ajax="true"
-							update="@form" 
-							onclick="ajax:viewExamDetailsBean.editConfirm(false)"
-							auto-update="true" rendered="#{viewExamDetailsBean.edit}">
-						</b:commandButton>
-						<!-- New -->
-						<b:commandButton value="#{msgs.button_Cancel}" icon="edit" ajax="true"
-							update="@form" 
-							onclick="ajax:viewExamDetailsBean.addNewConfirm(false)"
-							auto-update="true" rendered="#{viewExamDetailsBean.addNew}">
-						</b:commandButton>
+					<!-- Normal -->
+					<b:commandButton value="#{msgs.button_AddExam}" icon="edit"
+						look="info"
+						action="#{viewExamDetailsBean.newEnable()}"
+						rendered="#{viewExamDetailsBean.normal}">
+					</b:commandButton>
+					<!-- Edit -->
+					<b:commandButton value="#{msgs.button_update}" icon="edit" 
+						look="success"
+						action="#{viewExamDetailsBean.editConfirm(true)}"
+						rendered="#{viewExamDetailsBean.edit}">
+					</b:commandButton>
+					<!-- New -->
+					<b:commandButton value="#{msgs.button_save}" icon="edit"
+						look="success" 
+						action="#{viewExamDetailsBean.addNewConfirm(true)}"
+						auto-update="true" rendered="#{viewExamDetailsBean.addNew}">
+					</b:commandButton>
+				</b:column>
+				<!-- Right Button -->
+				<b:column span="3">
+					<!-- Normal -->
+					<b:commandButton value="#{msgs.button_Edit}" icon="edit"
+						look="success"
+						action="#{viewExamDetailsBean.editEnable()}"
+						rendered="#{viewExamDetailsBean.normal}">
+					</b:commandButton>
+					<!-- Edit -->
+					<b:commandButton value="#{msgs.button_Cancel}" icon="edit"
+						action="#{viewExamDetailsBean.editConfirm(false)}"
+						rendered="#{viewExamDetailsBean.edit}">
+					</b:commandButton>
+					<!-- New -->
+					<b:commandButton value="#{msgs.button_Cancel}" icon="edit"
+						action="#{viewExamDetailsBean.addNewConfirm(false)}"
+						 rendered="#{viewExamDetailsBean.addNew}">
+					</b:commandButton>
 					</b:column>
 				</b:row>
 

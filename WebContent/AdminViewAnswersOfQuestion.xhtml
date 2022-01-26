@@ -69,7 +69,6 @@
 							<!-- Delete Button -->
 							<b:commandButton value="" iconAwesome="trash" look="danger"
 								action="#{answersByQuestion.deleteAnswer(answer)}">
-								<f:ajax execute="@this" render="@form" />
 							</b:commandButton>
 						</b:dataTableColumn>
 
@@ -80,41 +79,42 @@
 					<!-- Left Button -->
 					<b:column span="3" offset="6">
 						<!-- Normal -->
-						<b:commandButton value="#{msgs.button_AddAnswer}" icon="edit" ajax="true"
-							update="@form" look="info" onclick="ajax:answersByQuestion.newEnable()"
-							auto-update="true" rendered="#{answersByQuestion.normal}">
-						</b:commandButton>
-						<!-- Edit -->
-						<b:commandButton value="#{msgs.button_update}" icon="edit" ajax="true"
-							update="@form" look="success" onclick="ajax:answersByQuestion.editConfirm(true)"
-							auto-update="true" rendered="#{answersByQuestion.edit}">
-						</b:commandButton>
-						<!-- New -->
-						<b:commandButton value="#{msgs.button_save}" icon="edit" ajax="true"
-							update="@form" look="success"
-							onclick="ajax:answersByQuestion.addNewConfirm(true)"
-							auto-update="true" rendered="#{answersByQuestion.addNew}">
-						</b:commandButton>
-					</b:column>
-					<!-- Right Button -->
-					<b:column span="3">
-						<!-- Normal -->
-						<b:commandButton value="#{msgs.button_Edit}" icon="edit" ajax="true"
-							update="@form" look="success" onclick="ajax:answersByQuestion.editEnable()"
-							auto-update="true" rendered="#{answersByQuestion.normal}">
-						</b:commandButton>
-						<!-- Edit -->
-						<b:commandButton value="#{msgs.button_Cancel}" icon="edit" ajax="true"
-							update="@form" 
-							onclick="ajax:answersByQuestion.editConfirm(false)"
-							auto-update="true" rendered="#{answersByQuestion.edit}">
-						</b:commandButton>
-						<!-- New -->
-						<b:commandButton value="#{msgs.button_Cancel}" icon="edit" ajax="true"
-							update="@form" 
-							onclick="ajax:answersByQuestion.addNewConfirm(false)"
-							auto-update="true" rendered="#{answersByQuestion.addNew}">
-						</b:commandButton>
+					<b:commandButton value="#{msgs.button_AddExam}" icon="edit"
+						look="info"
+						action="#{answersByQuestion.newEnable()}"
+						rendered="#{answersByQuestion.normal}">
+					</b:commandButton>
+					<!-- Edit -->
+					<b:commandButton value="#{msgs.button_update}" icon="edit" 
+						look="success"
+						action="#{answersByQuestion.editConfirm(true)}"
+						rendered="#{answersByQuestion.edit}">
+					</b:commandButton>
+					<!-- New -->
+					<b:commandButton value="#{msgs.button_save}" icon="edit"
+						look="success" 
+						action="#{answersByQuestion.addNewConfirm(true)}"
+						auto-update="true" rendered="#{answersByQuestion.addNew}">
+					</b:commandButton>
+				</b:column>
+				<!-- Right Button -->
+				<b:column span="3">
+					<!-- Normal -->
+					<b:commandButton value="#{msgs.button_Edit}" icon="edit"
+						look="success"
+						action="#{answersByQuestion.editEnable()}"
+						rendered="#{answersByQuestion.normal}">
+					</b:commandButton>
+					<!-- Edit -->
+					<b:commandButton value="#{msgs.button_Cancel}" icon="edit"
+						action="#{answersByQuestion.editConfirm(false)}"
+						rendered="#{answersByQuestion.edit}">
+					</b:commandButton>
+					<!-- New -->
+					<b:commandButton value="#{msgs.button_Cancel}" icon="edit"
+						action="#{answersByQuestion.addNewConfirm(false)}"
+						 rendered="#{answersByQuestion.addNew}">
+					</b:commandButton>
 					</b:column>
 				</b:row>
 			</b:container>
