@@ -141,9 +141,10 @@ public class AdminViewStudents {
 		}
 	}
 	
-	public void deleteStudent(Student student) {
+	public String deleteStudent(Student student) {
 		students.remove(student);
 		StudentModel.delete(student);
+		return "faces-redirect=true";
 	}
 	
 	public String goTo() {
