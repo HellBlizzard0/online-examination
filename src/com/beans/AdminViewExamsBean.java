@@ -149,7 +149,7 @@ public class AdminViewExamsBean {
 
 	public String fetchExams() {
 		this.exams = ExamModel.getExamsList(null, -1);
-		//getDepartmentss();
+	//	getDepartmentss();
 		return "AdminViewExams";
 	}
 
