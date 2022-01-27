@@ -36,8 +36,15 @@
 						rendered="#{not viewExamsBean.render(exam)}" />
 				</b:dataTableColumn>
 				<b:dataTableColumn>
-					<b:inputText value="#{exam.department}" placeholder="#{msgs.placeHolder_Department}" size="2"
-						rendered="#{viewExamsBean.render(exam)}" />
+					<!--  <b:inputText value="#{exam.department}" size="2"
+						rendered="#{viewExamsBean.render(exam)}" /> -->
+						<b:formGroup>
+    <b:selectOneMenu value="#{exam.department}" col-lg="3"   rendered="#{viewExamsBean.render(exam)}" select2="true">
+                    <f:selectItem itemLabel="(Please select)" itemValue="" />
+                   <f:selectItems value="#{viewExamsBean.departments}" var="c" itemValue="#{c}" itemLabel="#{c}" />
+                  
+                    </b:selectOneMenu> 
+                     </b:formGroup>
 					<h:outputText value="#{exam.department}"
 						rendered="#{not viewExamsBean.render(exam)}" />
 				</b:dataTableColumn>

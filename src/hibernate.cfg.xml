@@ -17,6 +17,8 @@
 		<mapping class="com.entities.Question" />
 		<mapping class="com.entities.Answer"/>
 		<mapping class="com.entities.ExamResult"/>
+		<mapping class="com.entities.Departments"/>
+		
 		
 		<mapping resource="named-queries.hbm.xml" />
 	</session-factory>

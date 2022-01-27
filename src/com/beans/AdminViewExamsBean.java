@@ -6,9 +6,11 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import com.entities.Departments;
 import com.entities.Exam;
 import com.entities.Question;
 import com.models.ExamModel;
+import com.models.ResultModel;
 
 @SessionScoped
 @ManagedBean(name = "viewExamsBean")
@@ -22,6 +24,8 @@ public class AdminViewExamsBean {
 	private boolean edit = false;
 	private boolean addNew = false;
 	private List<Exam> backupExams;
+	private String[] departments= {"ICS","SWE","COE","MATH","ISE"};
+//	private List<Departments> department;
 	
 	private enum Flags {
 		NORMAL,
@@ -145,6 +149,7 @@ public class AdminViewExamsBean {
 
 	public String fetchExams() {
 		this.exams = ExamModel.getExamsList(null, -1);
+	//	getDepartmentss();
 		return "AdminViewExams";
 	}
 
@@ -176,6 +181,25 @@ public class AdminViewExamsBean {
 		this.exams = exams;
 	}
 
-	
+	public String[] getDepartments() {
+		return departments;
+	}
 
+	public void setDepartments(String[] departments) {
+		this.departments = departments;
+	}
+
+/*	public List<Departments> getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(List<Departments> department) {
+		this.department = department;
+	}
+
+	public void  getDepartmentss() {
+		//getStudent().setId(4);
+		 department= ResultModel.getDepartments();
+	}
+*/
 }
