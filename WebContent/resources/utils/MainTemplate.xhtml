@@ -16,83 +16,83 @@
 	<div>
 		<h:form>
 			<b:navBar brand="#{msgs.label_NavBarTitle}" fixed="top"
-				inverse="true" dir="#{msgs.dir}" >
+				inverse="true" dir="#{msgs.dir}">
 				<b:container>
-			<b:row>
-			<b:column offset="6" span="2">
-				<b:navbarLinks>
-					<b:navCommandLink action="#{languageBean.toggleLanguage()}"
-						value="#{msgs.button_toggleLanguage}" />
-				</b:navbarLinks>
-			</b:column>
-			</b:row>
-			</b:container>
+					<b:row>
+						<b:column offset="6" span="2">
+							<b:navbarLinks>
+								<b:navCommandLink action="#{languageBean.toggleLanguage()}"
+									value="#{msgs.button_toggleLanguage}" />
+							</b:navbarLinks>
+						</b:column>
+					</b:row>
+				</b:container>
 			</b:navBar>
-			<b:container >
-			<b:column span="3" dir="#{msgs.dir}" rendered="#{languageBean.LTR}">
+			<b:container dir="#{msgs.dir}">
+				<b:column span="3" dir="#{msgs.dir}" rendered="#{languageBean.LTR}">
 
-				<b:panel look="primary" title="Static sidebar">
-					<b:listLinks>
-						<b:navCommandLink header="#{msgs.label_Exams}" />
-						<b:navCommandLink value="#{msgs.label_ViewExams}"
-							action="#{viewExamsBean.fetchExams()}" icon="tag"
-							iconAlign="left" />
-						<b:navCommandLink header="#{msgs.label_Students}" />
-						<b:navCommandLink value="#{msgs.label_RegisterStudent}" action="Register" icon="tag"
-							iconAlign="left" />
-						<b:navCommandLink value="#{msgs.label_ViewStudents}"
-							action="#{adminViewStudentsBean.goTo()}" icon="tag"
-							iconAlign="left" />
-						<b:navCommandLink header="#{msgs.label_Results}" />
-						<b:navCommandLink value="#{msgs.label_ViewResults}"
-							action="#{adminViewResultsBean.goTo()}" icon="tag"
-							iconAlign="left" />
-						<b:navCommandLink header="" />
+					<b:panel look="primary" title="Static sidebar">
+						<b:listLinks>
+							<b:navCommandLink header="#{msgs.label_Exams}" />
+							<b:navCommandLink value="#{msgs.label_ViewExams}"
+								action="#{viewExamsBean.fetchExams()}" icon="tag"
+								iconAlign="left" />
+							<b:navCommandLink header="#{msgs.label_Students}" />
+							<b:navCommandLink value="#{msgs.label_RegisterStudent}"
+								action="Register" icon="tag" iconAlign="left" />
+							<b:navCommandLink value="#{msgs.label_ViewStudents}"
+								action="#{adminViewStudentsBean.goTo()}" icon="tag"
+								iconAlign="left" />
+							<b:navCommandLink header="#{msgs.label_Results}" />
+							<b:navCommandLink value="#{msgs.label_ViewResults}"
+								action="#{adminViewResultsBean.goTo()}" icon="tag"
+								iconAlign="left" />
+							<b:navCommandLink header="" />
 
-						<b:navCommandLink value="#{msgs.button_logout}" action="#{login.logout()}"
-							icon="tag" iconAlign="left" />
+							<b:navCommandLink value="#{msgs.button_logout}"
+								action="#{login.logout()}" icon="tag" iconAlign="left" />
 
-						<b:messages />
-					</b:listLinks>
-				</b:panel>
-		</b:column>		
-		
-		
-			<b:column span="9">
-				<b:jumbotron>
-					<composite:insertChildren />
-				</b:jumbotron>
-			</b:column>
-			
-			<b:column span="3" dir="#{msgs.dir}" rendered="#{languageBean.RTL}">
+							<b:messages />
+						</b:listLinks>
+					</b:panel>
+				</b:column>
 
-				<b:panel look="primary" title="Static sidebar">
-					<b:listLinks>
-						<b:navCommandLink header="#{msgs.label_Exams}" />
-						<b:navCommandLink value="#{msgs.label_ViewExams}"
-							action="#{viewExamsBean.fetchExams()}" icon="tag"
-							iconAlign="left" />
-						<b:navCommandLink header="#{msgs.label_Students}" />
-						<b:navCommandLink value="#{msgs.label_RegisterStudent}" action="Register" icon="tag"
-							iconAlign="left" />
-						<b:navCommandLink value="#{msgs.label_ViewStudents}"
-							action="#{adminViewStudentsBean.goTo()}" icon="tag"
-							iconAlign="left" />
-						<b:navCommandLink header="#{msgs.label_Results}" />
-						<b:navCommandLink value="#{msgs.label_ViewResults}"
-							action="#{adminViewResultsBean.goTo()}" icon="tag"
-							iconAlign="left" />
-						<b:navCommandLink header="" />
 
-						<b:navCommandLink value="#{msgs.button_logout}" action="#{login.logout()}"
-							icon="tag" iconAlign="left" />
+				<b:column span="9">
+					<b:jumbotron>
+						<composite:insertChildren />
+					</b:jumbotron>
+				</b:column>
 
-						<b:messages />
-					</b:listLinks>
-				</b:panel>
-		</b:column>		
-		</b:container>
-		
+				<b:column span="3" dir="#{msgs.dir}" rendered="#{languageBean.RTL}">
+
+					<b:panel look="primary" title="Static sidebar">
+						<b:listLinks>
+							<b:navCommandLink header="#{msgs.label_Exams}" />
+							<b:navCommandLink value="#{msgs.label_ViewExams}"
+								action="#{viewExamsBean.fetchExams()}" icon="tag"
+								iconAlign="left" />
+							<b:navCommandLink header="#{msgs.label_Students}" />
+							<b:navCommandLink value="#{msgs.label_RegisterStudent}"
+								action="Register" icon="tag" iconAlign="left" />
+							<b:navCommandLink value="#{msgs.label_ViewStudents}"
+								action="#{adminViewStudentsBean.goTo()}" icon="tag"
+								iconAlign="left" />
+							<b:navCommandLink header="#{msgs.label_Results}" />
+							<b:navCommandLink value="#{msgs.label_ViewResults}"
+								action="#{adminViewResultsBean.goTo()}" icon="tag"
+								iconAlign="left" />
+							<b:navCommandLink header="" />
+
+							<b:navCommandLink value="#{msgs.button_logout}"
+								action="#{login.logout()}" icon="tag" iconAlign="left" />
+
+							<b:messages />
+						</b:listLinks>
+					</b:panel>
+				</b:column>
+			</b:container>
+
 		</h:form>
 	</div>
 </composite:implementation>
